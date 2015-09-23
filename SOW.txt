@@ -1,0 +1,76 @@
+App SOW
+
+Client side
+
+1. Login screen -- Teen and Follower accounts
+	
+	1.1 It should have two fields, they are "User Name (and email?)" and "Password"
+	
+	1.2 It should have two buttons, "Log in"  and "Sign up"
+		
+		1.2.1 Clicking on the "log in" button will make the app try to log in to the server
+		
+		1.2.2 Clicking on the "sign up" button should open another activity or show a fragment.
+		This will allow the user to enter their personal data, account type (teen, follower,
+		probably clinician), specify password etc. That screen will have a "Cancel" and "Ok" buttons.
+		Clicking on the latter should send the info to the server, so that the user can sign in.
+
+
+2. Main screen -- Teen account
+	
+	2.1 Display info like a first name, a last name, a date of birth, a medical record number,
+	the last check-in date etc (BR1)
+	
+	2.2 Control buttons: check-in, feedback, reminders, followers, following.
+	Hitting on all those buttons will lead to opening the corresponding screens
+	
+		2.2.1 The Check-in button will display the number of the missed check-in events (if any)
+		
+		2.2.2 The Followers button will display the number of the follow request (if any)
+		
+		2.2.3 The Following button will display the number of the new feedback messages (if any)
+
+
+2. Main screen (It will be just the Following screen) -- Follower account
+	
+
+3. Check-In screen (BR3) -- Teen account only
+
+TBD
+
+
+4. Feedback screen (BR4) -- Teen and Follower accounts
+	
+	4.1 Display feedback based on the account type and permissions granted by the following users
+
+
+5. Reminders screen -- Teen and Follower account 
+
+	5.1 List of reminders and which can be added/changed based on the account type and permissions
+	
+	5.2 There will be a button "Add reminder" by clicking on which a screen with setting will be opened
+	
+	5.3 Long press on a list item will open a menu with the following items:
+		- settings
+		- remove
+
+
+6. Followers screen -- Teen account only
+
+	6.1 List of the existing followers and requests. New followers can be added by the user,
+	the old followers can be changed/removed. Certain permissions can be granted.
+	
+	6.2 There will be a "Add Follower" to send a invitation to a potential follower 
+
+
+7. Following screen -- Teen and Follower accounts
+
+	7.1 List of the user followed by you. Long press will open a menu with the following items:
+		- feedback
+		- reminders
+		- un-follow
+		- send a check-in request
+	
+	7.2 There will be a "Follow" button to specify a new teen to follow.
+
+
