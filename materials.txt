@@ -1,0 +1,18 @@
+Some info I need to read
+
+1. Push notifications
+
+https://developers.google.com/cloud-messaging/android/start
+
+2. Charts
+
+http://code.google.com/apis/chart/
+http://code.google.com/apis/chart/image/
+
+Integration:
+http://himtech-spring.blogspot.ru/2012/07/spring-mvc-with-google-chart.html
+http://www.roytuts.com/google-chart-using-spring/
+
+3. OAuth2
+
+http://projects.spring.io/spring-security-oauth/docs/oauth2.html
