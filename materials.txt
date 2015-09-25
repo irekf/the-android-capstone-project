@@ -8,6 +8,7 @@ https://developers.google.com/cloud-messaging/android/start
 
 http://code.google.com/apis/chart/
 http://code.google.com/apis/chart/image/
+https://github.com/PhilJay/MPAndroidChart
 
 Integration:
 http://himtech-spring.blogspot.ru/2012/07/spring-mvc-with-google-chart.html
