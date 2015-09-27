@@ -13,7 +13,11 @@ import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomize
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.acpcoursera.config.OAuth2ServerConfig;
+import com.acpcoursera.config.SecurityConfiguration;
 
 /* Automatically inject any dependencies marked with @Autowired */
 @EnableAutoConfiguration
@@ -27,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 /* Scan a package for controllers */
 @ComponentScan("com.acpcoursera.controllers")
 
+@Import({SecurityConfiguration.class, OAuth2ServerConfig.class})
 public class Application {
 
     public static void main(String[] args) {
