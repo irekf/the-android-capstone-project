@@ -68,7 +68,11 @@ public class OAuth2ServerConfig {
         @Autowired
         public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
             this.userDetailsManager = auth.jdbcAuthentication().dataSource(dataSource)
-                .withDefaultSchema().getUserDetailsService();
+                    .usersByUsernameQuery(
+                            "SELECT username, password, enabled FROM users WHERE username=?")
+                    .authoritiesByUsernameQuery(
+                            "SELECT username, role FROM user_roles WHERE username=?")
+                    .getUserDetailsService();
         }
 
         public AuthorizationServerConfiguration() throws Exception {
