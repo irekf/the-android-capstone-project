@@ -1,0 +1,1 @@
+curl -X POST -k -vu mobile:12345 https://localhost:8443/oauth/token -H "Accept: application/json" -d "password=pass2&username=user2&grant_type=password&scope=read%20write&client_secret=12345&client_id=mobile"

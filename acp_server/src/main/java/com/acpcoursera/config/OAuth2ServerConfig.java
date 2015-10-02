@@ -1,8 +1,5 @@
 package com.acpcoursera.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -55,37 +53,13 @@ public class OAuth2ServerConfig {
 
     @Configuration
     @EnableAuthorizationServer
-    @Order(Ordered.LOWEST_PRECEDENCE - 100)
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-        private ProviderManager authenticationManager;
+        @Autowired
+        private AuthenticationManager authenticationManager;
 
         @Autowired
         protected DataSource dataSource;
-
-        private JdbcUserDetailsManager userDetailsManager;
-
-        @Autowired
-        public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-            this.userDetailsManager = auth.jdbcAuthentication().dataSource(dataSource)
-                    .usersByUsernameQuery(
-                            "SELECT username, password, enabled FROM users WHERE username=?")
-                    .authoritiesByUsernameQuery(
-                            "SELECT username, role FROM user_roles WHERE username=?")
-                    .getUserDetailsService();
-        }
-
-        public AuthorizationServerConfiguration() throws Exception {
-
-            DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-            // TODO: password encoding and salt
-
-            List<AuthenticationProvider> providers = new ArrayList<>();
-            providers.add(provider);
-
-            authenticationManager = new ProviderManager(providers);
-
-        }
 
         @Bean
         public ClientDetailsService clientDetailsService() throws Exception {
@@ -93,12 +67,8 @@ public class OAuth2ServerConfig {
                     .withClient("mobile").authorizedGrantTypes("password")
                     .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
                     .scopes("read","write").resourceIds("data")
+                    .secret("12345")
                     .accessTokenValiditySeconds(3600).and().build();
-        }
-
-        @Bean(name = "userDetailsManager")
-        public JdbcUserDetailsManager userDetailsManager() {
-            return userDetailsManager;
         }
 
         @Override
@@ -111,6 +81,39 @@ public class OAuth2ServerConfig {
         public void configure(ClientDetailsServiceConfigurer clients)
                 throws Exception {
             clients.withClientDetails(clientDetailsService());
+        }
+
+    }
+
+    @Configuration
+    @Order(Ordered.LOWEST_PRECEDENCE - 20)
+    protected static class AuthenticationManagerConfiguration extends
+            GlobalAuthenticationConfigurerAdapter {
+
+        @Autowired
+        private DataSource dataSource;
+
+        private JdbcUserDetailsManager userDetailsManager;
+
+        @Bean
+        public JdbcUserDetailsManager userDetailsManager() {
+            return userDetailsManager;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
+
+        @Override
+        public void init(AuthenticationManagerBuilder auth) throws Exception {
+            this.userDetailsManager = auth.jdbcAuthentication().dataSource(dataSource)
+                    .passwordEncoder(passwordEncoder())
+                    .usersByUsernameQuery(
+                            "SELECT username, password, enabled FROM users WHERE username=?")
+                    .authoritiesByUsernameQuery(
+                            "SELECT username, authority FROM authorities WHERE username=?")
+                    .getUserDetailsService();
         }
 
     }
