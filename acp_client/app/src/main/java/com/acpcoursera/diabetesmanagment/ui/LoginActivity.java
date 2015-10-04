@@ -14,7 +14,7 @@ curl -H "Content-Type:application/json" -H "Authorization:key=KEY_FROM_GOOGLE_DE
 https://gcm-http.googleapis.com/gcm/send
  */
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
