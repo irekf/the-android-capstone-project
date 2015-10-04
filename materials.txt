@@ -17,3 +17,72 @@ http://www.roytuts.com/google-chart-using-spring/
 3. OAuth2
 
 http://projects.spring.io/spring-security-oauth/docs/oauth2.html
+
+
+/********* My stuff ************/
+1. Create a keystore with a self-signed certificate:
+
+> keytool -genkey -alias tomcat -keyalg RSA -keystore acp.jks
+Enter keystore password:  
+Re-enter new password: 
+What is your first and last name?
+  [Unknown]:  localhost
+What is the name of your organizational unit?
+  [Unknown]:  localhost
+What is the name of your organization?
+  [Unknown]:  localhost
+What is the name of your City or Locality?
+  [Unknown]:  
+What is the name of your State or Province?
+  [Unknown]:  
+What is the two-letter country code for this unit?
+  [Unknown]:  
+Is CN=localhost, OU=localhost, O=localhost, L=Unknown, ST=Unknown, C=Unknown correct?
+  [no]:  yes
+
+Enter key password for <tomcat>
+	(RETURN if same as keystore password):  
+
+2. Export the public key certificate from the keystore
+
+> keytool -export -keystore acp.jks -alias tomcat -rfc -file acp.cer
+Enter keystore password:  
+Certificate stored in file <acp.cer>
+
+3. Generate a keystore with the certificate I exported, http://blog.antoine.li/2010/10/22/android-trusting-ssl-certificates/
+
+> keytool -importcert -v -trustcacerts -file acp.cer -alias RootCA -keystore acp.bks -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath bcprov-jdk15on-152.jar -storetype BKS -storepass acppass
+Owner: CN=localhost, OU=localhost, O=localhost, L=Unknown, ST=Unknown, C=Unknown
+Issuer: CN=localhost, OU=localhost, O=localhost, L=Unknown, ST=Unknown, C=Unknown
+Serial number: 4a580655
+Valid from: Sun Oct 04 22:24:22 YEKT 2015 until: Sat Jan 02 22:24:22 YEKT 2016
+Certificate fingerprints:
+	 MD5:  BE:15:35:2F:20:07:A3:C8:63:09:65:B4:02:08:19:78
+	 SHA1: C7:7A:4D:8C:F4:A9:1F:B5:99:D3:71:1B:6E:CF:8A:BB:CB:35:E4:89
+	 SHA256: 50:EF:2D:D1:DB:22:F3:AC:3E:B4:D8:0D:B3:B4:28:B3:81:00:D1:DE:D1:25:7A:E1:0B:1C:E5:55:B4:D8:35:49
+	 Signature algorithm name: SHA256withRSA
+	 Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: BC DD 15 9A 1A 54 76 B7   49 0F F6 A7 78 A5 35 D7  .....Tv.I...x.5.
+0010: B0 33 5F C2                                        .3_.
+]
+]
+
+Trust this certificate? [no]:  yes
+Certificate was added to keystore
+[Storing acp.bks]
+
+> keytool -list -keystore acp.bks -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath bcprov-jdk15on-152.jar -storetype BKS -storepass acppass
+Keystore type: BKS
+Keystore provider: BC
+
+Your keystore contains 1 entry
+
+RootCA, Oct 4, 2015, trustedCertEntry, 
+Certificate fingerprint (SHA1): C7:7A:4D:8C:F4:A9:1F:B5:99:D3:71:1B:6E:CF:8A:BB:CB:35:E4:89
+
