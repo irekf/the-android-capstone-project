@@ -1,4 +1,4 @@
-package com.acpcoursera.diabetesmanagment.util;
+package com.acpcoursera.diabetesmanagment.config;
 
 public class AcpPreferences {
 

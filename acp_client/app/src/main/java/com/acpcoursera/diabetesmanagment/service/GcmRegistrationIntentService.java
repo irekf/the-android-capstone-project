@@ -2,13 +2,12 @@ package com.acpcoursera.diabetesmanagment.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.acpcoursera.diabetesmanagment.R;
-import com.acpcoursera.diabetesmanagment.util.AcpPreferences;
+import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
