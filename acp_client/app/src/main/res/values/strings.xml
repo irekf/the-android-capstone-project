@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Diabetes Managment</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in_button">Log In</string>
+    <string name="sign_up_button">Sign Up</string>
 </resources>

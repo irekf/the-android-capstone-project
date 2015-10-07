@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.acpcoursera.diabetesmanagment.ui.AuthFragment">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_button"
+        android:id="@+id/sign_up_button"
+        android:layout_gravity="end|center_vertical" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in_button"
+        android:id="@+id/log_in_button"
+        android:layout_gravity="start|center_vertical" />
+</FrameLayout>
