@@ -16,7 +16,7 @@ curl -H "Content-Type:application/json" -H "Authorization:key=KEY_FROM_GOOGLE_DE
 https://gcm-http.googleapis.com/gcm/send
  */
 
-public class AuthActivity extends Activity implements AuthFragment.Callbacks {
+public class AuthActivity extends Activity implements LogInFragment.Callbacks {
 
     private static String TAG = AuthActivity.class.getSimpleName();
 
@@ -32,22 +32,13 @@ public class AuthActivity extends Activity implements AuthFragment.Callbacks {
             return;
         }
 
-        AuthFragment authFragment = new AuthFragment();
+        LogInFragment logInFragment = new LogInFragment();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.auth_activity_fragment_container, authFragment);
+        fragmentTransaction.add(R.id.auth_activity_fragment_container, logInFragment);
         fragmentTransaction.commit();
 
-    }
-
-    @Override
-    public void onLogInButtonClicked() {
-        LogInFragment logInFragment = new LogInFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.auth_activity_fragment_container, logInFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     @Override
