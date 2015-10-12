@@ -16,7 +16,7 @@
 
     In this section of the document you will see the app from a user's perspective, that is the screens and major features the user can use. The technical and implementation details will be described in the next section.
 
-    \newpage
+\newpage
 
     \subsection{Authentication}
 
@@ -38,7 +38,7 @@
         As you can see in the figure \ref{fig:screen_main}, the user can also log out if, for example, another person needs to use the app under their own account.\footnote{Basic Project Requirement \#1: App supports multiple users via individual user accounts}
     \end{description}
 
-    \newpage
+\newpage
 
     \subsection{Main Menu}
 
@@ -54,7 +54,39 @@
 
     This menu and the screens, which can be navigated to from the main menu, are only available to authenticated users.\footnote{Basic Project Requirement \#2: App contains at least one user facing function available only to authenticated users}
 
+\newpage
+
     \subsection{Check-In}
 
+    This is the main screen for gathering a teen's diabetes related information. It might be open when the user clicks on a check-in notification or be navigated to from the main menu. The figure \ref{fig:screen_checkin} shows what information will probably be required from a teen user.
+    \footnote{Functional Description and App Requirement \#3: Once the Teen acknowledges a Reminder, the app opens for a Check-In.  A Check-In includes data associated with that Teen, a date, a time, and the user's responses to a set of Questions at that date and time.}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{checkin.png}
+        \caption{check-in screen}
+        \label{fig:screen_checkin}
+    \end{figure}
+
+    This screen is only available for the teen users. The follower users can't preform check-in's.
+    \footnote{Functional Description and App Requirement \#5: The app includes a Follower role that is a different type of user (e.g., a parent, clinician, friend, etc.) who does not the ability to perform Check-Ins, but who can receive Check-In data shared from one or more Teens. Also, the app allows a Teen to be a Follower for other Teens.}
+
+\newpage
+
+    \subsection{Feedback}
+
+    Both teen and follower accounts can receive feedback from the users they follow. This information will be displayed on the \emph{Feedback} screen (see the figure \ref{fig:screen_feedback}). Either the \emph{Followers} screen (figure \ref{fig:screen_followers}) or the main menu (in case of a teen account to see their own feedback data) can be used to navigate to the \emph{Feedback} screen. 
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth,height=\textheight,keepaspectratio]{feedback.png}
+        \caption{feedback screen}
+        \label{fig:screen_feedback}
+    \end{figure}
+    
+    Whenever a teen submits check-in data, his/her followers will receive feedback via system notifications and/or notifications in the main menu. 
+    \footnote{Functional Description and App Requirement \#4: A Teen is able to monitor their feedback data that is updated at some appropriate interval (e.g., when a Check-In is completed, daily, weekly, or when requested by Followers). The Feedback data can be viewed graphically on the mobile device.}
+
+    The amount of information will depend on the permissions the corresponding teen granted to their follower(s) (see the figures \ref{fig:screen_follow_req} and \ref{fig:screen_followers}).
 
 \end{document}
