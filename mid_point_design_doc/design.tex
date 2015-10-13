@@ -3,7 +3,7 @@
 \graphicspath{{images/}}
 
 \title{Got It Diabetes Management:\\Mid-Point Design Document}
-\date{2015-10-10}
+\date{2015-10-12}
 \author{by a Coursera student}
 
 \begin{document}
@@ -95,7 +95,8 @@
     Whenever a \emph{Teen} submits check-in data, his/her followers will receive feedback via system notifications and/or notifications in the \emph{Main Menu}. 
     \footnote{Functional Description and App Requirement \#4: A \emph{Teen} is able to monitor their feedback data that is updated at some appropriate interval (e.g., when a Check-In is completed, daily, weekly, or when requested by \emph{Followers}). The Feedback data can be viewed graphically on the mobile device.}
 
-    The amount of information will depend on the permissions the corresponding \emph{Teen} granted to their \emph{Follower(s)} (see the figures \ref{fig:screen_followers} and \ref{fig:screen_follow_req}).
+    The amount of information will depend on the permissions the corresponding \emph{Teen} granted to their \emph{Follower(s)} (see the figures \ref{fig:screen_followers} and \ref{fig:screen_follow_req}). Additionally, touch gestures will be used to zoom in and zoom out the feedback plot.
+    \footnote{Basic Project Requirement \#7: App uses at least one advanced capability or API from the following list: multimedia capture, multimedia playback, touch gestures, sensors, animation.}
 
 \newpage
 
@@ -182,5 +183,89 @@ In case if the \emph{Teen} has a new follower request, he/she can click on the c
 \newpage
 
 \section{Implementation Details}
+
+This section describes the implementation details of the application's components at a very high level. There will be provided an example of use of some of those components to give you a picture of how they are going to interact.
+
+\newpage
+
+    \subsection{Client and Server Side Implementation}
+    
+    \begin{description}
+        \item[Client Side] \hfill \\
+            The client side is represented by an android-based application.
+        \item[Server Side] \hfill \\
+            The server side of the project is represented by a remotely-hosted Java Spring-based service.
+            \footnote{Basic Project Requirement \#4: App interacts with at least one remotely-hosted Java Spring-based service} 
+            For the sake of simplicity and due to the lack of time, no scaling capabilities is going to be used.
+    \end{description}
+
+    \subsection{Security}
+
+    \begin{description}
+        \item[Client-Server Communication] \hfill \\
+            All network communication between the client and server side is done via HTTPS.
+            \footnote{Basic Project Requirement \#5: App interacts over the network via HTTP/HTTPS}
+            For test purposes the project uses a self-signed SSL certificate, which should be changed in production. The client side is distributed with the public-key certificate, which is stored inside a JKS keystore in resources/raw. 
+        \item[User Security] \hfill \\
+            OAuth2 is used for the user authorization. All interactions with the client (except for the \emph{Authentication} screen) and the server can be done only if an access token has been granted to the user. Once an access token has been received, it is saved into shared preferences on the client side, so that it can be used from any place in the application and the user could use the app when the network is off (for example, to work with the cached feedback).
+        \item[User Credentials Security] \hfill \\
+            The users passwords are not stored on the server side. Instead of the plain text format, hash value and salt is used to verify the users credentials.
+    \end{description}
+
+    \subsection{Data Management}
+
+    \begin{description}
+        \item[Client Side] \hfill \\
+            The activities and fragments will be as stateless as possible and hold almost no data in order to facilitate configuration changes. A content provider backed by an SQL database will be used to store cached server data, so that this data could be used even if the user is off-line.
+        \item[Server Side] \hfill \\
+            The server uses a separate MySQL database to store all the users' data.
+    \end{description}
+
+    \subsection{Network Operations}
+
+    \begin{description}
+        \item[Client Side] \hfill \\
+        All client side network operations will be performed in a background thread via a single intent service.
+        \footnote{Basic Project Requirement \#8: App supports at least one operation that is performed off the UI Thread in one or more background Threads or Thread pool.}
+        Once the intent service has received data from the server, it hands it over to the intermediate service (the data is received via a local broadcast receiver) and waits for another network request from the activities/fragments.
+        
+        The intermediate service delivers data to the content provider. After the content provider's data has been updated, the corresponding loader will update the activity/fragment based on the changes in the content provider. This will separate logic and data and will make it easy to handle configurations changes.
+        \footnote{Basic Project Requirement \#3: App comprises at least 1 instance of each of at least 2 of the following 4 fundamental Android components: Activity, BroadcastReceiver, Service, ContentProvider}
+        \item[Server Side] \hfill \\
+            The server network operation will be performed via a google cloud messaging server. The GCM server will then deliver any updates to the corresponding client by using push notifications. Depending on the type of the info from the server, a push notification will contain either entire data or ``command'' for the client side (for example, to fetch new feedback from the server).
+    \end{description}
+
+    \subsection{Client GUI}
+
+    As you could see in the ``User-Facing Components'' section, the client side GUI will be represented by at least 10 screens.
+    \footnote{Basic Project Requirement \#6: App allows users to navigate between 3 or more user interface screens at runtime}
+    Those screen will most likely be implemented using 2-3 activities and 7-8 fragments. The use of fragments should make the GUI smoother and make it easier to re-use pieces of the user interface.
+
+\newpage
+
+    \subsection{Example Components' Usage}
+
+    This is an example of how the certain components are used when one user sends a follow request to another user. Just follow the arrows to see in what order the parts are being used during request.
+
+    \begin{figure}[ht]
+         \centering
+         \includegraphics[page=1,width=\textwidth,height=0.7\textheight,keepaspectratio]{follow_req_workflow.pdf}
+         \caption{follow request workflow}
+         \label{fig:screen_follow_req_workflow}
+    \end{figure}
+
+\newpage
+\pagenumbering{gobble}
+
+\clearpage
+\vspace*{\fill}
+\begin{center}
+    \begin{minipage}{0.4\textwidth}
+        \fontsize{28}{12}\selectfont
+        Thank You!
+    \end{minipage}
+\end{center}
+\vfill
+\clearpage
 
 \end{document}
