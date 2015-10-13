@@ -4,7 +4,7 @@
 
 \title{Got It Diabetes Management:\\Mid-Point Design Document}
 \date{2015-10-10}
-\author{A Coursera Student}
+\author{by a Coursera student}
 
 \begin{document}
     \pagenumbering{gobble}
@@ -12,7 +12,7 @@
     \newpage
     \pagenumbering{arabic}
 
-    \section{User-Facing Components}
+\section{User-Facing Components}
 
     In this section of the document you will see the app from a user's perspective, that is the screens and major features the user can use. The technical and implementation details will be described in the next section.
 
@@ -31,18 +31,23 @@
 
     \begin{description}
         \item[Log In] \hfill \\
-        The user needs to enter their user name (or e-mail) and password. After hitting on the Log In button the app will display the Check-In screen (see the figure \ref{fig:screen_checkin}).
+            The user needs to enter their user name (or e-mail) and password. After hitting on the \emph{Log In} button the app will display the \emph{Check-In} screen (see the figure \ref{fig:screen_checkin}).
         \item[Sign Up] \hfill \\
-            The registration process includes several steps, each of which gathers various user's information. Depending on the user type (teen or follower), the information gathered might differ. The teen account will at least include a first name, a last name, a date of birth, and a medical record number. A followers account will probably only include a first and a last name.\footnote{Functional Description and App Requirement \#1: The Teen is the primary user of the mobile app and is represented in the app by a unit of data containing the core set of identifying information about a diabetic adolescent, including (but not necessarily limited to) a first name, a last name, a date of birth, and a medical record number.}
+            The registration process includes several steps, each of which gathers various user's information. Depending on the user type (\emph{Teen} or \emph{Follower}), the information gathered might differ. The \emph{Teen} account will at least include a first name, a last name, a date of birth, and a medical record number. A \emph{Followers} account will probably only include a first and a last name.
+            \footnote{Functional Description and App Requirement \#1: The \emph{Teen} is the primary user of the mobile app and is represented in the app by a unit of data containing the core set of identifying information about a diabetic adolescent, including (but not necessarily limited to) a first name, a last name, a date of birth, and a medical record number.}
+            Both account types will require an e-mail address.
         \item[Log Out] \hfill \\
-        As you can see in the figure \ref{fig:screen_main}, the user can also log out if, for example, another person needs to use the app under their own account.\footnote{Basic Project Requirement \#1: App supports multiple users via individual user accounts}
+            As you can see in the figure \ref{fig:screen_main}, the user can also log out if, for example, another person needs to use the app under their own account.
+            \footnote{Basic Project Requirement \#1: App supports multiple users via individual user accounts}
     \end{description}
 
 \newpage
 
     \subsection{Main Menu}
 
-    To give the user ability to easily navigate between all the screens, the application uses a navigation drawer, which is called \emph{Main Menu}.\\Some menu items will indicated additional informations, for example, the number of unseen feedback, unread messages etc.
+    To give the users ability to easily navigate between all the screens, the application uses a navigation drawer, which is called \emph{Main Menu}.
+    
+    Some menu items will indicated additional informations, for example, the number of unseen feedback, unread messages etc.
 
     \begin{figure}[h]
         \centering
@@ -52,14 +57,15 @@
     \end{figure}
 
 
-    This menu and the screens, which can be navigated to from the main menu, are only available to authenticated users.\footnote{Basic Project Requirement \#2: App contains at least one user facing function available only to authenticated users}
+    This menu and the screens, which can be navigated to from the \emph{Main Menu}, are only available to authenticated users.
+    \footnote{Basic Project Requirement \#2: App contains at least one user facing function available only to authenticated users}
 
 \newpage
 
     \subsection{Check-In}
 
-    This is the main screen for gathering a teen's diabetes related information. It might be open when the user clicks on a check-in notification or be navigated to from the main menu. The figure \ref{fig:screen_checkin} shows what information will probably be required from a teen user.
-    \footnote{Functional Description and App Requirement \#3: Once the Teen acknowledges a Reminder, the app opens for a Check-In.  A Check-In includes data associated with that Teen, a date, a time, and the user's responses to a set of Questions at that date and time.}
+    This is the main screen for gathering a teen's diabetes related information. It might be open when the user clicks on a check-in notification or be navigated to from the \emph{Main Menu}. The figure \ref{fig:screen_checkin} shows what information will probably be required from a \emph{Teen} user.
+    \footnote{Functional Description and App Requirement \#3: Once the \emph{Teen} acknowledges a Reminder, the app opens for a Check-In.  A Check-In includes data associated with that \emph{Teen}, a date, a time, and the user's responses to a set of Questions at that date and time.}
 
     \begin{figure}[h]
         \centering
@@ -68,14 +74,16 @@
         \label{fig:screen_checkin}
     \end{figure}
 
-    This screen is only available for the teen users. The follower users can't preform check-in's.
-    \footnote{Functional Description and App Requirement \#5: The app includes a Follower role that is a different type of user (e.g., a parent, clinician, friend, etc.) who does not the ability to perform Check-Ins, but who can receive Check-In data shared from one or more Teens. Also, the app allows a Teen to be a Follower for other Teens.}
+    This screen is only available for the \emph{Teen} users. The \emph{Follower} users cannot preform check-in's.
+    \footnote{Functional Description and App Requirement \#5: The app includes a \emph{Follower} role that is a different type of user (e.g., a parent, clinician, friend, etc.) who does not the ability to perform Check-Ins, but who can receive Check-In data shared from one or more \emph{Teens}. Also, the app allows a \emph{Teen} to be a \emph{Follower} for other \emph{Teens}.}
 
 \newpage
 
     \subsection{Feedback}
 
-    Both teen and follower accounts can receive feedback from the users they follow. This information will be displayed on the \emph{Feedback} screen (see the figure \ref{fig:screen_feedback}). Either the \emph{Followers} screen (figure \ref{fig:screen_followers}) or the main menu (in case of a teen account to see their own feedback data) can be used to navigate to the \emph{Feedback} screen. 
+    Both \emph{Teen} and \emph{Follower} accounts can receive feedback from the users they follow. This information will be displayed on the \emph{Feedback} screen (see the figure \ref{fig:screen_feedback}).
+    
+    Either the \emph{Followers} screen (figure \ref{fig:screen_followers}) or the \emph{Main Menu} (in case of a \emph{Teen} account to see their own feedback data) can be used to navigate to the \emph{Feedback} screen. 
 
     \begin{figure}[h]
         \centering
@@ -84,9 +92,95 @@
         \label{fig:screen_feedback}
     \end{figure}
     
-    Whenever a teen submits check-in data, his/her followers will receive feedback via system notifications and/or notifications in the main menu. 
-    \footnote{Functional Description and App Requirement \#4: A Teen is able to monitor their feedback data that is updated at some appropriate interval (e.g., when a Check-In is completed, daily, weekly, or when requested by Followers). The Feedback data can be viewed graphically on the mobile device.}
+    Whenever a \emph{Teen} submits check-in data, his/her followers will receive feedback via system notifications and/or notifications in the \emph{Main Menu}. 
+    \footnote{Functional Description and App Requirement \#4: A \emph{Teen} is able to monitor their feedback data that is updated at some appropriate interval (e.g., when a Check-In is completed, daily, weekly, or when requested by \emph{Followers}). The Feedback data can be viewed graphically on the mobile device.}
 
-    The amount of information will depend on the permissions the corresponding teen granted to their follower(s) (see the figures \ref{fig:screen_follow_req} and \ref{fig:screen_followers}).
+    The amount of information will depend on the permissions the corresponding \emph{Teen} granted to their \emph{Follower(s)} (see the figures \ref{fig:screen_followers} and \ref{fig:screen_follow_req}).
+
+\newpage
+
+    \subsection{Followers}
+
+    Each \emph{Teen} account user can have followers. These are users that receive feedback from the \emph{Teen} and can send him/her messages.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{followers.png}
+        \caption{follower and settings screens}
+        \label{fig:screen_followers}
+    \end{figure}
+
+    As you can see in the figure \ref{fig:screen_followers}, a \emph{Teen} can also change the amount of data he/she wants to share with a certain \emph{Follower}.
+    \footnote{Functional Description and App Requirement \#6: The app allows a \emph{Teen} to choose what part(s) of their data to share with one or more \emph{Followers}.}
+
+\newpage
+
+In case if the \emph{Teen} has a new follower request, he/she can click on the corresponding item in the list (figure \ref{fig:screen_followers}) to open the \emph{New Follow Request} screen. The \emph{Teen} can  either accept or reject the request (see the figure \ref{fig:screen_follow_req}).
+    
+    If the \emph{Teen} wants to invite a \emph{Follower}, the \textbf{+} button can be used to open the corresponding screen, where the \emph{Teen} needs to enter the e-mail the person has used during the registration.
+    \footnote{Functional Description and App Requirement \#7: The app only allows \emph{Teen} data to be disseminated to authorized/authenticated \emph{Followers} and accessed over HTTPS to enhance privacy and security of the data (the HTTPS part will be described in the implementation details)}
+    The person, whom the invite has been sent to, will receive a notification where he/she can accept/reject the invitation.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{follow_req.png}
+        \caption{follow request and invitation screens}
+        \label{fig:screen_follow_req}
+    \end{figure}
+
+\newpage
+
+    \subsection{Following}
+
+    To see the list of the users you currently follow the \emph{Following} screen can be used. The user can access feedback of the users he/she follows or start to follow another one by clicking on the \textbf{+} button (see the figure \ref{fig:screen_following}).
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{following.png}
+        \caption{following screen}
+        \label{fig:screen_following}
+    \end{figure}
+
+\newpage
+
+    \subsection{Reminders}
+
+    Each \emph{Teen} will receive check-in reminders in the form of alarms at least three times a day. Once a reminder has been received a \emph{Teen} can tap on the notification and the \emph{Check-In} screen will be open to perform the check-in process.
+    Reminder can be added, edited or tuned on/off  using the \emph{Reminders} screen (see the figure \ref{fig:screen_reminders}). At least three reminders will always be on.
+    \footnote{Functional Description and App Requirement \#2: The \emph{Teen} receives a Reminder in the form of alarms or notifications at patient-adjustable times at least three times per day.}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth,height=\textheight,keepaspectratio]{reminders.png}
+        \caption{reminders screen}
+        \label{fig:screen_reminders}
+    \end{figure}
+
+\newpage
+
+    \subsection{Optional Features}
+
+    The following features will be implemented only if the major capstone project requirements are met and there is development time left.
+
+    \begin{itemize}
+        \item Messages
+
+            \emph{Teen} account will be able to communicate with their \emph{Followers} and vice versa by using the \emph{Messages} screen. A \emph{Teen} or their \emph{Follower(s)} will be able to communicate in the form of a dialog (see the figure \ref{fig:screen_messages}).
+
+
+            \begin{figure}[h]
+                \centering
+                \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{messages.png}
+                \caption{messages and dialog screens}
+                \label{fig:screen_messages}
+            \end{figure}
+
+        \item User Settings (the screen is not present)
+    \end{itemize}
+            This screen will allow to alter different user information and settings. For example, a user could change the password or turn some notifications off.
+
+\newpage
+
+\section{Implementation Details}
 
 \end{document}
