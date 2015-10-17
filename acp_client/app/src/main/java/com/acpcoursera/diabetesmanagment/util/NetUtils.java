@@ -7,13 +7,9 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
@@ -23,14 +19,43 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class NetUtils {
 
-    public static OkHttpClient getSecureHttpClient(Context context) {
+    private static String TAG = NetUtils.class.getSimpleName();
+
+    public static class SecureHttpClientException extends Exception {
+
+        private Throwable rootCause;
+
+        public SecureHttpClientException() {
+            super();
+        }
+
+        public SecureHttpClientException(String message) {
+            super(message);
+        }
+
+        public SecureHttpClientException(Throwable rootCause) {
+            super(rootCause);
+            this.rootCause = rootCause;
+        }
+
+        public SecureHttpClientException(String message, Throwable rootCause) {
+            super(message, rootCause);
+            this.rootCause = rootCause;
+        }
+
+        public Throwable getRootCause() {
+            return rootCause;
+        }
+    }
+
+    public static OkHttpClient getSecureHttpClient(Context context) throws SecureHttpClientException {
         OkHttpClient client = new OkHttpClient();
 
         KeyStore keyStore = null;
         try {
             keyStore = readKeyStore(context);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            throw new SecureHttpClientException("Error: " + t.getMessage(), t);
         }
 
         SSLContext sslContext = null;
@@ -38,29 +63,25 @@ public class NetUtils {
         KeyManagerFactory keyManagerFactory = null;
         try {
             sslContext = SSLContext.getInstance("SSL");
-            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory = TrustManagerFactory.getInstance("blah-blah");
             keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            throw new SecureHttpClientException("Error: " + t.getMessage(), t);
         }
 
         try {
             trustManagerFactory.init(keyStore);
             keyManagerFactory.init(keyStore, "keystore_pass".toCharArray());
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            throw new SecureHttpClientException("Error: " + t.getMessage(), t);
         }
 
         try {
             sslContext.init(keyManagerFactory.getKeyManagers(),
                     trustManagerFactory.getTrustManagers(),
                     new SecureRandom());
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            throw new SecureHttpClientException("Error: " + t.getMessage(), t);
         }
         client.setSslSocketFactory(sslContext.getSocketFactory());
 
@@ -84,13 +105,10 @@ public class NetUtils {
             // Initialize the keystore with the provided trusted certificates
             // Also provide the password of the keystore
             trusted.load(in, "acppass".toCharArray());
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        } catch (Throwable t) {
+            throw new KeyStoreException("Error: " + t.getMessage(), t);
+        }
+        finally {
             try {
                 in.close();
             } catch (IOException e) {
