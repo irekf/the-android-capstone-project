@@ -63,7 +63,7 @@ public class NetUtils {
         KeyManagerFactory keyManagerFactory = null;
         try {
             sslContext = SSLContext.getInstance("SSL");
-            trustManagerFactory = TrustManagerFactory.getInstance("blah-blah");
+            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         } catch (Throwable t) {
             throw new SecureHttpClientException("Error: " + t.getMessage(), t);
