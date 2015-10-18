@@ -26,11 +26,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
 import javax.security.auth.login.LoginException;
 
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_ADDRESS;
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_ID;
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_SECRET;
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_PORT;
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_SCHEME;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.*;
 
 public class NetUtils {
 
@@ -158,7 +154,7 @@ public class NetUtils {
         try {
             // Initialize the keystore with the provided trusted certificates
             // Also provide the password of the keystore
-            trusted.load(in, "acppass".toCharArray());
+            trusted.load(in, CLIENT_KEYSTORE_PASS.toCharArray());
         } catch (Throwable t) {
             throw new KeyStoreException("Error: " + t.getMessage(), t);
         }
