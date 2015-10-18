@@ -3,7 +3,15 @@ package com.acpcoursera.diabetesmanagment.util;
 import android.content.Context;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.squareup.okhttp.Credentials;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +24,13 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
+import javax.security.auth.login.LoginException;
+
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_ADDRESS;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_ID;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_SECRET;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_PORT;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_SCHEME;
 
 public class NetUtils {
 
@@ -96,6 +111,45 @@ public class NetUtils {
         });
 
         return client;
+    }
+
+    public static String getAccessToken(OkHttpClient client, String username, String password)
+            throws IOException, LoginException {
+
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme(SERVER_SCHEME)
+                .host(SERVER_ADDRESS)
+                .port(SERVER_PORT)
+                .addPathSegment("oauth")
+                .addEncodedPathSegment("token")
+                .addQueryParameter("username", username)
+                .addQueryParameter("password", password)
+                .addQueryParameter("scope", "read write")
+                .addQueryParameter("grant_type", "password")
+                .addQueryParameter("client_id", SERVER_CLIENT_ID)
+                .addQueryParameter("client_secret", SERVER_CLIENT_SECRET)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET))
+                .post(RequestBody.create(MediaType.parse(""), ""))
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        int httpStatus = response.code();
+        if (httpStatus < 200 || httpStatus > 299) {
+            throw new LoginException("Error: cannot get access token, HTTP status = " + httpStatus);
+        }
+
+        String body = response.body().string();
+        JsonElement accessToken = new JsonParser().parse(body).getAsJsonObject().get("access_token");
+        if (accessToken == null) {
+            throw new LoginException("Error: no access token found in response body");
+        }
+
+        return accessToken.getAsString();
     }
 
     private static KeyStore readKeyStore(Context context) throws KeyStoreException {
