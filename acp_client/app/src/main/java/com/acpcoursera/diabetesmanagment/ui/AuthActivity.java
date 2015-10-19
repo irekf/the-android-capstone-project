@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.service.GcmRegistrationIntentService;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 /*
 Send a test push notification:
@@ -30,6 +31,12 @@ public class AuthActivity extends Activity implements LogInFragment.Callbacks {
 
         if (savedInstanceState != null) {
             return;
+        }
+
+        // start the main activity if we have an access token
+        if (!MiscUtils.readAccessToken(this).isEmpty()) {
+            Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(mainActivityIntent);
         }
 
         LogInFragment logInFragment = new LogInFragment();

@@ -8,4 +8,5 @@
     <!-- Strings related to login -->
     <string name="prompt_password">Password</string>
     <string name="prompt_user_name">User Name</string>
+    <string name="log_out_button">Log Out</string>
 </resources>

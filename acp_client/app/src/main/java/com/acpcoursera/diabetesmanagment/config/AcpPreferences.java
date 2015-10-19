@@ -15,4 +15,8 @@ public class AcpPreferences {
     public static final String SERVER_CLIENT_ID = "mobile";
     public static final String SERVER_CLIENT_SECRET = "12345";
 
+    public static final String SHARED_PREF_FILE =
+            "com.acpcoursera.diabetesmanagement.PREFERENCE_FILE_KEY";
+    public static final String ACCESS_TOKEN_PREF = "access_token_pref";
+
 }

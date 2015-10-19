@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 public class LogInFragment extends Fragment {
 
@@ -80,7 +80,6 @@ public class LogInFragment extends Fragment {
         mReceiver = new NetOpsReceiver();
         IntentFilter filter = new IntentFilter(TAG);
         filter.addAction(NetOpsService.ACTION_LOG_IN);
-        filter.addAction(NetOpsService.ACTION_SIGN_UP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
@@ -96,32 +95,24 @@ public class LogInFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.d(TAG, "intent received");
-
             String action = intent.getAction();
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
             if (action.equals(NetOpsService.ACTION_LOG_IN)) {
                 if (resultCode == NetOpsService.RC_OK) {
+                    // save the access token and go to the main screen
                     String accessToken = intent.getStringExtra(NetOpsService.EXTRA_ACCESS_TOKEN);
-                    Toast.makeText(
-                            getActivity(),
-                            "Access token: " + accessToken,
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    MiscUtils.saveAccessToken(getActivity(), accessToken);
+                    Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(mainActivityIntent);
                 }
                 else {
                     Toast.makeText(
                             getActivity(),
-                            "Login error: " + intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
+                            "Login error: " +
+                                    intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
                             Toast.LENGTH_SHORT
                     ).show();
                 }
-            }
-            else if (action.equals(NetOpsService.ACTION_SIGN_UP)) {
-
-            }
-            else {
-
             }
 
         }
