@@ -1,10 +1,10 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.service.GcmRegistrationIntentService;
@@ -17,7 +17,7 @@ curl -H "Content-Type:application/json" -H "Authorization:key=KEY_FROM_GOOGLE_DE
 https://gcm-http.googleapis.com/gcm/send
  */
 
-public class AuthActivity extends Activity implements LogInFragment.Callbacks {
+public class AuthActivity extends FragmentActivity implements LogInFragment.Callbacks {
 
     private static String TAG = AuthActivity.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public class AuthActivity extends Activity implements LogInFragment.Callbacks {
 
         LogInFragment logInFragment = new LogInFragment();
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.auth_activity_fragment_container, logInFragment);
         fragmentTransaction.commit();
@@ -51,7 +51,7 @@ public class AuthActivity extends Activity implements LogInFragment.Callbacks {
     @Override
     public void onSignUpButtonClicked() {
         SignUpFragment signUpFragment = new SignUpFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.auth_activity_fragment_container, signUpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
