@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -22,19 +23,22 @@ public class LogInFragment extends Fragment {
 
     private static String TAG = LogInFragment.class.getSimpleName();
 
-    Callbacks mCallbacks;
+    private Callbacks mCallbacks;
 
     public interface Callbacks {
         public void onSignUpButtonClicked();
     }
 
-    Button mLogInButton;
-    Button mSignUpButton;
+    private Button mLogInButton;
+    private Button mSignUpButton;
 
-    EditText mUserName;
-    EditText mPassword;
+    private EditText mUserName;
+    private EditText mPassword;
 
-    NetOpsReceiver mReceiver;
+    private NetOpsReceiver mReceiver;
+
+    private boolean mUiEnabled = true;
+    private static String UI_ENABLED_KEY = "ui_enabled_key";
 
     @Override
          public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +67,10 @@ public class LogInFragment extends Fragment {
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!areCredentialsValid()) {
+                    return;
+                }
+                setUiEnabled(false);
                 // let's try to log in, i.e. get an access token
                 Intent intent = new Intent(getActivity(), NetOpsService.class);
                 intent.setAction(NetOpsService.ACTION_LOG_IN);
@@ -72,6 +80,18 @@ public class LogInFragment extends Fragment {
             }
         });
 
+        // check if UI is greyed out because logging in is in progress
+        if (savedInstanceState != null) {
+            mUiEnabled = savedInstanceState.getBoolean(UI_ENABLED_KEY);
+            setUiEnabled(mUiEnabled);
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(UI_ENABLED_KEY, mUiEnabled);
     }
 
     @Override
@@ -106,6 +126,7 @@ public class LogInFragment extends Fragment {
                     startActivity(mainActivityIntent);
                 }
                 else {
+                    setUiEnabled(true);
                     Toast.makeText(
                             getActivity(),
                             "Login error: " +
@@ -116,6 +137,37 @@ public class LogInFragment extends Fragment {
             }
 
         }
+    }
+
+    private boolean areCredentialsValid() {
+        if (mUserName.getText().toString().isEmpty()) {
+            Toast.makeText(
+                    getActivity(),
+                    "Enter user name",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
+        }
+        else if (mPassword.getText().toString().isEmpty()) {
+            Toast.makeText(
+                    getActivity(),
+                    "Enter password",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void setUiEnabled(boolean enabled) {
+        mUiEnabled = enabled;
+        mLogInButton.setClickable(enabled);
+        mSignUpButton.setClickable(enabled);
+        mUserName.setEnabled(enabled);
+        mPassword.setEnabled(enabled);
+        int textColor = enabled ? Color.BLACK : Color.GRAY;
+        mLogInButton.setTextColor(textColor);
+        mSignUpButton.setTextColor(textColor);
     }
 
 }
