@@ -9,4 +9,10 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_user_name">User Name</string>
     <string name="log_out_button">Log Out</string>
+    <string name="label_next">NEXT</string>
+    <string name="label_back">BACK</string>
+    <string name="label_finish">FINISH</string>
+    <string name="sign_up_tab_1">STEP 1</string>
+    <string name="sign_up_tab_2">STEP 2</string>
+    <string name="sign_up_tab_3">FINISH</string>
 </resources>

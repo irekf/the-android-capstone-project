@@ -28,14 +28,26 @@ public class SignUpFragment extends Fragment {
         mTabHost = (FragmentTabHost)rootView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.sign_up_tab_content);
 
-        mTabHost.addTab(mTabHost.newTabSpec("step1").setIndicator("STEP 1"),
-                Fragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("step2").setIndicator("STEP 2"),
-                Fragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("finish").setIndicator("FINISH"),
-                Fragment.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec("tab1").setIndicator(getString(R.string.sign_up_tab_1)),
+                SignUpTab1.class, null
+        );
+        mTabHost.addTab(
+                mTabHost.newTabSpec("tab2").setIndicator(getString(R.string.sign_up_tab_2)),
+                SignUpTab2.class, null
+        );
+        mTabHost.addTab(
+                mTabHost.newTabSpec("tab3").setIndicator(getString(R.string.sign_up_tab_3)),
+                SignUpTab3.class, null
+        );
+
+        mTabHost.getTabWidget().setEnabled(false);
 
         return rootView;
+    }
+
+    public FragmentTabHost getTabHost() {
+        return mTabHost;
     }
 
 }
