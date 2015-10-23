@@ -15,4 +15,8 @@
     <string name="sign_up_tab_1">STEP 1</string>
     <string name="sign_up_tab_2">STEP 2</string>
     <string name="sign_up_tab_3">FINISH</string>
+    <string name="label_follower">FOLLOWER</string>
+    <string name="label_teen">TEEN</string>
+
+
 </resources>
