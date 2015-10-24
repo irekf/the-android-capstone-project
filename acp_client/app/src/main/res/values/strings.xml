@@ -17,6 +17,12 @@
     <string name="sign_up_tab_3">FINISH</string>
     <string name="label_follower">FOLLOWER</string>
     <string name="label_teen">TEEN</string>
+    <string name="prompt_first_name">First Name</string>
+    <string name="prompt_second_name">Second Name</string>
+    <string name="prompt_email">E-Mail</string>
+    <string name="prompt_birth_date">Date of Birth</string>
+    <string name="prompt_password2">Re-enter Password</string>
+    <string name="prompt_mrn">Medical Record Number</string>
 
 
 </resources>

@@ -50,6 +50,54 @@
                 android:layout_alignParentEnd="true"
                 android:layout_toEndOf="@+id/anchor" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:id="@+id/sign_up_tab_1_first_name_edit_text"
+                android:hint="@string/prompt_first_name"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_below="@+id/sign_up_tab_1_teen_button"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="30dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:id="@+id/sign_up_tab_1_second_name_edit_text"
+                android:hint="@string/prompt_second_name"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_below="@+id/sign_up_tab_1_first_name_edit_text"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="30dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/sign_up_tab_1_birth_date_edit_text"
+                android:hint="@string/prompt_birth_date"
+                android:layout_below="@+id/sign_up_tab_1_second_name_edit_text"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="30dp"
+                android:focusable="false" />
+
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="textEmailAddress"-->
+                <!--android:id="@+id/sign_up_tab_1_email_edit_text"-->
+                <!--android:hint="@string/prompt_email"-->
+                <!--android:maxLines="1"-->
+                <!--android:singleLine="true"-->
+                <!--android:layout_below="@+id/sign_up_tab_1_second_name_edit_text"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_marginTop="30dp" />-->
+
         </RelativeLayout>
 
     </ScrollView>

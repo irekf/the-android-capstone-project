@@ -1,5 +1,6 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -7,9 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.acpcoursera.diabetesmanagment.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SignUpTab1 extends Fragment {
 
@@ -19,6 +26,11 @@ public class SignUpTab1 extends Fragment {
     private ToggleButton mTeenButton;
     private ToggleButton mFollowerButton;
 
+    private EditText mFirstNameEditText;
+    private EditText mSecondNameEditText;
+
+    private EditText mBirthDateEditText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -26,6 +38,7 @@ public class SignUpTab1 extends Fragment {
 
         mTabHost = ((SignUpFragment) getParentFragment()).getTabHost();
 
+        // next button
         Button nextButton = (Button) rootView.findViewById(R.id.sign_up_tab_1_next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +49,7 @@ public class SignUpTab1 extends Fragment {
             }
         });
 
+        // Teen vs Follower
         mTeenButton = (ToggleButton) rootView.findViewById(R.id.sign_up_tab_1_teen_button);
         mFollowerButton = (ToggleButton) rootView.findViewById(R.id.sign_up_tab_1_follower_button);
 
@@ -56,6 +70,39 @@ public class SignUpTab1 extends Fragment {
                 mTeenButton.setChecked(false);
             }
         });
+
+        // first and second names
+        mFirstNameEditText = (EditText) rootView.findViewById(R.id.sign_up_tab_1_first_name_edit_text);
+        mSecondNameEditText = (EditText) rootView.findViewById(R.id.sign_up_tab_1_second_name_edit_text);
+
+        // date of birth handling
+        mBirthDateEditText = (EditText) rootView.findViewById(R.id.sign_up_tab_1_birth_date_edit_text);
+
+        final Calendar myCalendar = Calendar.getInstance();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                // update birth date
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
+                mBirthDateEditText.setText(dateFormat.format(myCalendar.getTime()));
+
+            }
+        };
+
+        mBirthDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
 
         return rootView;
     }
