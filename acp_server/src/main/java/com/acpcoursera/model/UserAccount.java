@@ -1,4 +1,4 @@
-package com.acpcoursera;
+package com.acpcoursera.model;
 
 import java.util.Collection;
 
