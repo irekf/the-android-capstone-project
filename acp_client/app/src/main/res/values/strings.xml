@@ -33,6 +33,8 @@
     <string name="enter_email">Enter your e-mail</string>
     <string name="enter_password2">Re-enter your password</string>
     <string name="passwords_incorrect">Passwords don\'t match</string>
+    <string name="sign_up_error">Sign Up error:</string>
+    <string name="error_null_http_client">HTTP client null</string>
 
 
 </resources>

@@ -4,12 +4,19 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.DmService;
+import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
+import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.util.NetUtils;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
+
+import retrofit.Call;
+import retrofit.Response;
 
 public class NetOpsService extends IntentService {
 
@@ -21,6 +28,9 @@ public class NetOpsService extends IntentService {
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
     public static String EXTRA_ACCESS_TOKEN = "access_token";
+
+    public static String EXTRA_USER_INFO = "user_info";
+
     public static String EXTRA_ERROR_MESSAGE = "error_message";
 
     public static String RESULT_CODE = "result_code";
@@ -29,6 +39,7 @@ public class NetOpsService extends IntentService {
     public static int RC_MISSING = 16;
 
     public static OkHttpClient httpClient;
+    private static DmServiceProxy dmService;
 
     public NetOpsService() {
         super("NetOpsService");
@@ -44,6 +55,11 @@ public class NetOpsService extends IntentService {
                 e.printStackTrace();
             }
         }
+
+        if (dmService == null) {
+
+        }
+
     }
 
     @Override
@@ -69,6 +85,16 @@ public class NetOpsService extends IntentService {
                 }
             }
             else if (action.equals(ACTION_SIGN_UP)) {
+                DmServiceProxy svc = DmService.createService(httpClient);
+                UserInfo signUpInfo = intent.getParcelableExtra(EXTRA_USER_INFO);
+                Call<String> call = svc.signUp(signUpInfo);
+
+                // TODO handle properly
+                try {
+                    Response<String> response = call.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
             else {
@@ -77,7 +103,7 @@ public class NetOpsService extends IntentService {
         }
         else {
             broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-            broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, "HTTP client null");
+            broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, getString(R.string.error_null_http_client));
         }
 
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);

@@ -110,7 +110,7 @@ public class LogInFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 
-    public class NetOpsReceiver extends BroadcastReceiver {
+    private class NetOpsReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

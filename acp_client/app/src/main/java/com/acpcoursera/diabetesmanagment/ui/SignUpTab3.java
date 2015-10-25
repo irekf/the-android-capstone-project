@@ -1,8 +1,13 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 
 public class SignUpTab3 extends Fragment {
 
@@ -25,6 +31,8 @@ public class SignUpTab3 extends Fragment {
     private EditText mPassword;
     private EditText mPassword2;
     private EditText mEmail;
+
+    private NetOpsReceiver mReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +84,50 @@ public class SignUpTab3 extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mReceiver = new NetOpsReceiver();
+        IntentFilter filter = new IntentFilter(TAG);
+        filter.addAction(NetOpsService.ACTION_SIGN_UP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+    }
+
+    private class NetOpsReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
+            if (action.equals(NetOpsService.ACTION_SIGN_UP)) {
+                if (resultCode == NetOpsService.RC_OK) {
+                    Toast.makeText(getActivity(), "Signed Up successfully", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    setUiEnabled(true);
+                    Toast.makeText(
+                            getActivity(),
+                            getActivity().getString(R.string.sign_up_error) +
+                                    intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+
+        }
+    }
+
+    private void setUiEnabled(boolean isEnabled) {
+    }
+
     private boolean isInputValid() {
         boolean isValid  = true;
         if (TextUtils.isEmpty(mUserName.getText().toString().trim())) {
@@ -111,13 +163,19 @@ public class SignUpTab3 extends Fragment {
 
     private void updateSignUpInfo() {
         UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
-        signUpInfo.setUserName(mUserName.getText().toString().trim());
+        signUpInfo.setUsername(mUserName.getText().toString().trim());
         signUpInfo.setPassword(mPassword.getText().toString().trim());
         signUpInfo.setEmail(mEmail.getText().toString().trim());
     }
 
     private void submitSignUpInfo() {
         UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
+
+        Intent intent = new Intent(getActivity(), NetOpsService.class);
+        intent.setAction(NetOpsService.ACTION_SIGN_UP);
+        intent.putExtra(NetOpsService.EXTRA_USER_INFO, signUpInfo);
+        getActivity().startService(intent);
+
         Toast.makeText(
                 getActivity(),
                 "Data submitted: " + signUpInfo.toString(),

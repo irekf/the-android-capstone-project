@@ -7,26 +7,26 @@ public class UserInfo implements Parcelable {
 
     private static String TAG = UserInfo.class.getSimpleName();
 
-    private String mFirstName;
-    private String mSecondName;
-    private String mBirthDate;
-    private String mMedicalRecordNumber;
-    private String mUserName;
-    private String mPassword;
-    private String mEmail;
+    private String firstName;
+    private String secondName;
+    private String birthDate;
+    private String medicalRecordNumber;
+    private String username;
+    private String password;
+    private String email;
 
     public UserInfo() {
 
     }
 
     protected UserInfo(Parcel in) {
-        mFirstName = in.readString();
-        mSecondName = in.readString();
-        mBirthDate = in.readString();
-        mMedicalRecordNumber = in.readString();
-        mUserName = in.readString();
-        mPassword = in.readString();
-        mEmail = in.readString();
+        firstName = in.readString();
+        secondName = in.readString();
+        birthDate = in.readString();
+        medicalRecordNumber = in.readString();
+        username = in.readString();
+        password = in.readString();
+        email = in.readString();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
@@ -48,77 +48,77 @@ public class UserInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mFirstName);
-        dest.writeString(mSecondName);
-        dest.writeString(mBirthDate);
-        dest.writeString(mMedicalRecordNumber);
-        dest.writeString(mUserName);
-        dest.writeString(mPassword);
-        dest.writeString(mEmail);
+        dest.writeString(firstName);
+        dest.writeString(secondName);
+        dest.writeString(birthDate);
+        dest.writeString(medicalRecordNumber);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(email);
     }
 
     // getter and setter of user info fields
     public String getFirstName() {
-        return mFirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        mFirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getSecondName() {
-        return mSecondName;
+        return secondName;
     }
 
     public void setSecondName(String secondName) {
-        mSecondName = secondName;
+        this.secondName = secondName;
     }
 
     public String getBirthDate() {
-        return mBirthDate;
+        return birthDate;
     }
 
     public void setBirthDate(String birthDate) {
-        mBirthDate = birthDate;
+        this.birthDate = birthDate;
     }
 
     public String getMedicalRecordNumber() {
-        return mMedicalRecordNumber;
+        return medicalRecordNumber;
     }
 
     public void setMedicalRecordNumber(String medicalRecordNumber) {
-        mMedicalRecordNumber = medicalRecordNumber;
+        this.medicalRecordNumber = medicalRecordNumber;
     }
 
-    public String getUserName() {
-        return mUserName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        mUserName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
-        return mPassword;
+        return password;
     }
 
     public void setPassword(String password) {
-        mPassword = password;
+        this.password = password;
     }
 
     public String getEmail() {
-        return mEmail;
+        return email;
     }
 
     public void setEmail(String email) {
-        mEmail = email;
+        this.email = email;
     }
 
     @Override
     public String toString() {
-        return "First name: " + mFirstName + ", Second name: " + mSecondName + ", Birth date: "
-                + mBirthDate + ", MRN: " + mMedicalRecordNumber + ", User name: " + mUserName
-                + ", Password: " + mPassword + ", e-mail: " + mEmail;
+        return "First name: " + firstName + ", Second name: " + secondName + ", Birth date: "
+                + birthDate + ", MRN: " + medicalRecordNumber + ", User name: " + username
+                + ", Password: " + password + ", e-mail: " + email;
     }
 
 }
