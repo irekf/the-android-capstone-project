@@ -8,16 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserInfo;
 
 public class SignUpFragment extends Fragment {
 
     private static String TAG = SignUpFragment.class.getSimpleName();
+
+    private UserInfo signUpInfo;
+    private static String SIGN_UP_INFO_KEY = "sign_up_info_key";
 
     private FragmentTabHost mTabHost;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            signUpInfo = savedInstanceState.getParcelable(SIGN_UP_INFO_KEY);
+        }
+        else {
+            signUpInfo = new UserInfo();
+        }
+
     }
 
     @Override
@@ -44,6 +56,16 @@ public class SignUpFragment extends Fragment {
         mTabHost.getTabWidget().setEnabled(false);
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SIGN_UP_INFO_KEY, signUpInfo);
+    }
+
+    public UserInfo getSignUpInfo() {
+        return signUpInfo;
     }
 
     public FragmentTabHost getTabHost() {

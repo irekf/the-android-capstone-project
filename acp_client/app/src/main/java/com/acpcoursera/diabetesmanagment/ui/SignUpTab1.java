@@ -4,15 +4,19 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +27,7 @@ public class SignUpTab1 extends Fragment {
     private static String TAG = SignUpTab1.class.getSimpleName();
 
     private FragmentTabHost mTabHost;
+
     private ToggleButton mTeenButton;
     private ToggleButton mFollowerButton;
 
@@ -44,6 +49,7 @@ public class SignUpTab1 extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isInputValid()) {
+                    updateSignUpInfo();
                     mTabHost.setCurrentTab(mTabHost.getCurrentTab() + 1);
                 }
             }
@@ -108,7 +114,27 @@ public class SignUpTab1 extends Fragment {
     }
 
     private boolean isInputValid() {
-        return true;
+        boolean isValid  = true;
+        if (TextUtils.isEmpty(mFirstNameEditText.getText().toString().trim())) {
+            Toast.makeText(getActivity(), R.string.enter_first_name, Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        else if (TextUtils.isEmpty(mSecondNameEditText.getText().toString().trim())) {
+            Toast.makeText(getActivity(), R.string.enter_second_name, Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        else if (TextUtils.isEmpty(mBirthDateEditText.getText().toString().trim())) {
+            Toast.makeText(getActivity(), R.string.enter_birth_date, Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private void updateSignUpInfo() {
+        UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
+        signUpInfo.setFirstName(mFirstNameEditText.getText().toString().trim());
+        signUpInfo.setSecondName(mSecondNameEditText.getText().toString().trim());
+        signUpInfo.setBirthDate(mBirthDateEditText.getText().toString().trim());
     }
 
 }

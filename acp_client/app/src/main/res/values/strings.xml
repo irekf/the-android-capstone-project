@@ -23,6 +23,16 @@
     <string name="prompt_birth_date">Date of Birth</string>
     <string name="prompt_password2">Re-enter Password</string>
     <string name="prompt_mrn">Medical Record Number</string>
+    <string name="login_error">"Login error: "</string>
+    <string name="enter_username">Enter user name</string>
+    <string name="enter_password">Enter password</string>
+    <string name="enter_first_name">Enter first name</string>
+    <string name="enter_second_name">Enter second name</string>
+    <string name="enter_birth_date">Enter date of birth</string>
+    <string name="enter_mrn">Enter medical record number</string>
+    <string name="enter_email">Enter your e-mail</string>
+    <string name="enter_password2">Re-enter your password</string>
+    <string name="passwords_incorrect">Passwords don\'t match</string>
 
 
 </resources>

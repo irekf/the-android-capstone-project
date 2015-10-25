@@ -3,19 +3,26 @@ package com.acpcoursera.diabetesmanagment.ui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserInfo;
 
 public class SignUpTab2 extends Fragment {
 
     private static String TAG = SignUpTab2.class.getSimpleName();
 
     private FragmentTabHost mTabHost;
+
+    private EditText mMedicalRecordNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,11 +31,13 @@ public class SignUpTab2 extends Fragment {
 
         mTabHost = ((SignUpFragment) getParentFragment()).getTabHost();
 
+        // next and back buttons
         Button nextButton = (Button) rootView.findViewById(R.id.sign_up_tab_2_next_button);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isInputValid()) {
+                    updateSignUpInfo();
                     mTabHost.setCurrentTab(mTabHost.getCurrentTab() + 1);
                 }
             }
@@ -56,11 +65,23 @@ public class SignUpTab2 extends Fragment {
             }
         });
 
+        // medical record number
+        mMedicalRecordNumber = (EditText) rootView.findViewById(R.id.sign_up_tab_2_mrn_edit_text);
+
         return rootView;
     }
 
     private boolean isInputValid() {
+        if (TextUtils.isEmpty(mMedicalRecordNumber.getText().toString().trim())) {
+            Toast.makeText(getActivity(), R.string.enter_mrn, Toast.LENGTH_SHORT);
+            return false;
+        }
         return true;
+    }
+
+    private void updateSignUpInfo() {
+        UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
+        signUpInfo.setMedicalRecordNumber(mMedicalRecordNumber.getText().toString().trim());
     }
 
 }

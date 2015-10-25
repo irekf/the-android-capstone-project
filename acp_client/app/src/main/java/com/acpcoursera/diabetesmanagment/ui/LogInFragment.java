@@ -129,7 +129,7 @@ public class LogInFragment extends Fragment {
                     setUiEnabled(true);
                     Toast.makeText(
                             getActivity(),
-                            "Login error: " +
+                            getActivity().getString(R.string.login_error) +
                                     intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
                             Toast.LENGTH_SHORT
                     ).show();
@@ -143,7 +143,7 @@ public class LogInFragment extends Fragment {
         if (mUserName.getText().toString().isEmpty()) {
             Toast.makeText(
                     getActivity(),
-                    "Enter user name",
+                    R.string.enter_username,
                     Toast.LENGTH_SHORT
             ).show();
             return false;
@@ -151,7 +151,7 @@ public class LogInFragment extends Fragment {
         else if (mPassword.getText().toString().isEmpty()) {
             Toast.makeText(
                     getActivity(),
-                    "Enter password",
+                    R.string.enter_password,
                     Toast.LENGTH_SHORT
             ).show();
             return false;
