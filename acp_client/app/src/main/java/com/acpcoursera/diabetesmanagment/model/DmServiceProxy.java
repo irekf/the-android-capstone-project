@@ -11,7 +11,7 @@ public interface DmServiceProxy {
     public final static String DM_SVC_SIGN_UP_PATH = "/signup";
 
     @POST(DM_SVC_SIGN_UP_PATH)
-    public Call<String> signUp(@Body UserInfo info);
+    public Call<Void> signUp(@Body UserInfo info);
 
     @GET("/print/{text}")
     public Void printText(@Path("text") String text);

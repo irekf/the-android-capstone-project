@@ -35,6 +35,9 @@
     <string name="passwords_incorrect">Passwords don\'t match</string>
     <string name="sign_up_error">Sign Up error:</string>
     <string name="error_null_http_client">HTTP client null</string>
+    <string name="prompt_loading">Loading...</string>
+    <string name="prompt_please_wait">Please, wait.</string>
+    <string name="account_created">New account created</string>
 
 
 </resources>

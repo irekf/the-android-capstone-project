@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +131,7 @@ public class SignUpTab1 extends Fragment {
 
     private void updateSignUpInfo() {
         UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
+        signUpInfo.setAccountType(mTeenButton.isChecked() ? UserInfo.TYPE_TEEN : UserInfo.TYPE_FOLLOWER);
         signUpInfo.setFirstName(mFirstNameEditText.getText().toString().trim());
         signUpInfo.setSecondName(mSecondNameEditText.getText().toString().trim());
         signUpInfo.setBirthDate(mBirthDateEditText.getText().toString().trim());

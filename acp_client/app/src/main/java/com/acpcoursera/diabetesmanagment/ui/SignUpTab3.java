@@ -108,8 +108,12 @@ public class SignUpTab3 extends Fragment {
             String action = intent.getAction();
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
             if (action.equals(NetOpsService.ACTION_SIGN_UP)) {
+
+                ProgressDialogFragment.dismiss(getActivity());
+
                 if (resultCode == NetOpsService.RC_OK) {
-                    Toast.makeText(getActivity(), "Signed Up successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.account_created, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), AuthActivity.class));
                 }
                 else {
                     Toast.makeText(
@@ -121,9 +125,8 @@ public class SignUpTab3 extends Fragment {
                 }
             }
 
-            ProgressDialogFragment.dismiss(getActivity());
-
         }
+
     }
 
     private boolean isInputValid() {

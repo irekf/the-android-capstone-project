@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
@@ -65,6 +66,14 @@ public class NetOpsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        if (AcpPreferences.NET_DELAY_SEC != 0) {
+            try {
+                Thread.sleep(AcpPreferences.NET_DELAY_SEC * 1000, 0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         String action = intent.getAction();
         Intent broadcastIntent = new Intent();
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -87,21 +96,26 @@ public class NetOpsService extends IntentService {
             else if (action.equals(ACTION_SIGN_UP)) {
                 DmServiceProxy svc = DmService.createService(httpClient);
                 UserInfo signUpInfo = intent.getParcelableExtra(EXTRA_USER_INFO);
-                Call<String> call = svc.signUp(signUpInfo);
-
-                // TODO handle properly
+                Call<Void> call = svc.signUp(signUpInfo);
                 try {
-                    Response<String> response = call.execute();
-                } catch (Exception e) {
+                    Response<Void> response = call.execute();
+                    if (response.code() < 200 || response.code() > 299) {
+                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
+                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+                    }
+                    else {
+                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
+                    }
+                } catch (IOException e) {
+                    broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
+                    broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
                     e.printStackTrace();
                 }
-
             }
             else {
 
             }
-        }
-        else {
+        } else {
             broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
             broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, getString(R.string.error_null_http_client));
         }

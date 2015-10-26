@@ -7,6 +7,10 @@ public class UserInfo implements Parcelable {
 
     private static String TAG = UserInfo.class.getSimpleName();
 
+    public static String TYPE_TEEN  = "teen";
+    public static String TYPE_FOLLOWER  = "follower";
+
+    private String accountType;
     private String firstName;
     private String secondName;
     private String birthDate;
@@ -20,6 +24,7 @@ public class UserInfo implements Parcelable {
     }
 
     protected UserInfo(Parcel in) {
+        accountType = in.readString();
         firstName = in.readString();
         secondName = in.readString();
         birthDate = in.readString();
@@ -48,6 +53,7 @@ public class UserInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(accountType);
         dest.writeString(firstName);
         dest.writeString(secondName);
         dest.writeString(birthDate);
@@ -58,6 +64,14 @@ public class UserInfo implements Parcelable {
     }
 
     // getter and setter of user info fields
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -118,7 +132,7 @@ public class UserInfo implements Parcelable {
     public String toString() {
         return "First name: " + firstName + ", Second name: " + secondName + ", Birth date: "
                 + birthDate + ", MRN: " + medicalRecordNumber + ", User name: " + username
-                + ", Password: " + password + ", e-mail: " + email;
+                + ", Password: " + password + ", e-mail: " + email + ", Type: " + accountType;
     }
 
 }
