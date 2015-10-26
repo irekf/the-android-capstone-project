@@ -1,6 +1,8 @@
 package com.acpcoursera.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Controller;
@@ -27,14 +29,14 @@ public class TestController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public @ResponseBody String signupTest(@RequestBody UserInfo info) {
+    public ResponseEntity<Void> signupTest(@RequestBody UserInfo info) {
 
         System.out.println(info);
 
 //        userDetailsManager.createUser(new UserAccount("user2", passwordEncoder.encode("pass2"), "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT"));
 //        userDetailsManager.createUser(new UserAccount("user3", passwordEncoder.encode("pass3"), "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT"));
 
-        return "you sent some user info";
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 }

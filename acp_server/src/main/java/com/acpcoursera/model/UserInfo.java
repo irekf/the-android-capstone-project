@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserInfo implements UserDetails {
 
+    private String accountType;
     private String firstName;
     private String secondName;
     private String birthDate;
@@ -18,6 +19,14 @@ public class UserInfo implements UserDetails {
 
     private String username;
     private String password;
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -120,7 +129,7 @@ public class UserInfo implements UserDetails {
     public String toString() {
         return "First name: " + firstName + ", Second name: " + secondName + ", Birth date: "
                 + birthDate + ", MRN: " + medicalRecordNumber + ", User name: " + username
-                + ", Password: " + password + ", e-mail: " + email;
+                + ", Password: " + password + ", e-mail: " + email + ", Type: " + accountType;
     }
 
 }
