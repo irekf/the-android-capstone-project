@@ -31,10 +31,14 @@ public class TestController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<Void> signupTest(@RequestBody UserInfo info) {
 
-        System.out.println(info);
+        if (userDetailsManager.userExists(info.getUsername())) {
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        }
 
-//        userDetailsManager.createUser(new UserAccount("user2", passwordEncoder.encode("pass2"), "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT"));
-//        userDetailsManager.createUser(new UserAccount("user3", passwordEncoder.encode("pass3"), "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT"));
+        info.setAuthorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT");
+        info.setPassword(passwordEncoder.encode(info.getPassword()));
+
+        userDetailsManager.createUser(info);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

@@ -178,6 +178,12 @@ public class SignUpTab3 extends Fragment {
         getActivity().startService(intent);
 
         ProgressDialogFragment.show(getActivity());
+
+        Toast.makeText(
+                getActivity(),
+                "Data submitted: " + signUpInfo.toString(),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
 }

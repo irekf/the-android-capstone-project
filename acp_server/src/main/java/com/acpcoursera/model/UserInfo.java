@@ -72,6 +72,11 @@ public class UserInfo implements UserDetails {
     @JsonIgnore
     private Collection<GrantedAuthority> authorities;
 
+    @JsonIgnore
+    public void setAuthorities(String...authorities) {
+        this.authorities = AuthorityUtils.createAuthorityList(authorities);
+    }
+
     public UserInfo() {
     }
 
