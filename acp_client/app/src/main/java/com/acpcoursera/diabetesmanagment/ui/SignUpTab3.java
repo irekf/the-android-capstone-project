@@ -112,7 +112,6 @@ public class SignUpTab3 extends Fragment {
                     Toast.makeText(getActivity(), "Signed Up successfully", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    setUiEnabled(true);
                     Toast.makeText(
                             getActivity(),
                             getActivity().getString(R.string.sign_up_error) +
@@ -122,10 +121,9 @@ public class SignUpTab3 extends Fragment {
                 }
             }
 
-        }
-    }
+            ProgressDialogFragment.dismiss(getActivity());
 
-    private void setUiEnabled(boolean isEnabled) {
+        }
     }
 
     private boolean isInputValid() {
@@ -175,6 +173,8 @@ public class SignUpTab3 extends Fragment {
         intent.setAction(NetOpsService.ACTION_SIGN_UP);
         intent.putExtra(NetOpsService.EXTRA_USER_INFO, signUpInfo);
         getActivity().startService(intent);
+
+        ProgressDialogFragment.show(getActivity());
 
         Toast.makeText(
                 getActivity(),

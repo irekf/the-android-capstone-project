@@ -1,12 +1,11 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
-import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +35,6 @@ public class LogInFragment extends Fragment {
     private EditText mPassword;
 
     private NetOpsReceiver mReceiver;
-
-    private boolean mUiEnabled = true;
-    private static String UI_ENABLED_KEY = "ui_enabled_key";
 
     @Override
          public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +66,7 @@ public class LogInFragment extends Fragment {
                 if (!areCredentialsValid()) {
                     return;
                 }
-                setUiEnabled(false);
+                ProgressDialogFragment.show(getActivity());
                 // let's try to log in, i.e. get an access token
                 Intent intent = new Intent(getActivity(), NetOpsService.class);
                 intent.setAction(NetOpsService.ACTION_LOG_IN);
@@ -80,18 +76,6 @@ public class LogInFragment extends Fragment {
             }
         });
 
-        // check if UI is greyed out because logging in is in progress
-        if (savedInstanceState != null) {
-            mUiEnabled = savedInstanceState.getBoolean(UI_ENABLED_KEY);
-            setUiEnabled(mUiEnabled);
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(UI_ENABLED_KEY, mUiEnabled);
     }
 
     @Override
@@ -126,7 +110,7 @@ public class LogInFragment extends Fragment {
                     startActivity(mainActivityIntent);
                 }
                 else {
-                    setUiEnabled(true);
+                    ProgressDialogFragment.dismiss(getActivity());
                     Toast.makeText(
                             getActivity(),
                             getActivity().getString(R.string.login_error) +
@@ -157,17 +141,6 @@ public class LogInFragment extends Fragment {
             return false;
         }
         return true;
-    }
-
-    private void setUiEnabled(boolean enabled) {
-        mUiEnabled = enabled;
-        mLogInButton.setClickable(enabled);
-        mSignUpButton.setClickable(enabled);
-        mUserName.setEnabled(enabled);
-        mPassword.setEnabled(enabled);
-        int textColor = enabled ? Color.BLACK : Color.GRAY;
-        mLogInButton.setTextColor(textColor);
-        mSignUpButton.setTextColor(textColor);
     }
 
 }
