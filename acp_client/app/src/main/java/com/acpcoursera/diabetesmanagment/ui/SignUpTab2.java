@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
 public class SignUpTab2 extends Fragment {
 
@@ -73,7 +73,7 @@ public class SignUpTab2 extends Fragment {
 
     private boolean isInputValid() {
         if (TextUtils.isEmpty(mMedicalRecordNumber.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_mrn, Toast.LENGTH_SHORT);
+            showToast(getActivity(), R.string.enter_mrn);
             return false;
         }
         return true;

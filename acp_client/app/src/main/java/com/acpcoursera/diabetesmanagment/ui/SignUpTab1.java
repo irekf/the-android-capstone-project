@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.acpcoursera.diabetesmanagment.R;
@@ -20,6 +19,8 @@ import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
 public class SignUpTab1 extends Fragment {
 
@@ -115,15 +116,15 @@ public class SignUpTab1 extends Fragment {
     private boolean isInputValid() {
         boolean isValid  = true;
         if (TextUtils.isEmpty(mFirstNameEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_first_name, Toast.LENGTH_SHORT).show();
+            showToast(getActivity(), R.string.enter_first_name);
             isValid = false;
         }
         else if (TextUtils.isEmpty(mSecondNameEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_second_name, Toast.LENGTH_SHORT).show();
+            showToast(getActivity(), R.string.enter_second_name);
             isValid = false;
         }
         else if (TextUtils.isEmpty(mBirthDateEditText.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_birth_date, Toast.LENGTH_SHORT).show();
+            showToast(getActivity(), R.string.enter_birth_date);
             isValid = false;
         }
         return isValid;

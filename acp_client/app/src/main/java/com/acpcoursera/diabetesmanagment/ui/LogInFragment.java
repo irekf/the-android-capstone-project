@@ -12,13 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
 public class LogInFragment extends Fragment {
 
@@ -114,12 +114,8 @@ public class LogInFragment extends Fragment {
                 }
                 else {
                     ProgressDialogFragment.dismiss(getActivity());
-                    Toast.makeText(
-                            getActivity(),
-                            getActivity().getString(R.string.login_error) +
-                                    intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    showToast(getActivity(), getString(R.string.login_error) +
+                                    intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
                 }
             }
 
@@ -128,19 +124,11 @@ public class LogInFragment extends Fragment {
 
     private boolean areCredentialsValid() {
         if (mUserName.getText().toString().isEmpty()) {
-            Toast.makeText(
-                    getActivity(),
-                    R.string.enter_username,
-                    Toast.LENGTH_SHORT
-            ).show();
+            showToast(getActivity(), R.string.enter_username);
             return false;
         }
         else if (mPassword.getText().toString().isEmpty()) {
-            Toast.makeText(
-                    getActivity(),
-                    R.string.enter_password,
-                    Toast.LENGTH_SHORT
-            ).show();
+            showToast(getActivity(), R.string.enter_password);
             return false;
         }
         return true;

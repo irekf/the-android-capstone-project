@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
 public class SignUpTab3 extends Fragment {
 
@@ -115,16 +115,12 @@ public class SignUpTab3 extends Fragment {
                 ProgressDialogFragment.dismiss(getActivity());
 
                 if (resultCode == NetOpsService.RC_OK) {
-                    Toast.makeText(getActivity(), R.string.account_created, Toast.LENGTH_SHORT).show();
+                    showToast(getActivity(), R.string.account_created);
                     startActivity(new Intent(getActivity(), AuthActivity.class));
                 }
                 else {
-                    Toast.makeText(
-                            getActivity(),
-                            getActivity().getString(R.string.sign_up_error) +
-                                    intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    showToast(getActivity(), getString(R.string.sign_up_error) +
+                            intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
                 }
             }
 
@@ -135,27 +131,26 @@ public class SignUpTab3 extends Fragment {
     private boolean isInputValid() {
         boolean isValid  = true;
         if (TextUtils.isEmpty(mUserName.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_username, Toast.LENGTH_SHORT).show();
+            showToast(getActivity(), R.string.enter_username);
             isValid = false;
         }
         else if (TextUtils.isEmpty(mEmail.getText().toString().trim())) {
-            Toast.makeText(getActivity(), R.string.enter_email, Toast.LENGTH_SHORT).show();
+            showToast(getActivity(), R.string.enter_email);
             isValid = false;
         }
         else {
             String pwd1 = mPassword.getText().toString();
             String pwd2 = mPassword2.getText().toString();
             if (pwd1.isEmpty()) {
-                Toast.makeText(getActivity(), R.string.enter_password, Toast.LENGTH_SHORT).show();
+                showToast(getActivity(), R.string.enter_password);
                 isValid = false;
             }
             else if (pwd2.isEmpty()) {
-                Toast.makeText(getActivity(), R.string.enter_password2, Toast.LENGTH_SHORT).show();
+                showToast(getActivity(), R.string.enter_password2);
                 isValid = false;
             }
             else if (!pwd1.equals(pwd2)) {
-                Toast.makeText(getActivity(), R.string.passwords_incorrect, Toast.LENGTH_SHORT)
-                        .show();
+                showToast(getActivity(), R.string.passwords_incorrect);
                 mPassword.setText("");
                 mPassword.requestFocus();
                 mPassword2.setText("");
