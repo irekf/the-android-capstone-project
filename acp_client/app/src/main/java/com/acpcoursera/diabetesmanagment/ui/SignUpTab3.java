@@ -21,6 +21,8 @@ import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
+
 public class SignUpTab3 extends Fragment {
 
     private static String TAG = SignUpTab3.class.getSimpleName();
@@ -47,6 +49,7 @@ public class SignUpTab3 extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isInputValid()) {
+                    hideKeyboard(getActivity(), getView());
                     updateSignUpInfo();
                     submitSignUpInfo();
                 }

@@ -18,6 +18,8 @@ import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
+
 public class LogInFragment extends Fragment {
 
     private static String TAG = LogInFragment.class.getSimpleName();
@@ -66,6 +68,7 @@ public class LogInFragment extends Fragment {
                 if (!areCredentialsValid()) {
                     return;
                 }
+                hideKeyboard(getActivity(), getView());
                 ProgressDialogFragment.show(getActivity());
                 // let's try to log in, i.e. get an access token
                 Intent intent = new Intent(getActivity(), NetOpsService.class);
