@@ -6,18 +6,23 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
+import com.acpcoursera.diabetesmanagment.model.AccessToken;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.util.NetUtils;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 
-import javax.security.auth.login.LoginException;
-
 import retrofit.Call;
 import retrofit.Response;
+
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_ID;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SERVER_CLIENT_SECRET;
 
 public class NetOpsService extends IntentService {
 
@@ -81,13 +86,24 @@ public class NetOpsService extends IntentService {
 
         if (httpClient != null) {
             if (action.equals(ACTION_LOG_IN)) {
+                DmServiceProxy svc = DmService.createService(httpClient);
                 String userName = intent.getStringExtra(EXTRA_USER_NAME);
                 String password = intent.getStringExtra(EXTRA_PASSWORD);
+                Call<AccessToken> call =
+                        svc.login(Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
+                                userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET);
                 try {
-                    String accessToken = NetUtils.getAccessToken(httpClient, userName, password);
-                    broadcastIntent.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
-                    broadcastIntent.putExtra(RESULT_CODE, RC_OK);
-                } catch (IOException | LoginException e) {
+                    Response<AccessToken> response = call.execute();
+                    if (response.code() < 200 || response.code() > 299) {
+                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
+                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+                    }
+                    else {
+                        String accessToken = response.body().getAccessToken();
+                        broadcastIntent.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
+                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
+                    }
+                } catch (IOException e) {
                     broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
                     broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
                     e.printStackTrace();
@@ -122,4 +138,12 @@ public class NetOpsService extends IntentService {
 
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
     }
+
+    private String getGcmToken() throws IOException {
+        InstanceID instanceID = InstanceID.getInstance(this);
+        String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+                GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+        return token;
+    }
+
 }
