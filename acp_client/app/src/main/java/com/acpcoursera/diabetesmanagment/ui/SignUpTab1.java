@@ -132,7 +132,7 @@ public class SignUpTab1 extends Fragment {
 
     private void updateSignUpInfo() {
         UserInfo signUpInfo = ((SignUpFragment) getParentFragment()).getSignUpInfo();
-        signUpInfo.setAccountType(mTeenButton.isChecked() ? UserInfo.TYPE_TEEN : UserInfo.TYPE_FOLLOWER);
+        signUpInfo.setUserType(mTeenButton.isChecked() ? UserInfo.TYPE_TEEN : UserInfo.TYPE_FOLLOWER);
         signUpInfo.setFirstName(mFirstNameEditText.getText().toString().trim());
         signUpInfo.setSecondName(mSecondNameEditText.getText().toString().trim());
         signUpInfo.setBirthDate(mBirthDateEditText.getText().toString().trim());
