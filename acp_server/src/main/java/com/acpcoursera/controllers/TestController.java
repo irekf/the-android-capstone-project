@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.acpcoursera.model.UserAccount;
 import com.acpcoursera.model.UserInfo;
+import com.acpcoursera.repository.UserInfoRepository;
 
 @Controller
 public class TestController {
@@ -22,6 +24,9 @@ public class TestController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserInfoRepository usersInfo;
 
     @RequestMapping(value = "/print/{text}", method = RequestMethod.GET)
     public @ResponseBody String returnUserText(@PathVariable String text) {
@@ -35,10 +40,14 @@ public class TestController {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
         }
 
-        info.setAuthorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT");
-        info.setPassword(passwordEncoder.encode(info.getPassword()));
+        userDetailsManager.createUser(
+                new UserAccount(
+                        info.getUsername(),
+                        passwordEncoder.encode(info.getPassword()),
+                        "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+                );
 
-        userDetailsManager.createUser(info);
+        usersInfo.save(info);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

@@ -1,16 +1,18 @@
 package com.acpcoursera.model;
 
-import java.util.Collection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+@Entity
+public class UserInfo {
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+    @Id
+    @GeneratedValue
+    private Integer id;
 
-public class UserInfo implements UserDetails {
-
-    private String accountType;
+    private String userType;
     private String firstName;
     private String secondName;
     private String birthDate;
@@ -18,14 +20,23 @@ public class UserInfo implements UserDetails {
     private String email;
 
     private String username;
+    @Transient
     private String password;
 
-    public String getAccountType() {
-        return accountType;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getFirstName() {
@@ -68,31 +79,9 @@ public class UserInfo implements UserDetails {
         this.email = email;
     }
 
-
-    @JsonIgnore
-    private Collection<GrantedAuthority> authorities;
-
-    @JsonIgnore
-    public void setAuthorities(String...authorities) {
-        this.authorities = AuthorityUtils.createAuthorityList(authorities);
-    }
-
     public UserInfo() {
     }
 
-    public UserInfo(String username, String password,
-            String...authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = AuthorityUtils.createAuthorityList(authorities);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
@@ -101,7 +90,6 @@ public class UserInfo implements UserDetails {
         this.password = password;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -111,30 +99,10 @@ public class UserInfo implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
     public String toString() {
         return "First name: " + firstName + ", Second name: " + secondName + ", Birth date: "
                 + birthDate + ", MRN: " + medicalRecordNumber + ", User name: " + username
-                + ", Password: " + password + ", e-mail: " + email + ", Type: " + accountType;
+                + ", Password: " + password + ", e-mail: " + email + ", Type: " + userType;
     }
 
 }

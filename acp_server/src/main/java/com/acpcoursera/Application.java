@@ -14,13 +14,18 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.acpcoursera.config.OAuth2ServerConfig;
 import com.acpcoursera.config.SecurityConfiguration;
+import com.acpcoursera.repository.UserInfoRepository;
 
 /* Automatically inject any dependencies marked with @Autowired */
 @EnableAutoConfiguration
+
+/* Automatically create a JPA implementation of UserInfo repository */
+@EnableJpaRepositories(basePackageClasses = UserInfoRepository.class)
 
 /*
  * Enable the DispatcherServlet so that requests can be routed to our
