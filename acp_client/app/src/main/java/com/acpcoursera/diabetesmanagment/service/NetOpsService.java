@@ -3,6 +3,7 @@ package com.acpcoursera.diabetesmanagment.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
@@ -10,6 +11,7 @@ import com.acpcoursera.diabetesmanagment.model.AccessToken;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 import com.acpcoursera.diabetesmanagment.util.NetUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -45,6 +47,7 @@ public class NetOpsService extends IntentService {
     public static int RC_MISSING = 16;
 
     public static OkHttpClient httpClient;
+    private static DmServiceProxy dmServiceUnsecured;
     private static DmServiceProxy dmService;
 
     public NetOpsService() {
@@ -62,8 +65,15 @@ public class NetOpsService extends IntentService {
             }
         }
 
-        if (dmService == null) {
+        if (dmServiceUnsecured == null) {
+            dmServiceUnsecured = DmService.createService(httpClient.clone());
+        }
 
+        if (dmService == null) {
+            String accessToken = MiscUtils.readAccessToken(getApplicationContext());
+            if (accessToken != null) {
+                dmService = DmService.createService(httpClient.clone(), accessToken);
+            }
         }
 
     }
@@ -86,12 +96,13 @@ public class NetOpsService extends IntentService {
 
         if (httpClient != null) {
             if (action.equals(ACTION_LOG_IN)) {
-                DmServiceProxy svc = DmService.createService(httpClient);
                 String userName = intent.getStringExtra(EXTRA_USER_NAME);
                 String password = intent.getStringExtra(EXTRA_PASSWORD);
                 Call<AccessToken> call =
-                        svc.login(Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
-                                userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET);
+                        dmServiceUnsecured.login(
+                                Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
+                                userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET
+                        );
                 try {
                     Response<AccessToken> response = call.execute();
                     if (response.code() < 200 || response.code() > 299) {
@@ -100,8 +111,21 @@ public class NetOpsService extends IntentService {
                     }
                     else {
                         String accessToken = response.body().getAccessToken();
+                        dmService = DmService.createService(httpClient.clone(), accessToken);
                         broadcastIntent.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
                         broadcastIntent.putExtra(RESULT_CODE, RC_OK);
+
+                        // TODO remove this: test access token
+                        Call<Void> call2 = dmService.sendGcmToken(getGcmToken());
+                        try {
+                            Response<Void> resp = call2.execute();
+                            Log.d(TAG, "resp code: " + resp.code());
+                        }
+                        catch (Exception e) {
+                            Log.d(TAG, "error: " + e.getMessage());
+                        }
+
+
                     }
                 } catch (IOException e) {
                     broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
@@ -110,9 +134,8 @@ public class NetOpsService extends IntentService {
                 }
             }
             else if (action.equals(ACTION_SIGN_UP)) {
-                DmServiceProxy svc = DmService.createService(httpClient);
                 UserInfo signUpInfo = intent.getParcelableExtra(EXTRA_USER_INFO);
-                Call<Void> call = svc.signUp(signUpInfo);
+                Call<Void> call = dmServiceUnsecured.signUp(signUpInfo);
                 try {
                     Response<Void> response = call.execute();
                     if (response.code() < 200 || response.code() > 299) {

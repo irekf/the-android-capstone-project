@@ -25,4 +25,7 @@ public interface DmServiceProxy {
                                    @Query("client_id") String clientId,
                                    @Query("client_secret") String clientSecret);
 
+    @POST("/gcmtoken")
+    public Call<Void> sendGcmToken(@Query("token") String token);
+
 }

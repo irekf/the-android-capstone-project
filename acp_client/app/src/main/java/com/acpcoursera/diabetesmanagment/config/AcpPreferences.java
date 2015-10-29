@@ -8,7 +8,7 @@ public class AcpPreferences {
     public static final String CLIENT_KEYSTORE_PASS = "acppass";
 
     public static final String SERVER_SCHEME = "https";
-    public static final String SERVER_ADDRESS = "192.168.0.102";
+    public static final String SERVER_ADDRESS = "192.168.0.101";
     public static final int SERVER_PORT = 8443;
 
     // TODO: obfuscate maybe?

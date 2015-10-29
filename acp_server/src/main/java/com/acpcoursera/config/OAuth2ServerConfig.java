@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
@@ -30,6 +31,8 @@ public class OAuth2ServerConfig {
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+
+    	public static final String RESOURCE_ID = "data";
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
@@ -41,12 +44,18 @@ public class OAuth2ServerConfig {
             http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/**")
-                .access("#oauth2.hasScope('read')")
-            .and()
+                .access("#oauth2.hasScope('read')");
+
+            http
                 .authorizeRequests()
-                .antMatchers("/**")
+                .antMatchers(HttpMethod.POST, "/**")
                 .access("#oauth2.hasScope('write')");
 
+        }
+
+        @Override
+        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+             resources.resourceId(RESOURCE_ID);
         }
 
     }
@@ -66,7 +75,8 @@ public class OAuth2ServerConfig {
             return new InMemoryClientDetailsServiceBuilder()
                     .withClient("mobile").authorizedGrantTypes("password")
                     .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
-                    .scopes("read","write").resourceIds("data")
+                    .scopes("read","write")
+                    .resourceIds(ResourceServerConfiguration.RESOURCE_ID)
                     .secret("12345")
                     .accessTokenValiditySeconds(3600).and().build();
         }
