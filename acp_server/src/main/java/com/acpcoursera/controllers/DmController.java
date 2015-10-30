@@ -19,7 +19,7 @@ import com.acpcoursera.model.UserInfo;
 import com.acpcoursera.repository.UserInfoRepository;
 
 @Controller
-public class TestController {
+public class DmController {
 
     @Autowired
     private JdbcUserDetailsManager userDetailsManager;
