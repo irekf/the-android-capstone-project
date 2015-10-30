@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `authorities` (
     PRIMARY KEY (user_authority_id),
     UNIQUE KEY uni_username_authority(authority, username),
     KEY fk_username_idx(username),
-    CONSTRAINT fk_auth_username FOREIGN KEY (username) REFERENCES users(username));
+    CONSTRAINT fk_auth_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `user_info` (
     id int(11) NOT NULL AUTO_INCREMENT,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `user_info` (
     PRIMARY KEY (id),
     UNIQUE KEY uni_username(username),
     KEY fk_username_idx(username),
-    CONSTRAINT fk_info_username FOREIGN KEY (username) REFERENCES users(username));
+    CONSTRAINT fk_info_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
     
 CREATE TABLE IF NOT EXISTS `user_gcm` (
     id int(11) NOT NULL AUTO_INCREMENT,
@@ -34,4 +34,4 @@ CREATE TABLE IF NOT EXISTS `user_gcm` (
     PRIMARY KEY (id),
     UNIQUE KEY uni_username(username),
     KEY fk_username_idx(username),
-    CONSTRAINT fk_gcm_username FOREIGN KEY (username) REFERENCES users(username));
+    CONSTRAINT fk_gcm_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
