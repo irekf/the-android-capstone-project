@@ -47,9 +47,9 @@ public class NetOpsService extends IntentService {
 
     private LocalBroadcastManager mBroadcastManager;
 
-    public static OkHttpClient httpClient;
-    private static DmServiceProxy dmServiceUnsecured;
-    private static DmServiceProxy dmService;
+    public static OkHttpClient mHttpClient;
+    private static DmServiceProxy sDmServiceUnsecured;
+    private static DmServiceProxy sDmService;
 
     public NetOpsService() {
         super("NetOpsService");
@@ -58,22 +58,22 @@ public class NetOpsService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (httpClient == null) {
+        if (mHttpClient == null) {
             try {
-                httpClient = NetUtils.getSecureHttpClient(getApplicationContext());
+                mHttpClient = NetUtils.getSecureHttpClient(getApplicationContext());
             } catch (NetUtils.SecureHttpClientException e) {
                 e.printStackTrace();
             }
         }
 
-        if (dmServiceUnsecured == null) {
-            dmServiceUnsecured = DmService.createService(httpClient.clone());
+        if (sDmServiceUnsecured == null) {
+            sDmServiceUnsecured = DmService.createService(mHttpClient.clone());
         }
 
-        if (dmService == null) {
+        if (sDmService == null) {
             String accessToken = MiscUtils.readAccessToken(getApplicationContext());
             if (accessToken != null) {
-                dmService = DmService.createService(httpClient.clone(), accessToken);
+                sDmService = DmService.createService(mHttpClient.clone(), accessToken);
             }
         }
 
@@ -93,7 +93,7 @@ public class NetOpsService extends IntentService {
         }
 
         String action = intent.getAction();
-        if (httpClient != null) {
+        if (mHttpClient != null) {
             if (action.equals(ACTION_LOG_IN)) {
                 handleLogIn(intent);
             }
@@ -125,7 +125,7 @@ public class NetOpsService extends IntentService {
         String password = callerIntent.getStringExtra(EXTRA_PASSWORD);
 
         Call<AccessToken> loginCall =
-                dmServiceUnsecured.login(
+                sDmServiceUnsecured.login(
                         Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
                         userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET
                 );
@@ -139,9 +139,9 @@ public class NetOpsService extends IntentService {
             else {
 
                 String accessToken = logInResponse.body().getAccessToken();
-                dmService = DmService.createService(httpClient.clone(), accessToken);
+                sDmService = DmService.createService(mHttpClient.clone(), accessToken);
 
-                Call<Void> gcmTokenCall = dmService.sendGcmToken(getGcmToken());
+                Call<Void> gcmTokenCall = sDmService.sendGcmToken(getGcmToken());
                 Response<Void> gcmTokenResponse = gcmTokenCall.execute();
 
                 if (!gcmTokenResponse.isSuccess()) {
@@ -168,7 +168,7 @@ public class NetOpsService extends IntentService {
         Intent reply = new Intent(ACTION_LOG_OUT);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
-        Call<Void> call = dmService.logout();
+        Call<Void> call = sDmService.logout();
 
         try {
             Response<Void> response = call.execute();
@@ -188,7 +188,7 @@ public class NetOpsService extends IntentService {
 
         // clear the access token and null the DM service
         MiscUtils.saveAccessToken(getApplicationContext(), "");
-        dmService = null;
+        sDmService = null;
 
         mBroadcastManager.sendBroadcast(reply);
     }
@@ -199,7 +199,7 @@ public class NetOpsService extends IntentService {
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         UserInfo signUpInfo = callerIntent.getParcelableExtra(EXTRA_USER_INFO);
-        Call<Void> call = dmServiceUnsecured.signUp(signUpInfo);
+        Call<Void> call = sDmServiceUnsecured.signUp(signUpInfo);
 
         try {
             Response<Void> response = call.execute();
