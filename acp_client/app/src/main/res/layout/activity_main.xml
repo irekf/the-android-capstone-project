@@ -1,13 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <Button
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/left_drawer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/log_out_button"
-        android:id="@+id/log_out_button"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="start"
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <ListView android:id="@+id/left_drawer_items"
+            android:layout_width="240dp"
+            android:layout_height="0dip"
+            android:layout_weight=".9"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="#111" />
+
+        <!--TODO make this a button maybe?-->
+        <TextView
+            android:text="@string/log_out_button"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".1"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="#fff"
+            android:background="#111"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:id="@+id/log_out_button" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

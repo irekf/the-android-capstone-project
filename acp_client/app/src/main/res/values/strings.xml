@@ -40,5 +40,17 @@
     <string name="account_created">New account created</string>
     <string name="logout_error">"Logout error: "</string>
 
+    <string-array name="option_titles">
+        <item>Check-In</item>
+        <item>Feedback</item>
+        <item>Followers</item>
+        <item>Following</item>
+        <item>Messages</item>
+        <item>Reminders</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="label_main_menu">Main Menu</string>
 
 </resources>
