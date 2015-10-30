@@ -3,7 +3,6 @@ package com.acpcoursera.diabetesmanagment.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
@@ -47,6 +46,8 @@ public class NetOpsService extends IntentService {
     public static int RC_ERROR = 8;
     public static int RC_MISSING = 16;
 
+    private LocalBroadcastManager mBroadcastManager;
+
     public static OkHttpClient httpClient;
     private static DmServiceProxy dmServiceUnsecured;
     private static DmServiceProxy dmService;
@@ -77,6 +78,8 @@ public class NetOpsService extends IntentService {
             }
         }
 
+        mBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+
     }
 
     @Override
@@ -91,94 +94,126 @@ public class NetOpsService extends IntentService {
         }
 
         String action = intent.getAction();
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.setAction(action);
-
         if (httpClient != null) {
             if (action.equals(ACTION_LOG_IN)) {
-                String userName = intent.getStringExtra(EXTRA_USER_NAME);
-                String password = intent.getStringExtra(EXTRA_PASSWORD);
-                Call<AccessToken> call =
-                        dmServiceUnsecured.login(
-                                Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
-                                userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET
-                        );
-                try {
-                    Response<AccessToken> response = call.execute();
-                    if (response.code() < 200 || response.code() > 299) {
-                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
-                    }
-                    else {
-                        String accessToken = response.body().getAccessToken();
-                        dmService = DmService.createService(httpClient.clone(), accessToken);
-                        broadcastIntent.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
-                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
-
-                        // TODO remove this: test access token
-                        Call<Void> call2 = dmService.sendGcmToken(getGcmToken());
-                        try {
-                            Response<Void> resp = call2.execute();
-                            Log.d(TAG, "resp code: " + resp.code());
-                        }
-                        catch (Exception e) {
-                            Log.d(TAG, "error: " + e.getMessage());
-                        }
-
-
-                    }
-                } catch (IOException e) {
-                    broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                    broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
-                    e.printStackTrace();
-                }
+                handleLogIn(intent);
             }
             else if (action.equals(ACTION_LOG_OUT)) {
-                Call<Void> call = dmService.logout();
-                try {
-                    Response<Void> response = call.execute();
-                    if (response.code() < 200 || response.code() > 299) {
-                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
-                    }
-                    else {
-                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
-                    }
-                }
-                catch (Exception e) {
-                    broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                    broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
-                    e.printStackTrace();
-                }
+                handleLogOut(intent);
             }
             else if (action.equals(ACTION_SIGN_UP)) {
-                UserInfo signUpInfo = intent.getParcelableExtra(EXTRA_USER_INFO);
-                Call<Void> call = dmServiceUnsecured.signUp(signUpInfo);
-                try {
-                    Response<Void> response = call.execute();
-                    if (response.code() < 200 || response.code() > 299) {
-                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
-                    }
-                    else {
-                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
-                    }
-                } catch (IOException e) {
-                    broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-                    broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
-                    e.printStackTrace();
-                }
+                handleSignUp(intent);
             }
             else {
 
             }
         } else {
-            broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
-            broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, getString(R.string.error_null_http_client));
+            Intent reply = new Intent(ACTION_LOG_IN);
+            reply.addCategory(Intent.CATEGORY_DEFAULT);
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, getString(R.string.error_null_http_client));
+            mBroadcastManager.sendBroadcast(reply);
         }
 
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+    }
+
+    private void handleLogIn(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_LOG_IN);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String userName = callerIntent.getStringExtra(EXTRA_USER_NAME);
+        String password = callerIntent.getStringExtra(EXTRA_PASSWORD);
+
+        Call<AccessToken> loginCall =
+                dmServiceUnsecured.login(
+                        Credentials.basic(SERVER_CLIENT_ID, SERVER_CLIENT_SECRET),
+                        userName, password, SERVER_CLIENT_ID, SERVER_CLIENT_SECRET
+                );
+
+        try {
+            Response<AccessToken> logInResponse = loginCall.execute();
+            if (!logInResponse.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, logInResponse.message());
+            }
+            else {
+
+                String accessToken = logInResponse.body().getAccessToken();
+                dmService = DmService.createService(httpClient.clone(), accessToken);
+
+                Call<Void> gcmTokenCall = dmService.sendGcmToken(getGcmToken());
+                Response<Void> gcmTokenResponse = gcmTokenCall.execute();
+
+                if (!gcmTokenResponse.isSuccess()) {
+                    reply.putExtra(RESULT_CODE, RC_ERROR);
+                    reply.putExtra(EXTRA_ERROR_MESSAGE, gcmTokenResponse.message());
+                }
+                else {
+                    reply.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
+                    reply.putExtra(RESULT_CODE, RC_OK);
+                }
+
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleLogOut(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_LOG_OUT);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Call<Void> call = dmService.logout();
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        }
+        catch (Exception e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleSignUp(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_SIGN_UP);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        UserInfo signUpInfo = callerIntent.getParcelableExtra(EXTRA_USER_INFO);
+        Call<Void> call = dmServiceUnsecured.signUp(signUpInfo);
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
     }
 
     private String getGcmToken() throws IOException {
