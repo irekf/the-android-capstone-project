@@ -51,6 +51,9 @@ public class OAuth2ServerConfig {
                 .antMatchers(HttpMethod.POST, "/**")
                 .access("#oauth2.hasScope('write')");
 
+            // this is done in order to be able to use "/logout" URI in our controller
+            http.logout().logoutUrl("/httplogout");
+
         }
 
         @Override

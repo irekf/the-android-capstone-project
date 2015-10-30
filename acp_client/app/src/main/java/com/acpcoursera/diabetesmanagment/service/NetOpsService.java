@@ -32,6 +32,7 @@ public class NetOpsService extends IntentService {
 
     public static String ACTION_SIGN_UP = "action_sign_up";
     public static String ACTION_LOG_IN = "action_log_in";
+    public static String ACTION_LOG_OUT = "action_log_out";
 
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
@@ -128,6 +129,24 @@ public class NetOpsService extends IntentService {
 
                     }
                 } catch (IOException e) {
+                    broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
+                    broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            else if (action.equals(ACTION_LOG_OUT)) {
+                Call<Void> call = dmService.logout();
+                try {
+                    Response<Void> response = call.execute();
+                    if (response.code() < 200 || response.code() > 299) {
+                        broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
+                        broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+                    }
+                    else {
+                        broadcastIntent.putExtra(RESULT_CODE, RC_OK);
+                    }
+                }
+                catch (Exception e) {
                     broadcastIntent.putExtra(RESULT_CODE, RC_ERROR);
                     broadcastIntent.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
                     e.printStackTrace();

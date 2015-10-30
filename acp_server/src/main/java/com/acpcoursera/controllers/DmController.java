@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.acpcoursera.model.UserAccount;
+import com.acpcoursera.model.UserGcm;
 import com.acpcoursera.model.UserInfo;
+import com.acpcoursera.repository.UserGcmRepository;
 import com.acpcoursera.repository.UserInfoRepository;
 
 @Controller
@@ -29,6 +31,9 @@ public class DmController {
 
     @Autowired
     private UserInfoRepository usersInfo;
+
+    @Autowired
+    private UserGcmRepository usersGcm;
 
     @RequestMapping(value = "/print/{text}", method = RequestMethod.GET)
     public @ResponseBody String returnUserText(@PathVariable String text) {
@@ -50,6 +55,7 @@ public class DmController {
                 );
 
         usersInfo.save(info);
+        usersGcm.save(new UserGcm(info.getUsername(), null));
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -58,9 +64,21 @@ public class DmController {
     public ResponseEntity<Void> sendGcmToken(OAuth2Authentication auth,
             @RequestParam("token") String token) {
 
-    	// TODO: remove
-        System.out.println("user sent token: " + auth.getName());
-        System.out.println("token sent: " + token);
+    	String username = auth.getName();
+    	UserGcm gcmInfo = usersGcm.findByUsername(username);
+    	gcmInfo.setToken(token);
+    	usersGcm.save(gcmInfo);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity<Void> logout(OAuth2Authentication auth) {
+
+    	String username = auth.getName();
+    	UserGcm gcmInfo = usersGcm.findByUsername(username);
+    	gcmInfo.setToken(null);
+    	usersGcm.save(gcmInfo);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

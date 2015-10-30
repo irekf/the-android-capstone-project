@@ -38,6 +38,7 @@
     <string name="prompt_loading">Loading...</string>
     <string name="prompt_please_wait">Please, wait.</string>
     <string name="account_created">New account created</string>
+    <string name="logout_error">"Logout error: "</string>
 
 
 </resources>

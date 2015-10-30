@@ -26,3 +26,12 @@ CREATE TABLE IF NOT EXISTS `user_info` (
     UNIQUE KEY uni_username(username),
     KEY fk_username_idx(username),
     CONSTRAINT fk_info_username FOREIGN KEY (username) REFERENCES users(username));
+    
+CREATE TABLE IF NOT EXISTS `user_gcm` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    token varchar(4096),
+    PRIMARY KEY (id),
+    UNIQUE KEY uni_username(username),
+    KEY fk_username_idx(username),
+    CONSTRAINT fk_gcm_username FOREIGN KEY (username) REFERENCES users(username));
