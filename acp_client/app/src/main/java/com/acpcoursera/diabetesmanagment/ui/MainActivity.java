@@ -161,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        // clear the access token and go back to the login screen
-        MiscUtils.saveAccessToken(getApplicationContext(), "");
+        // log out and go back to the login screen
+        MiscUtils.setLoggedIn(getApplicationContext(), false);
         Intent authActivityIntent = new Intent(getApplicationContext(), AuthActivity.class);
         startActivity(authActivityIntent);
         finish();

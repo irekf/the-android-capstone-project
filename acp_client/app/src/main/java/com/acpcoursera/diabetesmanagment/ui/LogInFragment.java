@@ -106,9 +106,8 @@ public class LogInFragment extends Fragment {
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
             if (action.equals(NetOpsService.ACTION_LOG_IN)) {
                 if (resultCode == NetOpsService.RC_OK) {
-                    // save the access token and go to the main screen
-                    String accessToken = intent.getStringExtra(NetOpsService.EXTRA_ACCESS_TOKEN);
-                    MiscUtils.saveAccessToken(getActivity(), accessToken);
+                    // log in and go to the main screen
+                    MiscUtils.setLoggedIn(getActivity(), true);
                     Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
                     startActivity(mainActivityIntent);
                 }

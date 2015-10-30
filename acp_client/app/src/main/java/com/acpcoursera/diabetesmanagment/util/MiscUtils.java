@@ -9,10 +9,23 @@ import android.widget.Toast;
 
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.ACCESS_TOKEN_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SHARED_PREF_FILE;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_LOGGED_IN_PREF;
 
 public class MiscUtils {
 
     private static String TAG = MiscUtils.class.getSimpleName();
+
+    public static void setLoggedIn(Context context, boolean isLoggedIn) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(IS_LOGGED_IN_PREF, isLoggedIn);
+        editor.commit();
+    }
+
+    public static boolean isLoggedIn(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPref.getBoolean(IS_LOGGED_IN_PREF, false);
+    }
 
     public static void saveAccessToken(Context context, String token) {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);

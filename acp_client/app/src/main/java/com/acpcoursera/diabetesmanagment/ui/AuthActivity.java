@@ -33,8 +33,8 @@ public class AuthActivity extends FragmentActivity implements LogInFragment.Call
             return;
         }
 
-        // start the main activity if we have an access token
-        if (!MiscUtils.readAccessToken(this).isEmpty()) {
+        // start the main activity if we are logged in
+        if (MiscUtils.isLoggedIn(getApplicationContext())) {
             Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(mainActivityIntent);
         }

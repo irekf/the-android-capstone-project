@@ -19,6 +19,8 @@ public class AcpPreferences {
             "com.acpcoursera.diabetesmanagement.PREFERENCE_FILE_KEY";
     public static final String ACCESS_TOKEN_PREF = "access_token_pref";
 
+    public static final String IS_LOGGED_IN_PREF = "is_logged_in_pref";
+
     public static final int NET_DELAY_SEC = 1;
 
 }

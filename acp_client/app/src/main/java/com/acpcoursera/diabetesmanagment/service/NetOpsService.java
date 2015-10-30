@@ -35,7 +35,6 @@ public class NetOpsService extends IntentService {
 
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
-    public static String EXTRA_ACCESS_TOKEN = "access_token";
 
     public static String EXTRA_USER_INFO = "user_info";
 
@@ -150,7 +149,7 @@ public class NetOpsService extends IntentService {
                     reply.putExtra(EXTRA_ERROR_MESSAGE, gcmTokenResponse.message());
                 }
                 else {
-                    reply.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
+                    MiscUtils.saveAccessToken(getApplicationContext(), accessToken);
                     reply.putExtra(RESULT_CODE, RC_OK);
                 }
 
@@ -186,6 +185,10 @@ public class NetOpsService extends IntentService {
             reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
             e.printStackTrace();
         }
+
+        // clear the access token and null the DM service
+        MiscUtils.saveAccessToken(getApplicationContext(), "");
+        dmService = null;
 
         mBroadcastManager.sendBroadcast(reply);
     }
