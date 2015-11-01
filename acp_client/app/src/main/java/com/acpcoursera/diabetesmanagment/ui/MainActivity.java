@@ -55,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectOption(position);
+                TextView drawerItem = (TextView) view;
+                String itemText = drawerItem.getText().toString();
+                if (itemText.equals("Check-In")) {
+                    startActivity(new Intent(getApplicationContext(), CheckInActivity.class));
+                }
             }
         });
 

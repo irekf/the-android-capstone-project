@@ -52,5 +52,11 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="label_main_menu">Main Menu</string>
+    <string name="sugar_level_text">Sugar level</string>
+    <string name="at_text">at</string>
+    <string name="meal_text">Meal prior to the measurement:</string>
+    <string name="insulin_administered_text">Insulin had been administered at</string>
+    <string name="dosage_text">with the dosage of</string>
+    <string name="major_data_label">Major Data</string>
 
 </resources>
