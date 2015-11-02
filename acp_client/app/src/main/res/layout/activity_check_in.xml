@@ -12,7 +12,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp">
+            android:layout_height="400dp"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +38,7 @@
             <EditText
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:ems="10"
                 android:id="@+id/sugar_level_edit_text"
                 android:layout_marginStart="20dp"
@@ -55,14 +56,16 @@
                 android:layout_toEndOf="@+id/sugar_level_edit_text" />
 
             <EditText
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
                 android:id="@+id/measurement_time_edit_text"
                 android:layout_toEndOf="@+id/at_text_view"
                 android:layout_alignBottom="@+id/sugar_level_edit_text"
-                android:layout_marginStart="20dp" />
+                android:layout_marginStart="20dp"
+                android:textSize="14sp"
+                android:focusable="false"/>
 
             <View
                 android:layout_width="match_parent"
@@ -103,7 +106,7 @@
                 android:layout_marginTop="20dp" />
 
             <EditText
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
@@ -111,7 +114,9 @@
                 android:layout_toEndOf="@+id/at_2_text_view"
                 android:layout_alignBottom="@+id/at_2_text_view"
                 android:layout_marginStart="20dp"
-                android:layout_marginBottom="-10dp" />
+                android:layout_marginBottom="-10dp"
+                android:textSize="14sp"
+                android:focusable="false" />
 
             <View
                 android:layout_width="match_parent"
@@ -132,7 +137,7 @@
                 android:layout_marginTop="20dp" />
 
             <EditText
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
@@ -140,7 +145,9 @@
                 android:layout_toEndOf="@+id/insulin_administered_text_view"
                 android:layout_alignBottom="@+id/insulin_administered_text_view"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="-10dp" />
+                android:layout_marginBottom="-10dp"
+                android:textSize="14sp"
+                android:focusable="false" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -154,13 +161,23 @@
             <EditText
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:ems="10"
                 android:id="@+id/dosage_edit_text"
                 android:layout_toEndOf="@+id/dosage_text_view"
                 android:layout_alignBottom="@+id/dosage_text_view"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="-10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/insulin_units_text"
+                android:layout_toEndOf="@+id/dosage_edit_text"
+                android:layout_alignBottom="@+id/dosage_text_view"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/insulin_units_text_view" />
 
             <View
                 android:layout_width="match_parent"
@@ -171,7 +188,64 @@
                 android:layout_below="@+id/dosage_text_view"
                 android:layout_alignParentStart="true" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minor_data_label"
+                android:id="@+id/minor_data_text_view"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:layout_below="@+id/check_in_separator_3"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mood_text"
+                android:id="@+id/mood_text_view"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/minor_data_text_view"/>
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mood_number_picker"
+                android:layout_alignStart="@+id/mood_text_view"
+                android:layout_below="@+id/mood_text_view" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stress_text"
+                android:id="@+id/stress_text_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/minor_data_text_view"/>
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stress_number_picker"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/stress_text_view" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/energy_text"
+                android:id="@+id/energy_text_view"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/minor_data_text_view"/>
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/energy_number_picker"
+                android:layout_alignStart="@+id/energy_text_view"
+                android:layout_below="@+id/energy_text_view" />
 
         </RelativeLayout>
 
