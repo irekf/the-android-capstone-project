@@ -65,7 +65,8 @@
                 android:layout_alignBottom="@+id/sugar_level_edit_text"
                 android:layout_marginStart="20dp"
                 android:textSize="14sp"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:tag="@string/measurement_time_label"/>
 
             <View
                 android:layout_width="match_parent"
@@ -116,7 +117,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="-10dp"
                 android:textSize="14sp"
-                android:focusable="false" />
+                android:focusable="false"
+                android:tag="@string/meal_time_label"/>
 
             <View
                 android:layout_width="match_parent"
@@ -147,7 +149,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="-10dp"
                 android:textSize="14sp"
-                android:focusable="false" />
+                android:focusable="false"
+                android:tag="@string/insulin_adm_time_label"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -246,6 +249,15 @@
                 android:id="@+id/energy_number_picker"
                 android:layout_alignStart="@+id/energy_text_view"
                 android:layout_below="@+id/energy_text_view" />
+
+            <Button
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="@string/submit_label"
+                android:id="@+id/submit_button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/stress_number_picker" />
 
         </RelativeLayout>
 

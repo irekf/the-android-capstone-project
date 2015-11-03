@@ -63,6 +63,11 @@
     <string name="mood_text">Mood level</string>
     <string name="stress_text">Stress level</string>
     <string name="energy_text">Energy level</string>
+    <string name="submit_label">Submit</string>
+    <string name="measurement_time_label">Measurement Time</string>
+    <string name="meal_time_label">Meal Time</string>
+    <string name="insulin_adm_time_label">Insulin Administration Time</string>
+    <string name="error_need_required_data">You must provide all major info</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

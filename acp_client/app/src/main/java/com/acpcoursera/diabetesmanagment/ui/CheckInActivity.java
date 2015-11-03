@@ -5,12 +5,14 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,16 +30,36 @@ public class CheckInActivity extends AppCompatActivity {
     private NumberPicker mStressNumberPicker;
     private NumberPicker mEnergyNumberPicker;
 
+    private EditText mSugarLevel;
+    private EditText mMeal;
+    private EditText mInsulinDosage;
+
     private EditText mMeasurementTime;
     private EditText mMealTime;
     private EditText mInsulinAdministrationTime;
-
     private EditText mCurrentTimeAndDateField;
+
+    private Button mSubmitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_in);
+
+        EditText.OnClickListener numericFieldsListener = new EditText.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.requestFocus();
+                MiscUtils.showKeyboard(CheckInActivity.this, v);
+            }
+        };
+
+        mSugarLevel = (EditText) findViewById(R.id.sugar_level_edit_text);
+        mSugarLevel.setOnClickListener(numericFieldsListener);
+        mMeal = (EditText) findViewById(R.id.meal_edit_text);
+        mMeal.setOnClickListener(numericFieldsListener);
+        mInsulinDosage = (EditText) findViewById(R.id.dosage_edit_text);
+        mInsulinDosage.setOnClickListener(numericFieldsListener);
 
         mMoodNumberPicker = (NumberPicker) findViewById(R.id.mood_number_picker);
         mMoodNumberPicker.setMinValue(1);
@@ -77,9 +99,11 @@ public class CheckInActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                new TimePickerDialog(CheckInActivity.this, timeListener,
+                TimePickerDialog dialog = new TimePickerDialog(CheckInActivity.this, timeListener,
                         myCalendar.get(Calendar.HOUR_OF_DAY),
-                        myCalendar.get(Calendar.MINUTE), true).show();
+                        myCalendar.get(Calendar.MINUTE), true);
+                dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
+                dialog.show();
             }
         };
 
@@ -87,9 +111,11 @@ public class CheckInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentTimeAndDateField = (EditText) v;
-                new DatePickerDialog(CheckInActivity.this, dateListener,
+                DatePickerDialog dialog = new DatePickerDialog(CheckInActivity.this, dateListener,
                         myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
+                dialog.show();
             }
         };
 
@@ -100,6 +126,14 @@ public class CheckInActivity extends AppCompatActivity {
         mInsulinAdministrationTime = (EditText) findViewById(R.id.insulin_administered_edit_text);
         mInsulinAdministrationTime.setOnClickListener(timeAndDateListener);
 
+        mSubmitButton = (Button) findViewById(R.id.submit_button);
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isInputValid();
+            }
+        });
+
     }
 
     @Override
@@ -108,6 +142,37 @@ public class CheckInActivity extends AppCompatActivity {
         outState.putInt(MOOD_LEVEL_KEY, mMoodNumberPicker.getValue());
         outState.putInt(STRESS_LEVEL_KEY, mStressNumberPicker.getValue());
         outState.putInt(ENERGY_LEVEL_KEY, mEnergyNumberPicker.getValue());
+    }
+
+    private boolean isInputValid() {
+        boolean isValid  = true;
+        EditText viewToFocus = null;
+        if (mSugarLevel.getText().toString().isEmpty()) {
+            viewToFocus = mSugarLevel;
+        }
+        else if (mMeasurementTime.getText().toString().isEmpty()) {
+            viewToFocus = mMeasurementTime;
+        }
+        else if (mMeal.getText().toString().isEmpty()) {
+            viewToFocus = mMeal;
+        }
+        else if (mMealTime.getText().toString().isEmpty()) {
+            viewToFocus = mMealTime;
+        }
+        else if (mInsulinAdministrationTime.getText().toString().isEmpty()) {
+            viewToFocus = mInsulinAdministrationTime;
+        }
+        else if (mInsulinDosage.getText().toString().isEmpty()) {
+            viewToFocus = mInsulinDosage;
+        }
+
+        if (viewToFocus != null) {
+            MiscUtils.showToast(this, getString(R.string.error_need_required_data));
+            viewToFocus.performClick();
+            isValid = false;
+        }
+
+        return isValid;
     }
 
 }
