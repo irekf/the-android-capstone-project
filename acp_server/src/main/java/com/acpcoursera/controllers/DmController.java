@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.acpcoursera.model.CheckInData;
 import com.acpcoursera.model.UserAccount;
 import com.acpcoursera.model.UserGcm;
 import com.acpcoursera.model.UserInfo;
+import com.acpcoursera.repository.CheckInDataRepository;
 import com.acpcoursera.repository.UserGcmRepository;
 import com.acpcoursera.repository.UserInfoRepository;
 
@@ -34,6 +36,9 @@ public class DmController {
 
     @Autowired
     private UserGcmRepository usersGcm;
+
+    @Autowired
+    private CheckInDataRepository usersCheckIn;
 
     @RequestMapping(value = "/print/{text}", method = RequestMethod.GET)
     public @ResponseBody String returnUserText(@PathVariable String text) {
@@ -79,6 +84,18 @@ public class DmController {
     	UserGcm gcmInfo = usersGcm.findByUsername(username);
     	gcmInfo.setToken(null);
     	usersGcm.save(gcmInfo);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/checkin", method = RequestMethod.POST)
+    public ResponseEntity<Void> checkIn(OAuth2Authentication auth,
+    		@RequestBody CheckInData data) {
+
+    	String username = auth.getName();
+    	data.setUsername(username);
+
+    	usersCheckIn.save(data);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

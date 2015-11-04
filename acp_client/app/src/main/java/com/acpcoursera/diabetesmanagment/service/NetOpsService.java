@@ -232,7 +232,7 @@ public class NetOpsService extends IntentService {
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         CheckInData checkInData = callerIntent.getParcelableExtra(EXTRA_CHECK_IN_DATA);
-        Call<Void> call = sDmServiceUnsecured.checkIn(checkInData);
+        Call<Void> call = sDmService.checkIn(checkInData);
 
         try {
             Response<Void> response = call.execute();

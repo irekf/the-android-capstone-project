@@ -35,3 +35,20 @@ CREATE TABLE IF NOT EXISTS `user_gcm` (
     UNIQUE KEY uni_username(username),
     KEY fk_username_idx(username),
     CONSTRAINT fk_gcm_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
+    
+CREATE TABLE IF NOT EXISTS `check_in_data` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    sugar_level float NOT NULL,
+    sugar_level_time varchar(64) NOT NULL,
+    meal varchar(4096) NOT NULL,
+    meal_time varchar(64) NOT NULL,
+    insulin_dosage float NOT NULL,
+    insulin_administration_time varchar(64) NOT NULL,
+    mood_level int,
+    stress_level int,
+    energy_level int,
+    check_in_timestamp varchar(64) NOT NULL,
+    PRIMARY KEY (id),
+    KEY fk_username_idx(username),
+    CONSTRAINT fk_check_in_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);

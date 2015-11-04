@@ -183,12 +183,13 @@ public class CheckInActivity extends AppCompatActivity {
             if (action.equals(NetOpsService.ACTION_CHECK_IN)) {
                 if (resultCode == NetOpsService.RC_OK) {
                     showToast(CheckInActivity.this, getString(R.string.check_in_submitted));
+                    finish();
                 }
                 else {
+                    ProgressDialogFragment.dismiss(CheckInActivity.this);
                     showToast(CheckInActivity.this, getString(R.string.check_in_error) +
                             intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
                 }
-                ProgressDialogFragment.dismiss(CheckInActivity.this);
             }
 
         }
