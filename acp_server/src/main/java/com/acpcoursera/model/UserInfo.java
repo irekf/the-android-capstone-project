@@ -100,9 +100,16 @@ public class UserInfo {
 
     @Override
     public String toString() {
-        return "First name: " + firstName + ", Second name: " + secondName + ", Birth date: "
-                + birthDate + ", MRN: " + medicalRecordNumber + ", User name: " + username
-                + ", Password: " + password + ", e-mail: " + email + ", Type: " + userType;
+        return "UserInfo{" +
+                "userType='" + userType + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", medicalRecordNumber='" + medicalRecordNumber + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 
 }

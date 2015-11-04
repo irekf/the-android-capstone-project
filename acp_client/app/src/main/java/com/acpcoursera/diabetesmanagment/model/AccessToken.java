@@ -50,8 +50,12 @@ public class AccessToken {
 
     @Override
     public String toString() {
-        return "token: " + accessToken + ", type: " + tokenType
-                + ", expires in: " + expiresIn + ", scope: " + scope;
+        return "AccessToken{" +
+                "accessToken='" + accessToken + '\'' +
+                ", tokenType='" + tokenType + '\'' +
+                ", expiresIn=" + expiresIn +
+                ", scope='" + scope + '\'' +
+                '}';
     }
 
 }
