@@ -68,6 +68,8 @@
     <string name="meal_time_label">Meal Time</string>
     <string name="insulin_adm_time_label">Insulin Administration Time</string>
     <string name="error_need_required_data">You must provide all major info</string>
+    <string name="check_in_error">Check-In failed: </string>
+    <string name="check_in_submitted">Check-In data submitted</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

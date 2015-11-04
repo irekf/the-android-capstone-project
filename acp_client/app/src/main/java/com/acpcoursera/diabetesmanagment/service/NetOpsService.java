@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.config.AcpPreferences;
 import com.acpcoursera.diabetesmanagment.model.AccessToken;
+import com.acpcoursera.diabetesmanagment.model.CheckInData;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
@@ -33,10 +34,13 @@ public class NetOpsService extends IntentService {
     public static String ACTION_LOG_IN = "action_log_in";
     public static String ACTION_LOG_OUT = "action_log_out";
 
+    public static String ACTION_CHECK_IN = "action_check_in";
+
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
 
     public static String EXTRA_USER_INFO = "user_info";
+    public static String EXTRA_CHECK_IN_DATA = "check_in_data";
 
     public static String EXTRA_ERROR_MESSAGE = "error_message";
 
@@ -102,6 +106,9 @@ public class NetOpsService extends IntentService {
             }
             else if (action.equals(ACTION_SIGN_UP)) {
                 handleSignUp(intent);
+            }
+            else if (action.equals(ACTION_CHECK_IN)) {
+                handleCheckIn(intent);
             }
             else {
 
@@ -200,6 +207,32 @@ public class NetOpsService extends IntentService {
 
         UserInfo signUpInfo = callerIntent.getParcelableExtra(EXTRA_USER_INFO);
         Call<Void> call = sDmServiceUnsecured.signUp(signUpInfo);
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleCheckIn(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_CHECK_IN);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        CheckInData checkInData = callerIntent.getParcelableExtra(EXTRA_CHECK_IN_DATA);
+        Call<Void> call = sDmServiceUnsecured.checkIn(checkInData);
 
         try {
             Response<Void> response = call.execute();

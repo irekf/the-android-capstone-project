@@ -2,7 +2,12 @@ package com.acpcoursera.diabetesmanagment.ui;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -12,11 +17,18 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.CheckInData;
+import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
 public class CheckInActivity extends AppCompatActivity {
 
@@ -40,6 +52,8 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText mCurrentTimeAndDateField;
 
     private Button mSubmitButton;
+
+    private NetOpsReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,10 +144,54 @@ public class CheckInActivity extends AppCompatActivity {
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isInputValid();
+                if (isInputValid()) {
+                    hideKeyboard(CheckInActivity.this, CheckInActivity.this.getCurrentFocus());
+                    ProgressDialogFragment.show(CheckInActivity.this);
+                    Intent intent = new Intent(CheckInActivity.this, NetOpsService.class);
+                    intent.setAction(NetOpsService.ACTION_CHECK_IN);
+                    intent.putExtra(NetOpsService.EXTRA_CHECK_IN_DATA, collectCheckInData());
+                    startService(intent);
+                }
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mReceiver = new NetOpsReceiver();
+        IntentFilter filter = new IntentFilter(TAG);
+        filter.addAction(NetOpsService.ACTION_CHECK_IN);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+    private class NetOpsReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
+            if (action.equals(NetOpsService.ACTION_CHECK_IN)) {
+                if (resultCode == NetOpsService.RC_OK) {
+                    showToast(CheckInActivity.this, getString(R.string.check_in_submitted));
+                }
+                else {
+                    showToast(CheckInActivity.this, getString(R.string.check_in_error) +
+                            intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
+                }
+                ProgressDialogFragment.dismiss(CheckInActivity.this);
+            }
+
+        }
     }
 
     @Override
@@ -173,6 +231,21 @@ public class CheckInActivity extends AppCompatActivity {
         }
 
         return isValid;
+    }
+
+    private CheckInData collectCheckInData() {
+        CheckInData data = new CheckInData();
+        data.setSugarLevel(Float.valueOf(mSugarLevel.getText().toString()));
+        data.setSugarLevelTime(mMeasurementTime.getText().toString());
+        data.setMeal(mMeal.getText().toString());
+        data.setMealTime(mMealTime.getText().toString());
+        data.setInsulinDosage(Float.valueOf(mInsulinDosage.getText().toString()));
+        data.setInsulinAdministrationTime(mInsulinAdministrationTime.getText().toString());
+        data.setMoodLevel(mMoodNumberPicker.getValue());
+        data.setStressLevel(mStressNumberPicker.getValue());
+        data.setEnergyLevel(mEnergyNumberPicker.getValue());
+        data.setCheckInTimestamp(DateFormat.getDateTimeInstance().format(new Date()));
+        return data;
     }
 
 }
