@@ -1,9 +1,13 @@
 package com.acpcoursera.model;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class UserInfo {
@@ -15,7 +19,8 @@ public class UserInfo {
     private String userType;
     private String firstName;
     private String secondName;
-    private String birthDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
+    private Date birthDate;
     private String medicalRecordNumber;
     private String email;
 
@@ -55,11 +60,11 @@ public class UserInfo {
         this.secondName = secondName;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -104,7 +109,7 @@ public class UserInfo {
                 "userType='" + userType + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
+                ", birthDate='" + birthDate.toString() + '\'' +
                 ", medicalRecordNumber='" + medicalRecordNumber + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

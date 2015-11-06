@@ -20,17 +20,20 @@ public class CheckInData {
     private String username;
 
     private float sugarLevel;
-    private String sugarLevelTime;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
+    private Timestamp sugarLevelTime;
     private String meal;
-    private String mealTime;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
+    private Timestamp mealTime;
     private float insulinDosage;
-    private String insulinAdministrationTime;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
+    private Timestamp insulinAdministrationTime;
 
     private int moodLevel;
     private int stressLevel;
     private int energyLevel;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss.S")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
     private Timestamp checkInTimestamp;
 
     public CheckInData() {
@@ -53,11 +56,11 @@ public class CheckInData {
         this.sugarLevel = sugarLevel;
     }
 
-    public String getSugarLevelTime() {
+    public Timestamp getSugarLevelTime() {
         return sugarLevelTime;
     }
 
-    public void setSugarLevelTime(String sugarLevelTime) {
+    public void setSugarLevelTime(Timestamp sugarLevelTime) {
         this.sugarLevelTime = sugarLevelTime;
     }
 
@@ -69,11 +72,11 @@ public class CheckInData {
         this.meal = meal;
     }
 
-    public String getMealTime() {
+    public Timestamp getMealTime() {
         return mealTime;
     }
 
-    public void setMealTime(String mealTime) {
+    public void setMealTime(Timestamp mealTime) {
         this.mealTime = mealTime;
     }
 
@@ -85,11 +88,11 @@ public class CheckInData {
         this.insulinDosage = insulinDosage;
     }
 
-    public String getInsulinAdministrationTime() {
+    public Timestamp getInsulinAdministrationTime() {
         return insulinAdministrationTime;
     }
 
-    public void setInsulinAdministrationTime(String insulinAdministrationTime) {
+    public void setInsulinAdministrationTime(Timestamp insulinAdministrationTime) {
         this.insulinAdministrationTime = insulinAdministrationTime;
     }
 
@@ -129,11 +132,11 @@ public class CheckInData {
     public String toString() {
         return "CheckInData{" +
                 "sugarLevel=" + sugarLevel +
-                ", sugarLevelTime='" + sugarLevelTime + '\'' +
+                ", sugarLevelTime='" + sugarLevelTime.toString() + '\'' +
                 ", meal='" + meal + '\'' +
-                ", mealTime='" + mealTime + '\'' +
+                ", mealTime='" + mealTime.toString() + '\'' +
                 ", insulinDosage=" + insulinDosage +
-                ", insulinAdministrationTime='" + insulinAdministrationTime + '\'' +
+                ", insulinAdministrationTime='" + insulinAdministrationTime.toString() + '\'' +
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +

@@ -16,6 +16,7 @@ import android.widget.ToggleButton;
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -94,7 +95,7 @@ public class SignUpTab1 extends Fragment {
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
                 // update birth date
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy", Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 mBirthDateEditText.setText(dateFormat.format(myCalendar.getTime()));
 
             }
@@ -135,7 +136,7 @@ public class SignUpTab1 extends Fragment {
         signUpInfo.setUserType(mTeenButton.isChecked() ? UserInfo.TYPE_TEEN : UserInfo.TYPE_FOLLOWER);
         signUpInfo.setFirstName(mFirstNameEditText.getText().toString().trim());
         signUpInfo.setSecondName(mSecondNameEditText.getText().toString().trim());
-        signUpInfo.setBirthDate(mBirthDateEditText.getText().toString().trim());
+        signUpInfo.setBirthDate(Date.valueOf(mBirthDateEditText.getText().toString().trim()));
     }
 
 }

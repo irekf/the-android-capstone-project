@@ -3,6 +3,8 @@ package com.acpcoursera.diabetesmanagment.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Date;
+
 public class UserInfo implements Parcelable {
 
     private static String TAG = UserInfo.class.getSimpleName();
@@ -13,7 +15,7 @@ public class UserInfo implements Parcelable {
     private String userType;
     private String firstName;
     private String secondName;
-    private String birthDate;
+    private Date birthDate;
     private String medicalRecordNumber;
     private String username;
     private String password;
@@ -27,7 +29,7 @@ public class UserInfo implements Parcelable {
         userType = in.readString();
         firstName = in.readString();
         secondName = in.readString();
-        birthDate = in.readString();
+        birthDate = (Date) in.readSerializable();
         medicalRecordNumber = in.readString();
         username = in.readString();
         password = in.readString();
@@ -56,7 +58,7 @@ public class UserInfo implements Parcelable {
         dest.writeString(userType);
         dest.writeString(firstName);
         dest.writeString(secondName);
-        dest.writeString(birthDate);
+        dest.writeSerializable(birthDate);
         dest.writeString(medicalRecordNumber);
         dest.writeString(username);
         dest.writeString(password);
@@ -88,11 +90,11 @@ public class UserInfo implements Parcelable {
         this.secondName = secondName;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -134,7 +136,7 @@ public class UserInfo implements Parcelable {
                 "userType='" + userType + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
+                ", birthDate='" + birthDate.toString() + '\'' +
                 ", medicalRecordNumber='" + medicalRecordNumber + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

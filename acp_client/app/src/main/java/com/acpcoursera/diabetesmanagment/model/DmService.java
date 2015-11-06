@@ -29,7 +29,7 @@ public class DmService {
                             .build())
             .addConverterFactory(GsonConverterFactory.create(
                     new GsonBuilder()
-                            .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+                            .setDateFormat("yyyy-MM-dd HH:mm:ss.S")
                             .create())
             );
 

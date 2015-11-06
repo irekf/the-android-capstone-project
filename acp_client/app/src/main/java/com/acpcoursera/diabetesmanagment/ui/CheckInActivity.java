@@ -21,6 +21,7 @@ import com.acpcoursera.diabetesmanagment.model.CheckInData;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -100,7 +101,7 @@ public class CheckInActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 myCalendar.set(Calendar.MINUTE, minute);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm", Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
                 mCurrentTimeAndDateField.setText(dateFormat.format(myCalendar.getTime()));
             }
         };
@@ -235,11 +236,13 @@ public class CheckInActivity extends AppCompatActivity {
     private CheckInData collectCheckInData() {
         CheckInData data = new CheckInData();
         data.setSugarLevel(Float.valueOf(mSugarLevel.getText().toString()));
-        data.setSugarLevelTime(mMeasurementTime.getText().toString());
+        data.setSugarLevelTime(Timestamp.valueOf(mMeasurementTime.getText().toString() + ":00"));
         data.setMeal(mMeal.getText().toString());
-        data.setMealTime(mMealTime.getText().toString());
+        data.setMealTime(Timestamp.valueOf(mMealTime.getText().toString() + ":00"));
         data.setInsulinDosage(Float.valueOf(mInsulinDosage.getText().toString()));
-        data.setInsulinAdministrationTime(mInsulinAdministrationTime.getText().toString());
+        data.setInsulinAdministrationTime(
+                Timestamp.valueOf(mInsulinAdministrationTime.getText().toString() + ":00")
+        );
         data.setMoodLevel(mMoodNumberPicker.getValue());
         data.setStressLevel(mStressNumberPicker.getValue());
         data.setEnergyLevel(mEnergyNumberPicker.getValue());

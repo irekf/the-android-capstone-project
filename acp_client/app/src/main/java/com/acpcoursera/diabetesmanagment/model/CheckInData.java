@@ -10,11 +10,11 @@ public class CheckInData implements Parcelable {
     private static String TAG = CheckInData.class.getSimpleName();
 
     private float sugarLevel;
-    private String sugarLevelTime;
+    private Timestamp sugarLevelTime;
     private String meal;
-    private String mealTime;
+    private Timestamp mealTime;
     private float insulinDosage;
-    private String insulinAdministrationTime;
+    private Timestamp insulinAdministrationTime;
 
     private int moodLevel;
     private int stressLevel;
@@ -28,11 +28,11 @@ public class CheckInData implements Parcelable {
 
     protected CheckInData(Parcel in) {
         sugarLevel = in.readFloat();
-        sugarLevelTime = in.readString();
+        sugarLevelTime = (Timestamp) in.readSerializable();
         meal = in.readString();
-        mealTime = in.readString();
+        mealTime = (Timestamp) in.readSerializable();
         insulinDosage = in.readFloat();
-        insulinAdministrationTime = in.readString();
+        insulinAdministrationTime = (Timestamp) in.readSerializable();
         moodLevel = in.readInt();
         stressLevel = in.readInt();
         energyLevel = in.readInt();
@@ -59,11 +59,11 @@ public class CheckInData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(sugarLevel);
-        dest.writeString(sugarLevelTime);
+        dest.writeSerializable(sugarLevelTime);
         dest.writeString(meal);
-        dest.writeString(mealTime);
+        dest.writeSerializable(mealTime);
         dest.writeFloat(insulinDosage);
-        dest.writeString(insulinAdministrationTime);
+        dest.writeSerializable(insulinAdministrationTime);
         dest.writeInt(moodLevel);
         dest.writeInt(stressLevel);
         dest.writeInt(energyLevel);
@@ -78,11 +78,11 @@ public class CheckInData implements Parcelable {
         this.sugarLevel = sugarLevel;
     }
 
-    public String getSugarLevelTime() {
+    public Timestamp getSugarLevelTime() {
         return sugarLevelTime;
     }
 
-    public void setSugarLevelTime(String sugarLevelTime) {
+    public void setSugarLevelTime(Timestamp sugarLevelTime) {
         this.sugarLevelTime = sugarLevelTime;
     }
 
@@ -94,11 +94,11 @@ public class CheckInData implements Parcelable {
         this.meal = meal;
     }
 
-    public String getMealTime() {
+    public Timestamp getMealTime() {
         return mealTime;
     }
 
-    public void setMealTime(String mealTime) {
+    public void setMealTime(Timestamp mealTime) {
         this.mealTime = mealTime;
     }
 
@@ -110,11 +110,11 @@ public class CheckInData implements Parcelable {
         this.insulinDosage = insulinDosage;
     }
 
-    public String getInsulinAdministrationTime() {
+    public Timestamp getInsulinAdministrationTime() {
         return insulinAdministrationTime;
     }
 
-    public void setInsulinAdministrationTime(String insulinAdministrationTime) {
+    public void setInsulinAdministrationTime(Timestamp insulinAdministrationTime) {
         this.insulinAdministrationTime = insulinAdministrationTime;
     }
 
@@ -154,11 +154,11 @@ public class CheckInData implements Parcelable {
     public String toString() {
         return "CheckInData{" +
                 "sugarLevel=" + sugarLevel +
-                ", sugarLevelTime='" + sugarLevelTime + '\'' +
+                ", sugarLevelTime='" + sugarLevelTime.toString() + '\'' +
                 ", meal='" + meal + '\'' +
-                ", mealTime='" + mealTime + '\'' +
+                ", mealTime='" + mealTime.toString() + '\'' +
                 ", insulinDosage=" + insulinDosage +
-                ", insulinAdministrationTime='" + insulinAdministrationTime + '\'' +
+                ", insulinAdministrationTime='" + insulinAdministrationTime.toString() + '\'' +
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
