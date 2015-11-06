@@ -1,9 +1,12 @@
 package com.acpcoursera.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -27,7 +30,8 @@ public class CheckInData {
     private int stressLevel;
     private int energyLevel;
 
-    private String checkInTimestamp;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd hh:mm:ss.S")
+    private Timestamp checkInTimestamp;
 
     public CheckInData() {
 
@@ -113,11 +117,11 @@ public class CheckInData {
         this.energyLevel = energyLevel;
     }
 
-    public String getCheckInTimestamp() {
+    public Timestamp getCheckInTimestamp() {
         return checkInTimestamp;
     }
 
-    public void setCheckInTimestamp(String checkInTimestamp) {
+    public void setCheckInTimestamp(Timestamp checkInTimestamp) {
         this.checkInTimestamp = checkInTimestamp;
     }
 
@@ -133,7 +137,7 @@ public class CheckInData {
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
-                ", checkInTimestamp='" + checkInTimestamp + '\'' +
+                ", checkInTimestamp='" + checkInTimestamp.toString() + '\'' +
                 '}';
     }
 

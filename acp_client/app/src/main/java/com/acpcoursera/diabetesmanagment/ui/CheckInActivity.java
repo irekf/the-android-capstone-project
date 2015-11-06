@@ -21,10 +21,8 @@ import com.acpcoursera.diabetesmanagment.model.CheckInData;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.hideKeyboard;
@@ -245,7 +243,6 @@ public class CheckInActivity extends AppCompatActivity {
         data.setMoodLevel(mMoodNumberPicker.getValue());
         data.setStressLevel(mStressNumberPicker.getValue());
         data.setEnergyLevel(mEnergyNumberPicker.getValue());
-        data.setCheckInTimestamp(DateFormat.getDateTimeInstance().format(new Date()));
         return data;
     }
 

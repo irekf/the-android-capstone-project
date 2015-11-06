@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `check_in_data` (
     mood_level int,
     stress_level int,
     energy_level int,
-    check_in_timestamp varchar(64) NOT NULL,
+    check_in_timestamp timestamp NOT NULL,
     PRIMARY KEY (id),
     KEY fk_username_idx(username),
     CONSTRAINT fk_check_in_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);

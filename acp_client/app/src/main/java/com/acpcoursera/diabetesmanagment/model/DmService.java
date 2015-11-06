@@ -1,5 +1,6 @@
 package com.acpcoursera.diabetesmanagment.model;
 
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -26,7 +27,11 @@ public class DmService {
                             .host(SERVER_ADDRESS)
                             .port(SERVER_PORT)
                             .build())
-            .addConverterFactory(GsonConverterFactory.create());
+            .addConverterFactory(GsonConverterFactory.create(
+                    new GsonBuilder()
+                            .setDateFormat("yyyy-MM-dd hh:mm:ss.S")
+                            .create())
+            );
 
     public static DmServiceProxy createService(OkHttpClient client) {
         return builder.client(client).build().create(DmServiceProxy.class);

@@ -3,6 +3,8 @@ package com.acpcoursera.diabetesmanagment.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Timestamp;
+
 public class CheckInData implements Parcelable {
 
     private static String TAG = CheckInData.class.getSimpleName();
@@ -18,7 +20,7 @@ public class CheckInData implements Parcelable {
     private int stressLevel;
     private int energyLevel;
 
-    private String checkInTimestamp;
+    private Timestamp checkInTimestamp;
 
     public CheckInData() {
 
@@ -34,7 +36,7 @@ public class CheckInData implements Parcelable {
         moodLevel = in.readInt();
         stressLevel = in.readInt();
         energyLevel = in.readInt();
-        checkInTimestamp = in.readString();
+        checkInTimestamp = (Timestamp) in.readSerializable();
     }
 
     public static final Creator<CheckInData> CREATOR = new Creator<CheckInData>() {
@@ -65,7 +67,7 @@ public class CheckInData implements Parcelable {
         dest.writeInt(moodLevel);
         dest.writeInt(stressLevel);
         dest.writeInt(energyLevel);
-        dest.writeString(checkInTimestamp);
+        dest.writeSerializable(checkInTimestamp);
     }
 
     public float getSugarLevel() {
@@ -140,11 +142,11 @@ public class CheckInData implements Parcelable {
         this.energyLevel = energyLevel;
     }
 
-    public String getCheckInTimestamp() {
+    public Timestamp getCheckInTimestamp() {
         return checkInTimestamp;
     }
 
-    public void setCheckInTimestamp(String checkInTimestamp) {
+    public void setCheckInTimestamp(Timestamp checkInTimestamp) {
         this.checkInTimestamp = checkInTimestamp;
     }
 
@@ -160,7 +162,7 @@ public class CheckInData implements Parcelable {
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
-                ", checkInTimestamp='" + checkInTimestamp + '\'' +
+                ", checkInTimestamp='" + checkInTimestamp.toString() + '\'' +
                 '}';
     }
 
