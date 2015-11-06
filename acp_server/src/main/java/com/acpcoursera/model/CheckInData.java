@@ -132,15 +132,15 @@ public class CheckInData {
     public String toString() {
         return "CheckInData{" +
                 "sugarLevel=" + sugarLevel +
-                ", sugarLevelTime='" + sugarLevelTime.toString() + '\'' +
+                ", sugarLevelTime='" + sugarLevelTime + '\'' +
                 ", meal='" + meal + '\'' +
-                ", mealTime='" + mealTime.toString() + '\'' +
+                ", mealTime='" + mealTime + '\'' +
                 ", insulinDosage=" + insulinDosage +
-                ", insulinAdministrationTime='" + insulinAdministrationTime.toString() + '\'' +
+                ", insulinAdministrationTime='" + insulinAdministrationTime + '\'' +
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
-                ", checkInTimestamp='" + checkInTimestamp.toString() + '\'' +
+                ", checkInTimestamp='" + checkInTimestamp + '\'' +
                 '}';
     }
 

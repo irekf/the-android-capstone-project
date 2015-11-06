@@ -109,7 +109,7 @@ public class UserInfo {
                 "userType='" + userType + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
-                ", birthDate='" + birthDate.toString() + '\'' +
+                ", birthDate='" + birthDate + '\'' +
                 ", medicalRecordNumber='" + medicalRecordNumber + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
