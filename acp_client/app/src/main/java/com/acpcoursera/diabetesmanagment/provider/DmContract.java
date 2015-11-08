@@ -1,0 +1,90 @@
+package com.acpcoursera.diabetesmanagment.provider;
+
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+public class DmContract {
+
+    public static final String CONTENT_TYPE_APP_BASE
+            = "acpcoursera.diabetesmanagement.provider.dmprovider.";
+
+    public static final String CONTENT_TYPE_BASE = "vnd.android.cursor.dir/vnd."
+            + CONTENT_TYPE_APP_BASE;
+
+    public static final String CONTENT_ITEM_TYPE_BASE = "vnd.android.cursor.item/vnd."
+            + CONTENT_TYPE_APP_BASE;
+
+    interface FollowersColumns {
+        String USERNAME = "username";
+        String FOLLOWER_NAME = "follower_name";
+        String ACCEPTED = "accepted";
+        String MAJOR_DATA = "major_data";
+        String MINOR_DATE = "minor_data";
+    }
+
+    interface FollowingColumns {
+        String USERNAME = "username";
+        String FOLLOWING_NAME = "following_name";
+        String PENDING = "pending";
+        String MAJOR_DATA = "major_data";
+        String MINOR_DATE = "minor_data";
+    }
+
+    public static final String CONTENT_AUTHORITY
+            = "acpcoursera.diabetesmanagement.provider.dmprovider";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    private static final String PATH_FOLLOWERS = "followers";
+    private static final String PATH_FOLLOWING = "following";
+
+    public static String makeContentType(String id) {
+        if (id != null) {
+            return CONTENT_TYPE_BASE + id;
+        } else {
+            return null;
+        }
+    }
+
+    public static String makeContentItemType(String id) {
+        if (id != null) {
+            return CONTENT_ITEM_TYPE_BASE + id;
+        } else {
+            return null;
+        }
+    }
+
+    public static class Followers implements FollowersColumns, BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_FOLLOWERS).build();
+
+        public static final String CONTENT_TYPE_ID = "follower";
+
+        public static Uri buildFollowersUri() {
+            return CONTENT_URI;
+        }
+
+        public static Uri buildFollowerUri(String tagId) {
+            return CONTENT_URI.buildUpon().appendPath(tagId).build();
+        }
+
+    }
+
+    public static class Following implements FollowingColumns, BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_FOLLOWING).build();
+
+        public static final String CONTENT_TYPE_ID = "following";
+
+        public static Uri buildFollowingUri() {
+            return CONTENT_URI;
+        }
+
+        public static Uri buildFollowingUri(String tagId) {
+            return CONTENT_URI.buildUpon().appendPath(tagId).build();
+        }
+
+    }
+
+}
