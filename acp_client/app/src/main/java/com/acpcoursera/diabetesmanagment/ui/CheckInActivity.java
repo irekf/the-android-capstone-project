@@ -36,6 +36,9 @@ public class CheckInActivity extends AppCompatActivity {
     private static final String MOOD_LEVEL_KEY = "mood_level_key";
     private static final String STRESS_LEVEL_KEY = "stress_level_key";
     private static final String ENERGY_LEVEL_KEY = "energy_level_key";
+    private static final String SUGAR_TIME_CALENDAR_KEY = "sugar_time_calendar_key";
+    private static final String MEAL_TIME_CALENDAR_KEY = "meal_time_calendar_key";
+    private static final String INSULIN_TIME_CALENDAR_KEY = "insulin_time_calendar_key";
 
     private NumberPicker mMoodNumberPicker;
     private NumberPicker mStressNumberPicker;
@@ -45,10 +48,12 @@ public class CheckInActivity extends AppCompatActivity {
     private EditText mMeal;
     private EditText mInsulinDosage;
 
-    private EditText mMeasurementTime;
+    private EditText mSugarTime;
     private EditText mMealTime;
-    private EditText mInsulinAdministrationTime;
-    private EditText mCurrentTimeAndDateField;
+    private EditText mInsulinTime;
+    private Calendar mSugarTimeCalendar;
+    private Calendar mMealTimeCalendar;
+    private Calendar mInsulinTimeCalendar;
 
     private Button mSubmitButton;
 
@@ -93,51 +98,26 @@ public class CheckInActivity extends AppCompatActivity {
             mStressNumberPicker.setValue(stress);
             int energy = savedInstanceState.getInt(ENERGY_LEVEL_KEY);
             mEnergyNumberPicker.setValue(energy);
+
+            mSugarTimeCalendar = (Calendar) savedInstanceState
+                    .getSerializable(SUGAR_TIME_CALENDAR_KEY);
+            mMealTimeCalendar = (Calendar) savedInstanceState
+                    .getSerializable(MEAL_TIME_CALENDAR_KEY);
+            mInsulinTimeCalendar = (Calendar) savedInstanceState
+                    .getSerializable(INSULIN_TIME_CALENDAR_KEY);
+        }
+        else {
+            mSugarTimeCalendar = Calendar.getInstance();
+            mMealTimeCalendar = Calendar.getInstance();
+            mInsulinTimeCalendar = Calendar.getInstance();
         }
 
-        final Calendar myCalendar = Calendar.getInstance();
-        final TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                myCalendar.set(Calendar.MINUTE, minute);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
-                mCurrentTimeAndDateField.setText(dateFormat.format(myCalendar.getTime()));
-            }
-        };
-
-        final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                TimePickerDialog dialog = new TimePickerDialog(CheckInActivity.this, timeListener,
-                        myCalendar.get(Calendar.HOUR_OF_DAY),
-                        myCalendar.get(Calendar.MINUTE), true);
-                dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
-                dialog.show();
-            }
-        };
-
-        EditText.OnClickListener timeAndDateListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentTimeAndDateField = (EditText) v;
-                DatePickerDialog dialog = new DatePickerDialog(CheckInActivity.this, dateListener,
-                        myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH));
-                dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
-                dialog.show();
-            }
-        };
-
-        mMeasurementTime = (EditText) findViewById(R.id.measurement_time_edit_text);
-        mMeasurementTime.setOnClickListener(timeAndDateListener);
+        mSugarTime = (EditText) findViewById(R.id.measurement_time_edit_text);
+        mSugarTime.setOnClickListener(new TimeAndDateListener(mSugarTimeCalendar));
         mMealTime = (EditText) findViewById(R.id.meal_time_edit_text);
-        mMealTime.setOnClickListener(timeAndDateListener);
-        mInsulinAdministrationTime = (EditText) findViewById(R.id.insulin_administered_edit_text);
-        mInsulinAdministrationTime.setOnClickListener(timeAndDateListener);
+        mMealTime.setOnClickListener(new TimeAndDateListener(mMealTimeCalendar));
+        mInsulinTime = (EditText) findViewById(R.id.insulin_administered_edit_text);
+        mInsulinTime.setOnClickListener(new TimeAndDateListener(mInsulinTimeCalendar));
 
         mSubmitButton = (Button) findViewById(R.id.submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +134,49 @@ public class CheckInActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private class TimeAndDateListener implements
+            TimePickerDialog.OnTimeSetListener,
+            DatePickerDialog.OnDateSetListener,
+            View.OnClickListener {
+
+        private Calendar mCalendar;
+        private EditText mCurrentTimeAndDateField;
+
+        public TimeAndDateListener(Calendar calendar) {
+            mCalendar = calendar;
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            mCalendar.set(Calendar.MINUTE, minute);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+            mCurrentTimeAndDateField.setText(dateFormat.format(mCalendar.getTime()));
+        }
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            TimePickerDialog dialog = new TimePickerDialog(CheckInActivity.this, this,
+                    mCalendar.get(Calendar.HOUR_OF_DAY),
+                    mCalendar.get(Calendar.MINUTE), true);
+            dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
+            dialog.show();
+        }
+
+        @Override
+        public void onClick(View v) {
+            mCurrentTimeAndDateField = (EditText) v;
+            DatePickerDialog dialog = new DatePickerDialog(CheckInActivity.this, this,
+                    mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                    mCalendar.get(Calendar.DAY_OF_MONTH));
+            dialog.setTitle((String) mCurrentTimeAndDateField.getTag());
+            dialog.show();
+        }
     }
 
     @Override
@@ -200,6 +223,10 @@ public class CheckInActivity extends AppCompatActivity {
         outState.putInt(MOOD_LEVEL_KEY, mMoodNumberPicker.getValue());
         outState.putInt(STRESS_LEVEL_KEY, mStressNumberPicker.getValue());
         outState.putInt(ENERGY_LEVEL_KEY, mEnergyNumberPicker.getValue());
+
+        outState.putSerializable(SUGAR_TIME_CALENDAR_KEY, mSugarTimeCalendar);
+        outState.putSerializable(MEAL_TIME_CALENDAR_KEY, mMealTimeCalendar);
+        outState.putSerializable(INSULIN_TIME_CALENDAR_KEY, mInsulinTimeCalendar);
     }
 
     private boolean isInputValid() {
@@ -208,8 +235,8 @@ public class CheckInActivity extends AppCompatActivity {
         if (mSugarLevel.getText().toString().isEmpty()) {
             viewToFocus = mSugarLevel;
         }
-        else if (mMeasurementTime.getText().toString().isEmpty()) {
-            viewToFocus = mMeasurementTime;
+        else if (mSugarTime.getText().toString().isEmpty()) {
+            viewToFocus = mSugarTime;
         }
         else if (mMeal.getText().toString().isEmpty()) {
             viewToFocus = mMeal;
@@ -217,8 +244,8 @@ public class CheckInActivity extends AppCompatActivity {
         else if (mMealTime.getText().toString().isEmpty()) {
             viewToFocus = mMealTime;
         }
-        else if (mInsulinAdministrationTime.getText().toString().isEmpty()) {
-            viewToFocus = mInsulinAdministrationTime;
+        else if (mInsulinTime.getText().toString().isEmpty()) {
+            viewToFocus = mInsulinTime;
         }
         else if (mInsulinDosage.getText().toString().isEmpty()) {
             viewToFocus = mInsulinDosage;
@@ -236,13 +263,11 @@ public class CheckInActivity extends AppCompatActivity {
     private CheckInData collectCheckInData() {
         CheckInData data = new CheckInData();
         data.setSugarLevel(Float.valueOf(mSugarLevel.getText().toString()));
-        data.setSugarLevelTime(Timestamp.valueOf(mMeasurementTime.getText().toString() + ":00"));
+        data.setSugarLevelTime(new Timestamp(mSugarTimeCalendar.getTimeInMillis()));
         data.setMeal(mMeal.getText().toString());
-        data.setMealTime(Timestamp.valueOf(mMealTime.getText().toString() + ":00"));
+        data.setMealTime(new Timestamp(mMealTimeCalendar.getTimeInMillis()));
         data.setInsulinDosage(Float.valueOf(mInsulinDosage.getText().toString()));
-        data.setInsulinAdministrationTime(
-                Timestamp.valueOf(mInsulinAdministrationTime.getText().toString() + ":00")
-        );
+        data.setInsulinAdministrationTime(new Timestamp(mInsulinTimeCalendar.getTimeInMillis()));
         data.setMoodLevel(mMoodNumberPicker.getValue());
         data.setStressLevel(mStressNumberPicker.getValue());
         data.setEnergyLevel(mEnergyNumberPicker.getValue());
