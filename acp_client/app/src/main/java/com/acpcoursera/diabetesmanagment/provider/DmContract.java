@@ -31,7 +31,7 @@ public class DmContract {
     }
 
     public static final String CONTENT_AUTHORITY
-            = "acpcoursera.diabetesmanagement.provider.dmprovider";
+            = "com.acpcoursera.diabetesmanagement.provider.dmprovider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final String PATH_FOLLOWERS = "followers";

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -59,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
                 String itemText = drawerItem.getText().toString();
                 if (itemText.equals("Check-In")) {
                     startActivity(new Intent(getApplicationContext(), CheckInActivity.class));
+                }
+                else if (itemText.equals("Followers")) {
+                    FollowersFragment followersFragment = new FollowersFragment();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.content_frame, followersFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
             }
         });
