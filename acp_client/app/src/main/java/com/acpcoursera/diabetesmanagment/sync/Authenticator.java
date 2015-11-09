@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 public class Authenticator extends AbstractAccountAuthenticator {
 
+    private static String TAG = Authenticator.class.getSimpleName();
+
     public Authenticator(Context context) {
         super(context);
     }

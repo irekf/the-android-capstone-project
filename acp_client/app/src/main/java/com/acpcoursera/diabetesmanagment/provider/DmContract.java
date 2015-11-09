@@ -5,6 +5,8 @@ import android.provider.BaseColumns;
 
 public class DmContract {
 
+    private static String TAG = DmContract.class.getSimpleName();
+
     public static final String CONTENT_TYPE_APP_BASE
             = "acpcoursera.diabetesmanagement.provider.dmprovider.";
 
