@@ -81,6 +81,7 @@ public class DmProvider extends ContentProvider {
                 db.delete(DmDatabaseHelper.Tables.FOLLOWING,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+                break;
             case CHECK_IN_DATA_VALUES_ITEMS:
                 db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA, selection, selectionArgs);
                 break;
@@ -276,6 +277,7 @@ public class DmProvider extends ContentProvider {
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.FOLLOWING, values,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+                break;
             case CHECK_IN_DATA_VALUES_ITEMS:
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.CHECK_IN_DATA, values,
                         selection, selectionArgs);
