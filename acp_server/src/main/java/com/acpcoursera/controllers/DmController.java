@@ -1,6 +1,5 @@
 package com.acpcoursera.controllers;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.acpcoursera.model.CheckInData;
 import com.acpcoursera.model.GcmMessage;
+import com.acpcoursera.model.GcmResponse;
 import com.acpcoursera.model.UserAccount;
 import com.acpcoursera.model.UserGcm;
 import com.acpcoursera.model.UserInfo;
@@ -115,48 +115,45 @@ public class DmController {
     			+ "MgcMUJPChbXrbrQveSICp6gHihu6LpYvg-9YdBqkTk"
     			+ "S_ZLsBSnCwf-ztYHxa9kT320rzG5p4MBA5IDl");
     	message.addDataField("follower_name", "Will");
-		try {
-			int responseCode = sendGcmMessage(message);
-			System.out.println("response code: " + responseCode);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+    	GcmResponse response = sendGcmMessage(message);
+    	System.out.println(response);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    private int sendGcmMessage(GcmMessage message) throws IOException {
+    private GcmResponse sendGcmMessage(GcmMessage message) {
 
-    	URL gcmUrl = new URL("https://gcm-http.googleapis.com/gcm/send");
+    	GcmResponse response = new GcmResponse();
 
-    	HttpURLConnection connection = (HttpURLConnection) gcmUrl.openConnection();
-    	connection.setRequestMethod("POST");
-    	connection.setDoOutput(true);
-    	connection.setRequestProperty("Content-Type", "application/json");
-    	connection.setRequestProperty("Authorization", "key=" + System.getProperty("gcmkey"));
+    	try {
+    		URL gcmUrl = new URL("https://gcm-http.googleapis.com/gcm/send");
 
-    	ObjectMapper mapper = new ObjectMapper();
-    	DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-    	mapper.writeValue(out, message);
-    	out.flush();
-    	out.close();
+    		HttpURLConnection connection = (HttpURLConnection) gcmUrl.openConnection();
+    		connection.setRequestMethod("POST");
+    		connection.setDoOutput(true);
+    		connection.setRequestProperty("Content-Type", "application/json");
+    		connection.setRequestProperty("Authorization", "key=" + System.getProperty("gcmkey"));
 
-    	System.out.println("Message sent: " + mapper.writeValueAsString(message));
+    		ObjectMapper mapper = new ObjectMapper();
+    		DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+    		mapper.writeValue(out, message);
+    		out.flush();
+    		out.close();
 
-    	BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		String inputLine;
+    		int responseCode = connection.getResponseCode();
+    		if (responseCode == 200) {
+    			InputStreamReader in = new InputStreamReader(connection.getInputStream());
+    			response = mapper.readValue(in, GcmResponse.class);
+    		}
+    		response.setCode(responseCode);
 
-		StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
+    	}
+    	catch (IOException e) {
+    		System.out.println(e.getMessage());
+    	}
 
-		System.out.println("GCM response: " + response.toString());
-
-		int responseCode = connection.getResponseCode();
-    	return responseCode;
+    	return response;
     }
 
 }
