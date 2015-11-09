@@ -1,10 +1,11 @@
 package com.acpcoursera.diabetesmanagment.service;
 
-import android.content.ContentValues;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.acpcoursera.diabetesmanagment.provider.DmContract;
+import com.acpcoursera.diabetesmanagment.ui.AuthActivity;
 import com.google.android.gms.gcm.GcmListenerService;
 
 /*
@@ -23,19 +24,15 @@ public class MyGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
-        String follower = data.getString("follower_name");
+        String tableToUpdate = data.getString("table");
 
         Log.d(TAG, "Message from: " + from);
-        Log.d(TAG, "Follower's name: " + follower);
+        Log.d(TAG, "table: " + tableToUpdate);
 
-        ContentValues values = new ContentValues();
-        values.put(DmContract.Followers.USERNAME, "me");
-        values.put(DmContract.Followers.FOLLOWER_NAME, follower);
-        values.put(DmContract.Followers.ACCEPTED, 1);
-        values.put(DmContract.Followers.MAJOR_DATA, 1);
-        values.put(DmContract.Followers.MINOR_DATE, 0);
 
-        getContentResolver().insert(DmContract.Followers.buildFollowersUri(), values);
+        data.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(new Account(AuthActivity.ACCOUNT, AuthActivity.ACCOUNT_TYPE),
+                AuthActivity.AUTHORITY, data);
 
     }
 

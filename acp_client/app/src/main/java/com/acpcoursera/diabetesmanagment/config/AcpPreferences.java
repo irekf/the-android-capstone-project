@@ -16,7 +16,7 @@ public class AcpPreferences {
     public static final String SERVER_CLIENT_SECRET = "12345";
 
     public static final String SHARED_PREF_FILE =
-            "com.acpcoursera.diabetesmanagement.PREFERENCE_FILE_KEY";
+            "com.acpcoursera.diabetesmanagment.PREFERENCE_FILE_KEY";
     public static final String ACCESS_TOKEN_PREF = "access_token_pref";
 
     public static final String IS_LOGGED_IN_PREF = "is_logged_in_pref";

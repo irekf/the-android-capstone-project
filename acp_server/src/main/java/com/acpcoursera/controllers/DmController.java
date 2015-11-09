@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,18 +109,26 @@ public class DmController {
     	data.setCheckInTimestamp(new Timestamp(System.currentTimeMillis()));
     	usersCheckIn.save(data);
 
-    	/* test GCM */
+    	/* send GCM */
+    	UserGcm gcmInfo = usersGcm.findByUsername(username);
     	GcmMessage message = new GcmMessage();
-    	message.addRecipient("eZuBU0zk_g8:APA91bFtpw2VOtJjzvj"
-    			+ "Q5y21eWpIiBR5uX1O_4u1wIDEMPWERA1pHH5cAqavf"
-    			+ "MgcMUJPChbXrbrQveSICp6gHihu6LpYvg-9YdBqkTk"
-    			+ "S_ZLsBSnCwf-ztYHxa9kT320rzG5p4MBA5IDl");
-    	message.addDataField("follower_name", "Will");
+    	message.addRecipient(gcmInfo.getToken());
+    	message.addDataField("table", "check_in_data");
 
     	GcmResponse response = sendGcmMessage(message);
     	System.out.println(response);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/checkin", method = RequestMethod.GET)
+    public ResponseEntity<List<CheckInData>> getCheckInData(OAuth2Authentication auth) {
+
+    	String username = auth.getName();
+
+    	List<CheckInData> checkInData = usersCheckIn.findAllByUsername(username);
+
+    	return new ResponseEntity<List<CheckInData>>(checkInData, HttpStatus.OK);
     }
 
     private GcmResponse sendGcmMessage(GcmMessage message) {

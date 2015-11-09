@@ -71,14 +71,16 @@
 
         <provider
             android:name=".provider.DmProvider"
-            android:authorities="com.acpcoursera.diabetesmanagement.provider.dmprovider"
+            android:authorities="com.acpcoursera.diabetesmanagment.provider.dmprovider"
             android:enabled="true"
             android:exported="false"
             android:syncable="true" >
         </provider>
 
         <service
-            android:name=".sync.AuthenticatorService">
+            android:name=".sync.AuthenticatorService"
+            android:exported="true"
+            android:process=":auth">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>

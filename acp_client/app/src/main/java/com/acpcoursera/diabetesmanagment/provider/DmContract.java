@@ -8,7 +8,7 @@ public class DmContract {
     private static String TAG = DmContract.class.getSimpleName();
 
     public static final String CONTENT_TYPE_APP_BASE
-            = "acpcoursera.diabetesmanagement.provider.dmprovider.";
+            = "acpcoursera.diabetesmanagment.provider.dmprovider.";
 
     public static final String CONTENT_TYPE_BASE = "vnd.android.cursor.dir/vnd."
             + CONTENT_TYPE_APP_BASE;
@@ -47,7 +47,7 @@ public class DmContract {
     }
 
     public static final String CONTENT_AUTHORITY
-            = "com.acpcoursera.diabetesmanagement.provider.dmprovider";
+            = "com.acpcoursera.diabetesmanagment.provider.dmprovider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final String PATH_FOLLOWERS = "followers";

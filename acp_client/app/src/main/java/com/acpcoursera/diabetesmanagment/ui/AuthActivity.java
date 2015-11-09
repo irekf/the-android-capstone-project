@@ -24,7 +24,7 @@ public class AuthActivity extends FragmentActivity implements LogInFragment.Call
 
     private static String TAG = AuthActivity.class.getSimpleName();
 
-    public static final String AUTHORITY = "com.acpcoursera.diabetesmanagement.provider.dmprovider";
+    public static final String AUTHORITY = "com.acpcoursera.diabetesmanagment.provider.dmprovider";
     public static final String ACCOUNT_TYPE = "com.acpcoursera";
     public static final String ACCOUNT = "dummyaccount";
     private Account mAccount;

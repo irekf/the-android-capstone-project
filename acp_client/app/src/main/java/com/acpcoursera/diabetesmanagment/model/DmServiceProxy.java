@@ -1,5 +1,7 @@
 package com.acpcoursera.diabetesmanagment.model;
 
+import java.util.List;
+
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -33,5 +35,8 @@ public interface DmServiceProxy {
 
     @POST("/checkin")
     public Call<Void> checkIn(@Body CheckInData data);
+
+    @GET("/checkin")
+    public Call<List<CheckInData>> getCheckInData();
 
 }

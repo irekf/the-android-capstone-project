@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.acpcoursera.diabetesmanagement.provider.dmprovider"
+    android:contentAuthority="com.acpcoursera.diabetesmanagment.provider.dmprovider"
     android:accountType="com.acpcoursera"
     android:userVisible="false"
     android:supportsUploading="false"
