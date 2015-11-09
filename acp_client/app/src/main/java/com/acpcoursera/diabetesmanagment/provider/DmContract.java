@@ -32,12 +32,27 @@ public class DmContract {
         String MINOR_DATE = "minor_data";
     }
 
+    interface CheckInDataColumns {
+        String USERNAME = "username";
+        String SUGAR_LEVEL = "sugar_level";
+        String SUGAR_LEVEL_TIME = "sugar_level_time";
+        String MEAL = "meal";
+        String MEAL_TIME = "meal_time";
+        String INSULIN_DOSAGE = "insulin_dosage";
+        String INSULIN_ADMINISTRATION_TIME = "insulin_administration_time";
+        String MOOD_LEVEL = "mood_level";
+        String STRESS_LEVEL = "stress_level";
+        String ENERGY_LEVEL = "energy_level";
+        String CHECK_IN_TIME = "check_in_time";
+    }
+
     public static final String CONTENT_AUTHORITY
             = "com.acpcoursera.diabetesmanagement.provider.dmprovider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final String PATH_FOLLOWERS = "followers";
     private static final String PATH_FOLLOWING = "following";
+    private static final String PATH_CHECK_IN_DATA = "check_in_data";
 
     public static String makeContentType(String id) {
         if (id != null) {
@@ -79,11 +94,28 @@ public class DmContract {
 
         public static final String CONTENT_TYPE_ID = "following";
 
-        public static Uri buildFollowingUri() {
+        public static Uri buildFollowingsUri() {
             return CONTENT_URI;
         }
 
-        public static Uri buildFollowingUri(String tagId) {
+        public static Uri buildFollowingsUri(String tagId) {
+            return CONTENT_URI.buildUpon().appendPath(tagId).build();
+        }
+
+    }
+
+    public static class CheckInData implements CheckInDataColumns, BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CHECK_IN_DATA).build();
+
+        public static final String CONTENT_TYPE_ID = "check_in_data";
+
+        public static Uri buildCheckInDataUri() {
+            return CONTENT_URI;
+        }
+
+        public static Uri buildCheckInDatumUri(String tagId) {
             return CONTENT_URI.buildUpon().appendPath(tagId).build();
         }
 

@@ -20,6 +20,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
     interface Tables {
         String FOLLOWERS = "followers";
         String FOLLOWING = "following";
+        String CHECK_IN_DATA = "check_in_data";
     }
 
     private static final String SQL_CREATE_FOLLOWERS
@@ -42,6 +43,22 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
             + FollowingColumns.MINOR_DATE + " INTEGER NOT_NULL"
             + " )";
 
+    private static final String SQL_CREATE_CHECK_IN_DATA
+            = "CREATE TABLE " + Tables.CHECK_IN_DATA + " ("
+            + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + CheckInDataColumns.USERNAME + " TEXT NOT NULL, "
+            + CheckInDataColumns.SUGAR_LEVEL + " REAL NOT NULL, "
+            + CheckInDataColumns.SUGAR_LEVEL_TIME + " TEXT NOT NULL, "
+            + CheckInDataColumns.MEAL + " TEXT NOT NULL, "
+            + CheckInDataColumns.MEAL_TIME + " TEXT NOT NULL, "
+            + CheckInDataColumns.INSULIN_DOSAGE + " REAL NOT NULL, "
+            + CheckInDataColumns.INSULIN_ADMINISTRATION_TIME + " TEXT NOT NULL, "
+            + CheckInDataColumns.MOOD_LEVEL + " INTEGER NOT_NULL, "
+            + CheckInDataColumns.STRESS_LEVEL + " INTEGER NOT_NULL, "
+            + CheckInDataColumns.ENERGY_LEVEL + " INTEGER NOT_NULL, "
+            + CheckInDataColumns.CHECK_IN_TIME + " TEXT NOT_NULL"
+            + " )";
+
     public DmDatabaseHelper(Context context) {
         // TODO consider something different than cachedir
         super(context, context.getCacheDir() + File.separator + DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,11 +68,13 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_FOLLOWERS);
         db.execSQL(SQL_CREATE_FOLLOWING);
+        db.execSQL(SQL_CREATE_CHECK_IN_DATA);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWERS);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWING);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.CHECK_IN_DATA);
     }
 }

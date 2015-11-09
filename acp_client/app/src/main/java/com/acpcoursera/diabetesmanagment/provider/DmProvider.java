@@ -26,6 +26,8 @@ public class DmProvider extends ContentProvider {
     public final static int FOLLOWER_VALUES_ITEMS = 110;
     public final static int FOLLOWING_VALUES_ITEM = 200;
     public final static int FOLLOWING_VALUES_ITEMS = 210;
+    public final static int CHECK_IN_DATA_VALUES_ITEM = 300;
+    public final static int CHECK_IN_DATA_VALUES_ITEMS = 310;
 
     public static UriMatcher buildUriMatcher() {
 
@@ -45,6 +47,13 @@ public class DmProvider extends ContentProvider {
         matcher.addURI(DmContract.CONTENT_AUTHORITY,
                 DmDatabaseHelper.Tables.FOLLOWING + "/#",
                 FOLLOWING_VALUES_ITEM);
+
+        matcher.addURI(DmContract.CONTENT_AUTHORITY,
+                DmDatabaseHelper.Tables.CHECK_IN_DATA,
+                CHECK_IN_DATA_VALUES_ITEMS);
+        matcher.addURI(DmContract.CONTENT_AUTHORITY,
+                DmDatabaseHelper.Tables.CHECK_IN_DATA + "/#",
+                CHECK_IN_DATA_VALUES_ITEM);
 
         return matcher;
     }
@@ -72,6 +81,13 @@ public class DmProvider extends ContentProvider {
                 db.delete(DmDatabaseHelper.Tables.FOLLOWING,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA, selection, selectionArgs);
+                break;
+            case CHECK_IN_DATA_VALUES_ITEM:
+                db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA,
+                        addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
+                        selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -84,7 +100,24 @@ public class DmProvider extends ContentProvider {
 
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+
+        switch (sUriMatcher.match(uri)) {
+            case FOLLOWER_VALUES_ITEMS:
+                return DmContract.makeContentItemType(DmContract.Followers.CONTENT_TYPE_ID);
+            case FOLLOWER_VALUES_ITEM:
+                return DmContract.makeContentType(DmContract.Followers.CONTENT_TYPE_ID);
+            case FOLLOWING_VALUES_ITEMS:
+                return DmContract.makeContentItemType(DmContract.Following.CONTENT_TYPE_ID);
+            case FOLLOWING_VALUES_ITEM:
+                return DmContract.makeContentType(DmContract.Following.CONTENT_TYPE_ID);
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                return DmContract.makeContentItemType(DmContract.CheckInData.CONTENT_TYPE_ID);
+            case CHECK_IN_DATA_VALUES_ITEM:
+                return DmContract.makeContentType(DmContract.CheckInData.CONTENT_TYPE_ID);
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
     }
 
     @Override
@@ -100,7 +133,11 @@ public class DmProvider extends ContentProvider {
                 break;
             case FOLLOWING_VALUES_ITEMS:
                 table = DmDatabaseHelper.Tables.FOLLOWING;
-                result = DmContract.Following.buildFollowingUri();
+                result = DmContract.Following.buildFollowingsUri();
+                break;
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.CHECK_IN_DATA;
+                result = DmContract.CheckInData.buildCheckInDataUri();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -120,15 +157,46 @@ public class DmProvider extends ContentProvider {
 
     }
 
-    // TODO
-/*    @Override
+    @Override
     public int bulkInsert(@NonNull Uri uri, ContentValues[] values) {
 
+        String table;
         int rowsInserted = 0;
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
-    }*/
+        switch (sUriMatcher.match(uri)) {
+            case FOLLOWER_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.FOLLOWERS;
+                break;
+            case FOLLOWING_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.FOLLOWING;
+                break;
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.CHECK_IN_DATA;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        db.beginTransaction();
+        try {
+            for (ContentValues value : values) {
+                final long id = db.insert(table, null, value);
+                if (id != -1) {
+                    rowsInserted++;
+                }
+            }
+            db.setTransactionSuccessful();
+        }
+        finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return rowsInserted;
+    }
 
     @Override
     public boolean onCreate() {
@@ -155,6 +223,13 @@ public class DmProvider extends ContentProvider {
                 break;
             case FOLLOWING_VALUES_ITEM:
                 queryBuilder.setTables(DmDatabaseHelper.Tables.FOLLOWING);
+                selection = addKeyIdCheckToSelection(selection, ContentUris.parseId(uri));
+                break;
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                queryBuilder.setTables(DmDatabaseHelper.Tables.CHECK_IN_DATA);
+                break;
+            case CHECK_IN_DATA_VALUES_ITEM:
+                queryBuilder.setTables(DmDatabaseHelper.Tables.CHECK_IN_DATA);
                 selection = addKeyIdCheckToSelection(selection, ContentUris.parseId(uri));
                 break;
             default:
@@ -199,6 +274,14 @@ public class DmProvider extends ContentProvider {
                 break;
             case FOLLOWING_VALUES_ITEM:
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.FOLLOWING, values,
+                        addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
+                        selectionArgs);
+            case CHECK_IN_DATA_VALUES_ITEMS:
+                rowsUpdated = db.update(DmDatabaseHelper.Tables.CHECK_IN_DATA, values,
+                        selection, selectionArgs);
+                break;
+            case CHECK_IN_DATA_VALUES_ITEM:
+                rowsUpdated = db.update(DmDatabaseHelper.Tables.CHECK_IN_DATA, values,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
                 break;
