@@ -1,7 +1,10 @@
 package com.acpcoursera.diabetesmanagment.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.acpcoursera.diabetesmanagment.provider.DmContract;
 
 import java.sql.Timestamp;
 
@@ -16,7 +19,7 @@ public class CheckInData implements Parcelable {
     private String meal;
     private Timestamp mealTime;
     private float insulinDosage;
-    private Timestamp insulinAdministrationTime;
+    private Timestamp insulinTime;
 
     private int moodLevel;
     private int stressLevel;
@@ -34,7 +37,7 @@ public class CheckInData implements Parcelable {
         meal = in.readString();
         mealTime = (Timestamp) in.readSerializable();
         insulinDosage = in.readFloat();
-        insulinAdministrationTime = (Timestamp) in.readSerializable();
+        insulinTime = (Timestamp) in.readSerializable();
         moodLevel = in.readInt();
         stressLevel = in.readInt();
         energyLevel = in.readInt();
@@ -65,7 +68,7 @@ public class CheckInData implements Parcelable {
         dest.writeString(meal);
         dest.writeSerializable(mealTime);
         dest.writeFloat(insulinDosage);
-        dest.writeSerializable(insulinAdministrationTime);
+        dest.writeSerializable(insulinTime);
         dest.writeInt(moodLevel);
         dest.writeInt(stressLevel);
         dest.writeInt(energyLevel);
@@ -120,12 +123,12 @@ public class CheckInData implements Parcelable {
         this.insulinDosage = insulinDosage;
     }
 
-    public Timestamp getInsulinAdministrationTime() {
-        return insulinAdministrationTime;
+    public Timestamp getInsulinTime() {
+        return insulinTime;
     }
 
-    public void setInsulinAdministrationTime(Timestamp insulinAdministrationTime) {
-        this.insulinAdministrationTime = insulinAdministrationTime;
+    public void setInsulinTime(Timestamp insulinTime) {
+        this.insulinTime = insulinTime;
     }
 
     public int getMoodLevel() {
@@ -169,12 +172,28 @@ public class CheckInData implements Parcelable {
                 ", meal='" + meal + '\'' +
                 ", mealTime='" + mealTime + '\'' +
                 ", insulinDosage=" + insulinDosage +
-                ", insulinAdministrationTime='" + insulinAdministrationTime + '\'' +
+                ", insulinTime='" + insulinTime + '\'' +
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
                 ", checkInTimestamp='" + checkInTimestamp + '\'' +
                 '}';
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+        values.put(DmContract.CheckInData.USERNAME, username);
+        values.put(DmContract.CheckInData.SUGAR_LEVEL, sugarLevel);
+        values.put(DmContract.CheckInData.SUGAR_LEVEL_TIME, sugarLevelTime.toString());
+        values.put(DmContract.CheckInData.MEAL, meal);
+        values.put(DmContract.CheckInData.MEAL_TIME, mealTime.toString());
+        values.put(DmContract.CheckInData.INSULIN_DOSAGE, insulinDosage);
+        values.put(DmContract.CheckInData.INSULIN_TIME, insulinTime.toString());
+        values.put(DmContract.CheckInData.MOOD_LEVEL, moodLevel);
+        values.put(DmContract.CheckInData.STRESS_LEVEL, stressLevel);
+        values.put(DmContract.CheckInData.ENERGY_LEVEL, energyLevel);
+        values.put(DmContract.CheckInData.CHECK_IN_TIME, checkInTimestamp.toString());
+        return values;
     }
 
 }

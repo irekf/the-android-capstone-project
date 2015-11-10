@@ -267,7 +267,7 @@ public class CheckInActivity extends AppCompatActivity {
         data.setMeal(mMeal.getText().toString());
         data.setMealTime(new Timestamp(mMealTimeCalendar.getTimeInMillis()));
         data.setInsulinDosage(Float.valueOf(mInsulinDosage.getText().toString()));
-        data.setInsulinAdministrationTime(new Timestamp(mInsulinTimeCalendar.getTimeInMillis()));
+        data.setInsulinTime(new Timestamp(mInsulinTimeCalendar.getTimeInMillis()));
         data.setMoodLevel(mMoodNumberPicker.getValue());
         data.setStressLevel(mStressNumberPicker.getValue());
         data.setEnergyLevel(mEnergyNumberPicker.getValue());

@@ -39,7 +39,7 @@ public class DmContract {
         String MEAL = "meal";
         String MEAL_TIME = "meal_time";
         String INSULIN_DOSAGE = "insulin_dosage";
-        String INSULIN_ADMINISTRATION_TIME = "insulin_administration_time";
+        String INSULIN_TIME = "insulin_time";
         String MOOD_LEVEL = "mood_level";
         String STRESS_LEVEL = "stress_level";
         String ENERGY_LEVEL = "energy_level";

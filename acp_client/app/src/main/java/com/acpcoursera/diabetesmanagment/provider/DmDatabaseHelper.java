@@ -13,7 +13,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = DmDatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "acp.db";
 
@@ -26,8 +26,8 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_FOLLOWERS
             = "CREATE TABLE " + Tables.FOLLOWERS + " ("
             + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + FollowersColumns.USERNAME + " TEXT    NOT NULL, "
-            + FollowersColumns.FOLLOWER_NAME + " TEXT    NOT NULL, "
+            + FollowersColumns.USERNAME + " TEXT NOT NULL, "
+            + FollowersColumns.FOLLOWER_NAME + " TEXT NOT NULL, "
             + FollowersColumns.ACCEPTED + " INTEGER NOT NULL, "
             + FollowersColumns.MAJOR_DATA + " INTEGER NOT_NULL, "
             + FollowersColumns.MINOR_DATE + " INTEGER NOT_NULL"
@@ -36,8 +36,8 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_FOLLOWING
             = "CREATE TABLE " + Tables.FOLLOWING + " ("
             + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + FollowingColumns.USERNAME + " TEXT    NOT NULL, "
-            + FollowingColumns.FOLLOWING_NAME + " TEXT    NOT NULL, "
+            + FollowingColumns.USERNAME + " TEXT NOT NULL, "
+            + FollowingColumns.FOLLOWING_NAME + " TEXT NOT NULL, "
             + FollowingColumns.PENDING + " INTEGER NOT NULL, "
             + FollowingColumns.MAJOR_DATA + " INTEGER NOT_NULL, "
             + FollowingColumns.MINOR_DATE + " INTEGER NOT_NULL"
@@ -52,7 +52,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
             + CheckInDataColumns.MEAL + " TEXT NOT NULL, "
             + CheckInDataColumns.MEAL_TIME + " TEXT NOT NULL, "
             + CheckInDataColumns.INSULIN_DOSAGE + " REAL NOT NULL, "
-            + CheckInDataColumns.INSULIN_ADMINISTRATION_TIME + " TEXT NOT NULL, "
+            + CheckInDataColumns.INSULIN_TIME + " TEXT NOT NULL, "
             + CheckInDataColumns.MOOD_LEVEL + " INTEGER NOT_NULL, "
             + CheckInDataColumns.STRESS_LEVEL + " INTEGER NOT_NULL, "
             + CheckInDataColumns.ENERGY_LEVEL + " INTEGER NOT_NULL, "
@@ -76,5 +76,6 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWERS);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWING);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.CHECK_IN_DATA);
+        onCreate(db);
     }
 }

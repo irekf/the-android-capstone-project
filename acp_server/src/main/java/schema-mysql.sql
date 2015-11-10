@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `check_in_data` (
     meal varchar(4096) NOT NULL,
     meal_time timestamp NOT NULL,
     insulin_dosage float NOT NULL,
-    insulin_administration_time timestamp NOT NULL,
+    insulin_time timestamp NOT NULL,
     mood_level int,
     stress_level int,
     energy_level int,

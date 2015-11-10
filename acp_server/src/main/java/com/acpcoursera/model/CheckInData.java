@@ -25,7 +25,7 @@ public class CheckInData {
     private Timestamp mealTime;
     private float insulinDosage;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
-    private Timestamp insulinAdministrationTime;
+    private Timestamp insulinTime;
 
     private int moodLevel;
     private int stressLevel;
@@ -86,12 +86,12 @@ public class CheckInData {
         this.insulinDosage = insulinDosage;
     }
 
-    public Timestamp getInsulinAdministrationTime() {
-        return insulinAdministrationTime;
+    public Timestamp getInsulinTime() {
+        return insulinTime;
     }
 
-    public void setInsulinAdministrationTime(Timestamp insulinAdministrationTime) {
-        this.insulinAdministrationTime = insulinAdministrationTime;
+    public void setInsulinTime(Timestamp insulinTime) {
+        this.insulinTime = insulinTime;
     }
 
     public int getMoodLevel() {
@@ -135,7 +135,7 @@ public class CheckInData {
                 ", meal='" + meal + '\'' +
                 ", mealTime='" + mealTime + '\'' +
                 ", insulinDosage=" + insulinDosage +
-                ", insulinAdministrationTime='" + insulinAdministrationTime + '\'' +
+                ", insulinTime='" + insulinTime + '\'' +
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +

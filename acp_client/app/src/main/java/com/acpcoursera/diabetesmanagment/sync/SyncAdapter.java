@@ -81,20 +81,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                     ContentValues[] values = new ContentValues[checkInData.size()];
                     for (int i = 0; i < values.length; i++) {
-                        /* TODO this should go to a helper method #2 */
-                        values[i] = new ContentValues();
-                        values[i].put(DmContract.CheckInData.USERNAME, checkInData.get(i).getUsername());
-                        values[i].put(DmContract.CheckInData.SUGAR_LEVEL, checkInData.get(i).getSugarLevel());
-                        values[i].put(DmContract.CheckInData.SUGAR_LEVEL_TIME, checkInData.get(i).getSugarLevelTime().toString());
-                        values[i].put(DmContract.CheckInData.MEAL, checkInData.get(i).getMeal());
-                        values[i].put(DmContract.CheckInData.MEAL_TIME, checkInData.get(i).getMealTime().toString());
-                        values[i].put(DmContract.CheckInData.INSULIN_DOSAGE, checkInData.get(i).getInsulinDosage());
-                        values[i].put(DmContract.CheckInData.INSULIN_ADMINISTRATION_TIME, checkInData.get(i).getInsulinAdministrationTime().toString());
-                        values[i].put(DmContract.CheckInData.MOOD_LEVEL, checkInData.get(i).getMoodLevel());
-                        values[i].put(DmContract.CheckInData.STRESS_LEVEL, checkInData.get(i).getStressLevel());
-                        values[i].put(DmContract.CheckInData.ENERGY_LEVEL, checkInData.get(i).getEnergyLevel());
-                        values[i].put(DmContract.CheckInData.CHECK_IN_TIME, checkInData.get(i).getCheckInTimestamp().toString());
-                        /* TODO -------------------------------------- */
+                        values[i] = checkInData.get(i).getContentValues();
                     }
 
                     mContentResolver.delete(DmContract.CheckInData.buildCheckInDataUri(), null, null);
