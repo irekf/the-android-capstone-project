@@ -84,7 +84,8 @@ public class DmService {
         @Override public synchronized Timestamp deserialize(JsonElement jsonElement, Type type,
                                                        JsonDeserializationContext jsonDeserializationContext) {
             try {
-                return (Timestamp) dateFormat.parse(jsonElement.getAsString());
+                // TODO do I even need Timestamp in the app, Date would work as well
+                return new Timestamp(dateFormat.parse(jsonElement.getAsString()).getTime());
             } catch (ParseException e) {
                 throw new JsonParseException(e);
             }
