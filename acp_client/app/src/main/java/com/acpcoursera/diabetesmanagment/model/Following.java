@@ -11,6 +11,7 @@ public class Following {
     private String username;
     private String followingName;
     private boolean pending;
+    private boolean isInvite;
     private boolean majorData;
     private boolean minorData;
 
@@ -38,6 +39,14 @@ public class Following {
         this.pending = pending;
     }
 
+    public boolean isInvite() {
+        return isInvite;
+    }
+
+    public void setIsInvite(boolean isInvite) {
+        this.isInvite = isInvite;
+    }
+
     public boolean isMajorData() {
         return majorData;
     }
@@ -60,6 +69,7 @@ public class Following {
                 "username='" + username + '\'' +
                 ", followingName='" + followingName + '\'' +
                 ", pending=" + pending +
+                ", isInvite=" + isInvite +
                 ", majorData=" + majorData +
                 ", minorData=" + minorData +
                 '}';
@@ -70,6 +80,7 @@ public class Following {
         values.put(DmContract.Following.USERNAME, username);
         values.put(DmContract.Following.FOLLOWING_NAME, followingName);
         values.put(DmContract.Following.PENDING, pending ? 1 : 0);
+        values.put(DmContract.Following.IS_INVITE, isInvite ? 1 : 0);
         values.put(DmContract.Following.MAJOR_DATA, majorData ? 1 : 0);
         values.put(DmContract.Following.MINOR_DATE, minorData ? 1 : 0);
         return values;

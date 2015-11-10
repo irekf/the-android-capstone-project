@@ -28,6 +28,7 @@ public class DmContract {
         String USERNAME = "username";
         String FOLLOWING_NAME = "following_name";
         String PENDING = "pending";
+        String IS_INVITE = "is_invite";
         String MAJOR_DATA = "major_data";
         String MINOR_DATE = "minor_data";
     }
