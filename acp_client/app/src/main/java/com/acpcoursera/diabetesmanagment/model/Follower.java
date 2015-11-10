@@ -14,6 +14,10 @@ public class Follower {
     private boolean majorData;
     private boolean minorData;
 
+    public Follower() {
+
+    }
+
     public String getUsername() {
         return username;
     }
