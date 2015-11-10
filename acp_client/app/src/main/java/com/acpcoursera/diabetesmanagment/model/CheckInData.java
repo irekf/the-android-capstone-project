@@ -9,6 +9,8 @@ public class CheckInData implements Parcelable {
 
     private static String TAG = CheckInData.class.getSimpleName();
 
+    private String username;
+
     private float sugarLevel;
     private Timestamp sugarLevelTime;
     private String meal;
@@ -68,6 +70,14 @@ public class CheckInData implements Parcelable {
         dest.writeInt(stressLevel);
         dest.writeInt(energyLevel);
         dest.writeSerializable(checkInTimestamp);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public float getSugarLevel() {
@@ -153,7 +163,8 @@ public class CheckInData implements Parcelable {
     @Override
     public String toString() {
         return "CheckInData{" +
-                "sugarLevel=" + sugarLevel +
+                "userName=" + username +
+                ", sugarLevel=" + sugarLevel +
                 ", sugarLevelTime='" + sugarLevelTime + '\'' +
                 ", meal='" + meal + '\'' +
                 ", mealTime='" + mealTime + '\'' +

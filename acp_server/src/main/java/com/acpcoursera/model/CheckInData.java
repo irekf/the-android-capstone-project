@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class CheckInData {
@@ -16,7 +15,6 @@ public class CheckInData {
     @GeneratedValue
     private Integer id;
 
-    @JsonIgnore
     private String username;
 
     private float sugarLevel;
@@ -131,7 +129,8 @@ public class CheckInData {
     @Override
     public String toString() {
         return "CheckInData{" +
-                "sugarLevel=" + sugarLevel +
+        		"userName=" + username +
+                ", sugarLevel=" + sugarLevel +
                 ", sugarLevelTime='" + sugarLevelTime + '\'' +
                 ", meal='" + meal + '\'' +
                 ", mealTime='" + mealTime + '\'' +
