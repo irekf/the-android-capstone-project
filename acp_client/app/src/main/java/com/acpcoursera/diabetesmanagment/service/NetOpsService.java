@@ -19,6 +19,7 @@ import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
+import java.util.List;
 
 import retrofit.Call;
 import retrofit.Response;
@@ -35,12 +36,14 @@ public class NetOpsService extends IntentService {
     public static String ACTION_LOG_OUT = "action_log_out";
 
     public static String ACTION_CHECK_IN = "action_check_in";
+    public static String ACTION_GET_USER_LIST = "action_get_user_list";
 
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
 
     public static String EXTRA_USER_INFO = "user_info";
     public static String EXTRA_CHECK_IN_DATA = "check_in_data";
+    public static String EXTRA_USER_LIST = "user_list";
 
     public static String EXTRA_ERROR_MESSAGE = "error_message";
 
@@ -241,6 +244,33 @@ public class NetOpsService extends IntentService {
                 reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
             }
             else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleGetUserList(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_GET_USER_LIST);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Call<List<UserInfo>> call = sDmService.getUserList();
+
+        try {
+            Response<List<UserInfo>> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                List<UserInfo> users = response.body();
+                reply.putExtra(EXTRA_USER_LIST, users.toArray());
                 reply.putExtra(RESULT_CODE, RC_OK);
             }
         } catch (IOException e) {

@@ -39,4 +39,7 @@ public interface DmServiceProxy {
     @GET("/checkin")
     public Call<List<CheckInData>> getCheckInData();
 
+    @GET("/users")
+    public Call<List<UserInfo>> getUserList();
+
 }

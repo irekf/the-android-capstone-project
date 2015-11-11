@@ -131,6 +131,19 @@ public class DmController {
     	return new ResponseEntity<List<CheckInData>>(checkInData, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ResponseEntity<List<UserInfo>> getUserList(OAuth2Authentication auth) {
+
+    	String username = auth.getName();
+    	UserInfo currentUser = new UserInfo();
+    	currentUser.setUsername(username);
+
+    	List<UserInfo> allUsersInfo = usersInfo.findAll();
+    	allUsersInfo.remove(currentUser);
+
+    	return new ResponseEntity<List<UserInfo>>(allUsersInfo, HttpStatus.OK);
+    }
+
     private GcmResponse sendGcmMessage(GcmMessage message) {
 
     	GcmResponse response = new GcmResponse();

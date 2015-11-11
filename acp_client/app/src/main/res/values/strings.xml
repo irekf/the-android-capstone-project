@@ -70,6 +70,7 @@
     <string name="error_need_required_data">You must provide all major info</string>
     <string name="check_in_error">Check-In failed: </string>
     <string name="check_in_submitted">Check-In data submitted</string>
+    <string name="error_user_list">Error retrieving user list</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>
