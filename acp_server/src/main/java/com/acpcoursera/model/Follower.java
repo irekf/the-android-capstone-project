@@ -14,6 +14,7 @@ public class Follower {
     private String username;
     private String followerName;
     private boolean accepted;
+    private boolean pending;
     private boolean majorData;
     private boolean minorData;
 
@@ -45,6 +46,14 @@ public class Follower {
         this.accepted = accepted;
     }
 
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
     public boolean isMajorData() {
         return majorData;
     }
@@ -67,6 +76,7 @@ public class Follower {
                 "username='" + username + '\'' +
                 ", followerName='" + followerName + '\'' +
                 ", accepted=" + accepted +
+                ", pending=" + pending +
                 ", majorData=" + majorData +
                 ", minorData=" + minorData +
                 '}';

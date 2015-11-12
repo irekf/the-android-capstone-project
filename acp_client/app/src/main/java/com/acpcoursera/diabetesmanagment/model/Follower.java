@@ -11,6 +11,7 @@ public class Follower {
     private String username;
     private String followerName;
     private boolean accepted;
+    private boolean pending;
     private boolean majorData;
     private boolean minorData;
 
@@ -42,6 +43,14 @@ public class Follower {
         this.accepted = accepted;
     }
 
+    public boolean isPending() {
+        return pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
     public boolean isMajorData() {
         return majorData;
     }
@@ -64,6 +73,7 @@ public class Follower {
                 "username='" + username + '\'' +
                 ", followerName='" + followerName + '\'' +
                 ", accepted=" + accepted +
+                ", pending=" + pending +
                 ", majorData=" + majorData +
                 ", minorData=" + minorData +
                 '}';
@@ -74,6 +84,7 @@ public class Follower {
         values.put(DmContract.Followers.USERNAME, username);
         values.put(DmContract.Followers.FOLLOWER_NAME, followerName);
         values.put(DmContract.Followers.ACCEPTED, accepted ? 1 : 0);
+        values.put(DmContract.Followers.PENDING, accepted ? 1 : 0);
         values.put(DmContract.Followers.MAJOR_DATA, majorData ? 1 : 0);
         values.put(DmContract.Followers.MINOR_DATE, minorData ? 1 : 0);
         return values;

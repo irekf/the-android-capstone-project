@@ -20,6 +20,7 @@ public class DmContract {
         String USERNAME = "username";
         String FOLLOWER_NAME = "follower_name";
         String ACCEPTED = "accepted";
+        String PENDING = "pending";
         String MAJOR_DATA = "major_data";
         String MINOR_DATE = "minor_data";
     }

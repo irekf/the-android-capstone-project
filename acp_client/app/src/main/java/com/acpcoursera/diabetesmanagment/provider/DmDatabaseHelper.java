@@ -13,7 +13,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = DmDatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String DATABASE_NAME = "acp.db";
 
@@ -29,6 +29,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
             + FollowersColumns.USERNAME + " TEXT NOT NULL, "
             + FollowersColumns.FOLLOWER_NAME + " TEXT NOT NULL, "
             + FollowersColumns.ACCEPTED + " INTEGER NOT NULL, "
+            + FollowersColumns.PENDING + " INTEGER NOT NULL, "
             + FollowersColumns.MAJOR_DATA + " INTEGER NOT_NULL, "
             + FollowersColumns.MINOR_DATE + " INTEGER NOT_NULL"
             + " )";
