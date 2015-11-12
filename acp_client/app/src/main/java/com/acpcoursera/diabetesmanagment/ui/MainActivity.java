@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
+                mActionBar.setTitle(mOptionTitles[position]);
+                mDrawerLayout.closeDrawers();
             }
         });
 
@@ -80,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         ) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                mActionBar.setTitle("Diabetes Management");
             }
 
             public void onDrawerOpened(View drawerView) {
