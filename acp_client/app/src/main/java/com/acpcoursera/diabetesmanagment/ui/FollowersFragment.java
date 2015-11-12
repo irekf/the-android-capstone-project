@@ -7,6 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -54,6 +56,8 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
         mFollowers.setAdapter(mAdapter);
 
+        setHasOptionsMenu(true);
+
         return rootView;
     }
 
@@ -96,4 +100,10 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.changeCursor(null);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add, menu);
+    }
+
 }
