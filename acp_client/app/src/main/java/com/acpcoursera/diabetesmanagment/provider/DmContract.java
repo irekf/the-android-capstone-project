@@ -48,6 +48,12 @@ public class DmContract {
         String CHECK_IN_TIME = "check_in_time";
     }
 
+    interface ReminderColumns {
+        String HOUR_OF_DAY = "hour_of_day";
+        String MINUTE = "minute";
+        String IS_ENABLED = "is_enabled";
+    }
+
     public static final String CONTENT_AUTHORITY
             = "com.acpcoursera.diabetesmanagment.provider.dmprovider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -55,6 +61,7 @@ public class DmContract {
     private static final String PATH_FOLLOWERS = "followers";
     private static final String PATH_FOLLOWING = "following";
     private static final String PATH_CHECK_IN_DATA = "check_in_data";
+    private static final String PATH_REMINDER = "reminders";
 
     public static String makeContentType(String id) {
         if (id != null) {
@@ -118,6 +125,23 @@ public class DmContract {
         }
 
         public static Uri buildCheckInDatumUri(String tagId) {
+            return CONTENT_URI.buildUpon().appendPath(tagId).build();
+        }
+
+    }
+
+    public static class Reminders implements ReminderColumns, BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REMINDER).build();
+
+        public static final String CONTENT_TYPE_ID = "reminders";
+
+        public static Uri buildRemindersUri() {
+            return CONTENT_URI;
+        }
+
+        public static Uri buildReminderUri(String tagId) {
             return CONTENT_URI.buildUpon().appendPath(tagId).build();
         }
 

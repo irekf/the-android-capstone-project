@@ -28,6 +28,8 @@ public class DmProvider extends ContentProvider {
     public final static int FOLLOWING_VALUES_ITEMS = 210;
     public final static int CHECK_IN_DATA_VALUES_ITEM = 300;
     public final static int CHECK_IN_DATA_VALUES_ITEMS = 310;
+    public final static int REMINDER_VALUES_ITEM = 400;
+    public final static int REMINDER_VALUES_ITEMS = 410;
 
     public static UriMatcher buildUriMatcher() {
 
@@ -54,6 +56,13 @@ public class DmProvider extends ContentProvider {
         matcher.addURI(DmContract.CONTENT_AUTHORITY,
                 DmDatabaseHelper.Tables.CHECK_IN_DATA + "/#",
                 CHECK_IN_DATA_VALUES_ITEM);
+
+        matcher.addURI(DmContract.CONTENT_AUTHORITY,
+                DmDatabaseHelper.Tables.REMINDERS,
+                REMINDER_VALUES_ITEMS);
+        matcher.addURI(DmContract.CONTENT_AUTHORITY,
+                DmDatabaseHelper.Tables.REMINDERS + "/#",
+                REMINDER_VALUES_ITEM);
 
         return matcher;
     }
@@ -89,6 +98,13 @@ public class DmProvider extends ContentProvider {
                 db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+            case REMINDER_VALUES_ITEMS:
+                db.delete(DmDatabaseHelper.Tables.REMINDERS, selection, selectionArgs);
+                break;
+            case REMINDER_VALUES_ITEM:
+                db.delete(DmDatabaseHelper.Tables.REMINDERS,
+                        addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
+                        selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -115,6 +131,10 @@ public class DmProvider extends ContentProvider {
                 return DmContract.makeContentItemType(DmContract.CheckInData.CONTENT_TYPE_ID);
             case CHECK_IN_DATA_VALUES_ITEM:
                 return DmContract.makeContentType(DmContract.CheckInData.CONTENT_TYPE_ID);
+            case REMINDER_VALUES_ITEMS:
+                return DmContract.makeContentItemType(DmContract.Reminders.CONTENT_TYPE_ID);
+            case REMINDER_VALUES_ITEM:
+                return DmContract.makeContentType(DmContract.Reminders.CONTENT_TYPE_ID);
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -139,6 +159,10 @@ public class DmProvider extends ContentProvider {
             case CHECK_IN_DATA_VALUES_ITEMS:
                 table = DmDatabaseHelper.Tables.CHECK_IN_DATA;
                 result = DmContract.CheckInData.buildCheckInDataUri();
+                break;
+            case REMINDER_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.REMINDERS;
+                result = DmContract.Reminders.buildRemindersUri();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -175,6 +199,9 @@ public class DmProvider extends ContentProvider {
                 break;
             case CHECK_IN_DATA_VALUES_ITEMS:
                 table = DmDatabaseHelper.Tables.CHECK_IN_DATA;
+                break;
+            case REMINDER_VALUES_ITEMS:
+                table = DmDatabaseHelper.Tables.REMINDERS;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -233,6 +260,13 @@ public class DmProvider extends ContentProvider {
                 queryBuilder.setTables(DmDatabaseHelper.Tables.CHECK_IN_DATA);
                 selection = addKeyIdCheckToSelection(selection, ContentUris.parseId(uri));
                 break;
+            case REMINDER_VALUES_ITEMS:
+                queryBuilder.setTables(DmDatabaseHelper.Tables.REMINDERS);
+                break;
+            case REMINDER_VALUES_ITEM:
+                queryBuilder.setTables(DmDatabaseHelper.Tables.REMINDERS);
+                selection = addKeyIdCheckToSelection(selection, ContentUris.parseId(uri));
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -284,6 +318,14 @@ public class DmProvider extends ContentProvider {
                 break;
             case CHECK_IN_DATA_VALUES_ITEM:
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.CHECK_IN_DATA, values,
+                        addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
+                        selectionArgs);
+            case REMINDER_VALUES_ITEMS:
+                rowsUpdated = db.update(DmDatabaseHelper.Tables.REMINDERS, values,
+                        selection, selectionArgs);
+                break;
+            case REMINDER_VALUES_ITEM:
+                rowsUpdated = db.update(DmDatabaseHelper.Tables.REMINDERS, values,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
                 break;

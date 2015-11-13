@@ -13,7 +13,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = DmDatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String DATABASE_NAME = "acp.db";
 
@@ -21,6 +21,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
         String FOLLOWERS = "followers";
         String FOLLOWING = "following";
         String CHECK_IN_DATA = "check_in_data";
+        String REMINDERS = "reminders";
     }
 
     private static final String SQL_CREATE_FOLLOWERS
@@ -61,6 +62,14 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
             + CheckInDataColumns.CHECK_IN_TIME + " TEXT NOT_NULL"
             + " )";
 
+    private static final String SQL_CREATE_REMINDERS
+            = "CREATE TABLE " + Tables.REMINDERS + " ("
+            + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + ReminderColumns.HOUR_OF_DAY + " INTEGER NOT NULL, "
+            + ReminderColumns.MINUTE + " INTEGER NOT NULL, "
+            + ReminderColumns.IS_ENABLED + " INTEGER NOT NULL"
+            + " )";
+
     public DmDatabaseHelper(Context context) {
         // TODO consider something different than cachedir
         super(context, context.getCacheDir() + File.separator + DATABASE_NAME, null, DATABASE_VERSION);
@@ -71,6 +80,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_FOLLOWERS);
         db.execSQL(SQL_CREATE_FOLLOWING);
         db.execSQL(SQL_CREATE_CHECK_IN_DATA);
+        db.execSQL(SQL_CREATE_REMINDERS);
     }
 
     @Override
@@ -78,6 +88,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWERS);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.FOLLOWING);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.CHECK_IN_DATA);
+        db.execSQL("DROP TABLE IF EXISTS " + Tables.REMINDERS);
         onCreate(db);
     }
 }

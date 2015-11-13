@@ -102,6 +102,8 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <receiver android:name=".receiver.CheckInPublisher" />
+
     </application>
 
 </manifest>
