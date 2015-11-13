@@ -19,7 +19,7 @@ public class UserInfo {
     private String userType;
     private String firstName;
     private String secondName;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date birthDate;
     private String medicalRecordNumber;
     private String email;

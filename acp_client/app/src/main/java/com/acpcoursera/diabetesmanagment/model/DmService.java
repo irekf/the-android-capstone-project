@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.sql.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -44,7 +45,8 @@ public class DmService {
             .addConverterFactory(GsonConverterFactory.create(
                             new GsonBuilder()
                                     .setDateFormat("yyyy-MM-dd HH:mm:ss.S")
-                                    .registerTypeAdapter(Timestamp.class, new GsonUtcDateAdapter())
+                                    .registerTypeAdapter(Timestamp.class, new GsonSqlTimestampAdapter())
+                                    .registerTypeAdapter(Date.class, new GsonSqlDateAdapter())
                                     .create())
             );
 
@@ -68,10 +70,10 @@ public class DmService {
     }
 
     /* Gson uses the local timezone when serializing a Date (Timestamp in our case), we need a workaround */
-    private static class GsonUtcDateAdapter  implements JsonSerializer<Timestamp>, JsonDeserializer<Timestamp> {
+    private static class GsonSqlTimestampAdapter implements JsonSerializer<Timestamp>, JsonDeserializer<Timestamp> {
         private final DateFormat dateFormat;
 
-        private GsonUtcDateAdapter() {
+        private GsonSqlTimestampAdapter() {
             dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US);
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
@@ -86,6 +88,30 @@ public class DmService {
             try {
                 // TODO do I even need Timestamp in the app, Date would work as well
                 return new Timestamp(dateFormat.parse(jsonElement.getAsString()).getTime());
+            } catch (ParseException e) {
+                throw new JsonParseException(e);
+            }
+        }
+    }
+
+
+    private static class GsonSqlDateAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
+        private final DateFormat dateFormat;
+
+        private GsonSqlDateAdapter() {
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+
+        @Override public synchronized JsonElement serialize(Date date, Type type,
+                                                            JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(dateFormat.format(date));
+        }
+
+        @Override public synchronized Date deserialize(JsonElement jsonElement, Type type,
+                                                       JsonDeserializationContext jsonDeserializationContext) {
+            try {
+                return new Date(dateFormat.parse(jsonElement.getAsString()).getTime());
             } catch (ParseException e) {
                 throw new JsonParseException(e);
             }
