@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TAG = MainActivity.class.getSimpleName();
 
+    private static String ACTION_BAR_TITLE_KEY = "action_bar_title_key";
+
+    TextView mCheckInButton;
     TextView mLogOutButton;
 
     private NetOpsReceiver mReceiver;
@@ -39,11 +43,14 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
 
+    CharSequence mActionBarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mActionBar = getSupportActionBar();
 
         mOptionTitles = getResources().getStringArray(R.array.option_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -58,32 +65,29 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView drawerItem = (TextView) view;
                 String itemText = drawerItem.getText().toString();
-                if (itemText.equals("Check-In")) {
-                    startActivity(new Intent(getApplicationContext(), CheckInActivity.class));
+
+                if (itemText.equals("Followers")) {
+                    loadFollowersFragment();
                 }
-                else if (itemText.equals("Followers")) {
-                    FollowersFragment followersFragment = new FollowersFragment();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.content_frame, followersFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                }
-                mActionBar.setTitle(mOptionTitles[position]);
+
+                mActionBarTitle = mOptionTitles[position];
                 mDrawerLayout.closeDrawers();
             }
         });
-
-        mActionBar = getSupportActionBar();
 
         // drawer toggle
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout,
                 R.string.drawer_open, R.string.drawer_close
         ) {
+
+            @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
+                mActionBar.setTitle(mActionBarTitle);
             }
 
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 mActionBar.setTitle(R.string.label_main_menu);
@@ -95,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setHomeButtonEnabled(true);
+
+        mCheckInButton = (TextView) findViewById(R.id.check_in_button);
+        mCheckInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), CheckInActivity.class));
+            }
+        });
 
         // logout button (not really a button for now)
         mLogOutButton = (TextView) findViewById(R.id.log_out_button);
@@ -108,6 +120,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState == null) {
+            loadFollowersFragment();
+            mDrawerList.setItemChecked(1, true);
+            mActionBarTitle = getString(R.string.title_followers);
+        }
+        else {
+            mActionBarTitle = savedInstanceState.getCharSequence(ACTION_BAR_TITLE_KEY);
+        }
+        mActionBar.setTitle(mActionBarTitle);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence(ACTION_BAR_TITLE_KEY, mActionBarTitle);
     }
 
     @Override
@@ -150,6 +178,16 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+        }
+        else {
+            this.finish();
+        }
+    }
+
     private class NetOpsReceiver extends BroadcastReceiver {
 
         @Override
@@ -179,6 +217,14 @@ public class MainActivity extends AppCompatActivity {
         Intent authActivityIntent = new Intent(getApplicationContext(), AuthActivity.class);
         startActivity(authActivityIntent);
         finish();
+    }
+
+    private void loadFollowersFragment() {
+        FollowersFragment followersFragment = new FollowersFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, followersFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }

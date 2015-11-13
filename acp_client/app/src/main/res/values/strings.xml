@@ -48,7 +48,6 @@
     <string name="title_reminders">"Reminders"</string>
 
     <string-array name="option_titles">
-        <item>@string/title_check_in</item>
         <item>@string/title_feedback</item>
         <item>@string/title_followers</item>
         <item>@string/title_following</item>
@@ -79,6 +78,7 @@
     <string name="check_in_submitted">Check-In data submitted</string>
     <string name="error_user_list">Error retrieving user list</string>
     <string name="invite">Invite</string>
+    <string name="check_in_button">Check-In</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

@@ -18,6 +18,25 @@
         android:layout_gravity="start"
         android:orientation="vertical" >
 
+        <TextView
+            android:text="@string/check_in_button"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".1"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="#fff"
+            android:background="#111"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:id="@+id/check_in_button" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
         <ListView android:id="@+id/left_drawer_items"
             android:layout_width="240dp"
             android:layout_height="0dip"
