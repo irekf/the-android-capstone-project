@@ -270,7 +270,7 @@ public class NetOpsService extends IntentService {
             }
             else {
                 List<UserInfo> users = response.body();
-                reply.putExtra(EXTRA_USER_LIST, users.toArray());
+                reply.putExtra(EXTRA_USER_LIST, users.toArray(new UserInfo[users.size()]));
                 reply.putExtra(RESULT_CODE, RC_OK);
             }
         } catch (IOException e) {

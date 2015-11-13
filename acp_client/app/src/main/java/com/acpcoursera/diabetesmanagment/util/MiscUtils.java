@@ -3,13 +3,16 @@ package com.acpcoursera.diabetesmanagment.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.ACCESS_TOKEN_PREF;
-import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SHARED_PREF_FILE;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_LOGGED_IN_PREF;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SHARED_PREF_FILE;
 
 public class MiscUtils {
 
@@ -57,6 +60,13 @@ public class MiscUtils {
 
     public static void showToast(Context context, int resId) {
         Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
+    }
+
+    public static <T> T[] convertParcelableArray(Parcelable[] parcelables, Class<T> type) {
+        @SuppressWarnings("unchecked")
+        T[] result = (T[]) Array.newInstance(type, parcelables.length);
+        System.arraycopy(parcelables, 0, result, 0, parcelables.length);
+        return result;
     }
 
 }

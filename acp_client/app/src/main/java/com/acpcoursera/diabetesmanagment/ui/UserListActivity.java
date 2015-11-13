@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
@@ -40,7 +42,8 @@ public class UserListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_list);
 
         if (savedInstanceState != null) {
-            mUserList = (UserInfo[]) savedInstanceState.getParcelableArray(USER_LIST_KEY);
+            mUserList = MiscUtils.convertParcelableArray(
+                    savedInstanceState.getParcelableArray(USER_LIST_KEY), UserInfo.class);
         }
         else {
             requestUserList();
@@ -103,9 +106,10 @@ public class UserListActivity extends AppCompatActivity {
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
             if (action.equals(NetOpsService.ACTION_GET_USER_LIST)) {
                 if (resultCode == NetOpsService.RC_OK) {
-                    mUserList = (UserInfo[]) intent
+                    Parcelable[] parcelables = intent
                             .getParcelableArrayExtra(NetOpsService.EXTRA_USER_LIST);
-                    if (mUserList != null) {
+                    if (parcelables != null) {
+                        mUserList = MiscUtils.convertParcelableArray(parcelables, UserInfo.class);
                         setUserListAdapter();
                     }
                 }
