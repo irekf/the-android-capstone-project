@@ -113,6 +113,9 @@ public class NetOpsService extends IntentService {
             else if (action.equals(ACTION_CHECK_IN)) {
                 handleCheckIn(intent);
             }
+            else if (action.equals(ACTION_GET_USER_LIST)) {
+                handleGetUserList(intent);
+            }
             else {
 
             }

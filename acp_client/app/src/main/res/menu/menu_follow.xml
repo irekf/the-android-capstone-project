@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:title="@string/follow"
-        android:id="@+id/menu_invite"
+        android:id="@+id/menu_follow"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         compat:showAsAction="ifRoom">
     </item>

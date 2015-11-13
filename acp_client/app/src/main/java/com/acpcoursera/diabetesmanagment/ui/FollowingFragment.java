@@ -1,5 +1,7 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -22,6 +25,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
     private static String TAG = FollowingFragment.class.getSimpleName();
 
     private static final int TEST_LOADER = 0;
+
+    public static final int REQUEST_FOLLOW = 2;
 
     private SimpleCursorAdapter mAdapter;
     private ListView mFollowing;
@@ -107,6 +112,28 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_follow, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_follow:
+                Intent intent = new Intent(getActivity(), UserListActivity.class);
+                startActivityForResult(intent, REQUEST_FOLLOW);
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode ==REQUEST_FOLLOW) {
+            if (resultCode == Activity.RESULT_OK) {
+
+            }
+        }
     }
 
 }
