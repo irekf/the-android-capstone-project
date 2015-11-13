@@ -66,8 +66,22 @@ public class MainActivity extends AppCompatActivity {
                 TextView drawerItem = (TextView) view;
                 String itemText = drawerItem.getText().toString();
 
-                if (itemText.equals("Followers")) {
-                    loadFollowersFragment();
+                switch (itemText) {
+                    case "Feedback":
+                        loadFeedbackFragment();
+                        break;
+                    case "Followers":
+                        loadFollowersFragment();
+                        break;
+                    case "Following":
+                        loadFollowingFragment();
+                        break;
+                    case "Messages":
+                        loadMessagesFragment();
+                        break;
+                    case "Reminders":
+                        loadRemindersFragment();
+                        break;
                 }
 
                 mActionBarTitle = mOptionTitles[position];
@@ -219,10 +233,42 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void loadFeedbackFragment() {
+        FeedbackFragment feedbackFragment = new FeedbackFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, feedbackFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private void loadFollowersFragment() {
         FollowersFragment followersFragment = new FollowersFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, followersFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void loadFollowingFragment() {
+        FollowingFragment followingFragment = new FollowingFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, followingFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void loadMessagesFragment() {
+        MessagesFragment messagesFragment = new MessagesFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, messagesFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void loadRemindersFragment() {
+        RemindersFragment remindersFragment = new RemindersFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, remindersFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
