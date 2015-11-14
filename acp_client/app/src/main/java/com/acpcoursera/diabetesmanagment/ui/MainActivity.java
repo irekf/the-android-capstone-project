@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.provider.DmDatabaseHelper;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
@@ -228,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
     private void logOut() {
         // log out and go back to the login screen
         MiscUtils.setLoggedIn(getApplicationContext(), false);
+        new DmDatabaseHelper(this).clearDatabase();
         Intent authActivityIntent = new Intent(getApplicationContext(), AuthActivity.class);
         startActivity(authActivityIntent);
         finish();

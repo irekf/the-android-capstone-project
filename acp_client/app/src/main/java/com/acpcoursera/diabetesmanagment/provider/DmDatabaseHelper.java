@@ -13,7 +13,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = DmDatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String DATABASE_NAME = "acp.db";
 
@@ -90,5 +90,10 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Tables.CHECK_IN_DATA);
         db.execSQL("DROP TABLE IF EXISTS " + Tables.REMINDERS);
         onCreate(db);
+    }
+
+    public void clearDatabase() {
+        SQLiteDatabase db = getWritableDatabase();
+        onUpgrade(db, db.getVersion(), db.getVersion());
     }
 }
