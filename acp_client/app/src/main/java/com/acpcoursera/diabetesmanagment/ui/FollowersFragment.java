@@ -1,6 +1,8 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
+import android.accounts.Account;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,8 +31,7 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
     private static String TAG = FollowersFragment.class.getSimpleName();
 
-    private static final int TEST_LOADER = 0;
-
+    private static final int LOADER_ID = 0;
     public static final int REQUEST_INVITE = 1;
 
     private CursorAdapter mAdapter;
@@ -41,7 +42,7 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_followers, container, false);
 
-        getLoaderManager().initLoader(TEST_LOADER, null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         mAdapter = new FollowersListAdapter(getActivity(), null, 0);
         mFollowers = (ListView) rootView.findViewById(R.id.followers_list_view);
@@ -55,13 +56,19 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // TODO do a smarter sync
+        Bundle data = new Bundle();
+        data.putString("table", DmContract.Followers.CONTENT_TYPE_ID);
+        data.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(new Account(AuthActivity.ACCOUNT, AuthActivity.ACCOUNT_TYPE),
+                AuthActivity.AUTHORITY, data);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         switch (id) {
-            case TEST_LOADER:
+            case LOADER_ID:
                 return new CursorLoader(
                         getActivity(),
                         DmContract.Followers.buildFollowersUri(),
@@ -70,6 +77,7 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                                         DmContract.Followers._ID,
                                         DmContract.Followers.FOLLOWER_NAME,
                                         DmContract.Followers.FOLLOWER_FULL_NAME,
+                                        DmContract.Followers.TEEN,
                                         DmContract.Followers.ACCEPTED,
                                         DmContract.Followers.PENDING
                                 },
@@ -145,12 +153,14 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_FULL_NAME));
-            int isTeen = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.IS_TEEN));
+            int isTeen = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.TEEN));
             int accepted = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.ACCEPTED));
             int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.PENDING));
             String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_NAME));
 
-            idView.setText(id);
+//            Log.d(TAG, dumpCursorToString(cursor));
+
+            idView.setText(Integer.toString(id));
             fullNameView.setText(fullName);
             usernameView.setText(username);
 
@@ -166,6 +176,9 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
             }
             else if (pending != 0) {
                 statusView.setImageResource(R.drawable.ic_request_sent);
+            }
+            else {
+                statusView.setImageResource(0);
             }
 
         }

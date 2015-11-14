@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.acpcoursera.model.CheckInData;
+import com.acpcoursera.model.Follower;
+import com.acpcoursera.model.Following;
 import com.acpcoursera.model.GcmMessage;
 import com.acpcoursera.model.GcmResponse;
 import com.acpcoursera.model.UserAccount;
@@ -143,6 +146,90 @@ public class DmController {
 
     	return new ResponseEntity<List<UserInfo>>(allUsersInfo, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/followers", method = RequestMethod.GET)
+    public ResponseEntity<List<Follower>> getFollowers(OAuth2Authentication auth) {
+
+    	String username = auth.getName();
+    	UserInfo currentUser = new UserInfo();
+    	currentUser.setUsername(username);
+
+    	List<Follower> followers = new ArrayList<>();
+
+    	Follower f1 = new Follower();
+    	f1.setUsername("irekf");
+    	f1.setFollowerName("patrick22");
+    	f1.setTeen(true);
+    	f1.setMajorData(true);
+    	f1.setMinorData(true);
+    	f1.setFollowerFullName("Patrick Star");
+    	f1.setAccepted(true);
+
+    	Follower f2 = new Follower();
+    	f2.setUsername("irekf");
+    	f2.setFollowerName("will89");
+    	f2.setTeen(false);
+    	f2.setMajorData(true);
+    	f2.setMinorData(false);
+    	f2.setFollowerFullName("Will Bill");
+    	f2.setAccepted(false);
+
+    	Follower f3 = new Follower();
+    	f3.setUsername("irekf");
+    	f3.setFollowerName("scooby_2");
+    	f3.setTeen(false);
+    	f3.setMajorData(true);
+    	f3.setMinorData(false);
+    	f3.setFollowerFullName("Helen Green");
+    	f3.setAccepted(true);
+    	f3.setPending(true);
+
+    	followers.add(f1);
+    	followers.add(f2);
+    	followers.add(f3);
+
+    	return new ResponseEntity<List<Follower>>(followers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/following", method = RequestMethod.GET)
+    public ResponseEntity<List<Following>> getFollowing(OAuth2Authentication auth) {
+
+    	String username = auth.getName();
+    	UserInfo currentUser = new UserInfo();
+    	currentUser.setUsername(username);
+
+    	List<Following> following = new ArrayList<>();
+
+    	Following f1 = new Following();
+    	f1.setUsername("irekf");
+    	f1.setFollowingName("abcde");
+    	f1.setMajorData(true);
+    	f1.setMinorData(true);
+    	f1.setFollowingFullName("Ann Smith");
+    	f1.setPending(true);
+
+    	Following f2 = new Following();
+    	f2.setUsername("irekf");
+    	f2.setFollowingName("driver");
+    	f2.setMajorData(true);
+    	f2.setMinorData(false);
+    	f2.setFollowingFullName("Jane Lee");
+    	f2.setInvite(true);
+
+    	Following f3 = new Following();
+    	f3.setUsername("irekf");
+    	f3.setFollowingName("bee09");
+    	f3.setMajorData(true);
+    	f3.setMinorData(false);
+    	f3.setFollowingFullName("George C.");
+
+    	following.add(f1);
+    	following.add(f2);
+    	following.add(f3);
+
+    	return new ResponseEntity<List<Following>>(following, HttpStatus.OK);
+    }
+
 
     private GcmResponse sendGcmMessage(GcmMessage message) {
 

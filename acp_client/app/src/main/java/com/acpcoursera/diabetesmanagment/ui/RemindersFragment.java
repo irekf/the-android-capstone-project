@@ -297,7 +297,7 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
             int minute = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.MINUTE));
             int isEnabled = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.IS_ENABLED));
 
-            reminderId.setText(reminderId.getText());
+            reminderId.setText(Integer.toString(id));
 
             mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mCalendar.set(Calendar.MINUTE, minute);

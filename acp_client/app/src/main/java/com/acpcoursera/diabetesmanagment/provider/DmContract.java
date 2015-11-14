@@ -20,7 +20,7 @@ public class DmContract {
         String USERNAME = "username";
         String FOLLOWER_NAME = "follower_name";
         String FOLLOWER_FULL_NAME = "follower_full_name";
-        String IS_TEEN = "is_teen";
+        String TEEN = "teen";
         String ACCEPTED = "accepted";
         String PENDING = "pending";
         String MAJOR_DATA = "major_data";
@@ -32,7 +32,7 @@ public class DmContract {
         String FOLLOWING_NAME = "following_name";
         String FOLLOWING_FULL_NAME = "following_full_name";
         String PENDING = "pending";
-        String IS_INVITE = "is_invite";
+        String INVITE = "invite";
         String MAJOR_DATA = "major_data";
         String MINOR_DATE = "minor_data";
     }

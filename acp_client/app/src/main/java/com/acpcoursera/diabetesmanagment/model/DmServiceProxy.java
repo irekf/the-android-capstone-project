@@ -42,4 +42,10 @@ public interface DmServiceProxy {
     @GET("/users")
     public Call<List<UserInfo>> getUserList();
 
+    @GET("/followers")
+    public Call<List<Follower>> getFollowers();
+
+    @GET("/following")
+    public Call<List<Following>> getFollowing();
+
 }

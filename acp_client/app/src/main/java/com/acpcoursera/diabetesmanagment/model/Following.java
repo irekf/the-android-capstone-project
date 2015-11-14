@@ -12,7 +12,7 @@ public class Following {
     private String followingName;
     private String followingFullName;
     private boolean pending;
-    private boolean isInvite;
+    private boolean invite;
     private boolean majorData;
     private boolean minorData;
 
@@ -53,11 +53,11 @@ public class Following {
     }
 
     public boolean isInvite() {
-        return isInvite;
+        return invite;
     }
 
-    public void setIsInvite(boolean isInvite) {
-        this.isInvite = isInvite;
+    public void setInvite(boolean isInvite) {
+        this.invite = invite;
     }
 
     public boolean isMajorData() {
@@ -83,7 +83,7 @@ public class Following {
                 ", followingName='" + followingName + '\'' +
                 ", followingFullName='" + followingFullName + '\'' +
                 ", pending=" + pending +
-                ", isInvite=" + isInvite +
+                ", invite=" + invite +
                 ", majorData=" + majorData +
                 ", minorData=" + minorData +
                 '}';
@@ -95,7 +95,7 @@ public class Following {
         values.put(DmContract.Following.FOLLOWING_NAME, followingName);
         values.put(DmContract.Following.FOLLOWING_FULL_NAME, followingFullName);
         values.put(DmContract.Following.PENDING, pending ? 1 : 0);
-        values.put(DmContract.Following.IS_INVITE, isInvite ? 1 : 0);
+        values.put(DmContract.Following.INVITE, invite ? 1 : 0);
         values.put(DmContract.Following.MAJOR_DATA, majorData ? 1 : 0);
         values.put(DmContract.Following.MINOR_DATE, minorData ? 1 : 0);
         return values;

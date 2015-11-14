@@ -7,13 +7,14 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.acpcoursera.diabetesmanagment.model.CheckInData;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
+import com.acpcoursera.diabetesmanagment.model.Follower;
+import com.acpcoursera.diabetesmanagment.model.Following;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 import com.acpcoursera.diabetesmanagment.util.NetUtils;
@@ -86,23 +87,62 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                     mContentResolver.delete(DmContract.CheckInData.buildCheckInDataUri(), null, null);
                     mContentResolver.bulkInsert(DmContract.CheckInData.buildCheckInDataUri(), values);
-
-                    Cursor c = mContentResolver.query(DmContract.CheckInData.buildCheckInDataUri(), null, null, null, null);
-                    if (c != null) {
-                        try {
-                            while (c.moveToNext()) {
-                                Log.d(TAG, c.getString(4) + " " + c.getString(5));
-                            }
-                        } finally {
-                            c.close();
-                        }
-                    }
-
+                }
+                else {
+                    Log.w(TAG, response.message());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             /* TODO -------------------------------------- */
+        }
+        else if (tableName.equals(DmContract.Followers.CONTENT_TYPE_ID)) {
+            Call<List<Follower>> getFollowers = dmService.getFollowers();
+            try {
+                Response<List<Follower>> response = getFollowers.execute();
+                if (response.isSuccess()) {
+
+                    List<Follower> followers = response.body();
+
+                    ContentValues[] values = new ContentValues[followers.size()];
+                    for (int i = 0; i < values.length; i++) {
+                        values[i] = followers.get(i).getContentValues();
+                        Log.d(TAG, followers.get(i).toString());
+                    }
+
+                    mContentResolver.delete(DmContract.Followers.buildFollowersUri(), null, null);
+                    mContentResolver.bulkInsert(DmContract.Followers.buildFollowersUri(), values);
+                }
+                else {
+                    Log.w(TAG, response.message());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (tableName.equals(DmContract.Following.CONTENT_TYPE_ID)) {
+            Call<List<Following>> getFollowing = dmService.getFollowing();
+            try {
+                Response<List<Following>> response = getFollowing.execute();
+                if (response.isSuccess()) {
+
+                    List<Following> following = response.body();
+
+                    ContentValues[] values = new ContentValues[following.size()];
+                    for (int i = 0; i < values.length; i++) {
+                        values[i] = following.get(i).getContentValues();
+                        Log.d(TAG, following.get(i).toString());
+                    }
+
+                    mContentResolver.delete(DmContract.Following.buildFollowingsUri(), null, null);
+                    mContentResolver.bulkInsert(DmContract.Following.buildFollowingsUri(), values);
+                }
+                else {
+                    Log.w(TAG, response.message());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else {
             Log.w(TAG, "unknown table to sync: " + tableName);

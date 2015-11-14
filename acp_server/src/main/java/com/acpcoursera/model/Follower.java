@@ -14,7 +14,7 @@ public class Follower {
     private String username;
     private String followerName;
     private String followerFullName;
-    private boolean isTeen;
+    private boolean teen;
     private boolean accepted;
     private boolean pending;
     private boolean majorData;
@@ -49,11 +49,11 @@ public class Follower {
     }
 
     public boolean isTeen() {
-        return isTeen;
+        return teen;
     }
 
-    public void setIsTeen(boolean isTeen) {
-        this.isTeen = isTeen;
+    public void setTeen(boolean teen) {
+        this.teen = teen;
     }
 
     public boolean isAccepted() {
@@ -94,7 +94,7 @@ public class Follower {
                 "username='" + username + '\'' +
                 ", followerName='" + followerName + '\'' +
                 ", followerFullName='" + followerFullName + '\'' +
-                ", isTeen=" + isTeen +
+                ", teen=" + teen +
                 ", accepted=" + accepted +
                 ", pending=" + pending +
                 ", majorData=" + majorData +

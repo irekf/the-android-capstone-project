@@ -15,7 +15,7 @@ public class Following {
     private String followingName;
     private String followingFullName;
     private boolean pending;
-    private boolean isInvite;
+    private boolean invite;
     private boolean majorData;
     private boolean minorData;
 
@@ -56,11 +56,11 @@ public class Following {
     }
 
     public boolean isInvite() {
-        return isInvite;
+        return invite;
     }
 
-    public void setIsInvite(boolean isInvite) {
-        this.isInvite = isInvite;
+    public void setInvite(boolean invite) {
+        this.invite = invite;
     }
 
     public boolean isMajorData() {
@@ -86,7 +86,7 @@ public class Following {
                 ", followingName='" + followingName + '\'' +
                 ", followingFullName='" + followingFullName + '\'' +
                 ", pending=" + pending +
-                ", isInvite=" + isInvite +
+                ", invite=" + invite +
                 ", majorData=" + majorData +
                 ", minorData=" + minorData +
                 '}';

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="true"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,13 +14,13 @@
         android:visibility="gone">
     </TextView>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="48sp"
+        android:layout_width="24sp"
+        android:layout_height="24sp"
         android:id="@+id/following_icon"
         android:layout_marginStart="20dp"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="48sp"
+        android:layout_width="24sp"
+        android:layout_height="24sp"
         android:id="@+id/following_status"
         android:layout_marginStart="10dp"/>
     <TextView
