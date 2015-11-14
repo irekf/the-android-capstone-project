@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -144,10 +145,23 @@ public class UserListActivity extends AppCompatActivity {
 
             UserInfo user = mUserList[position];
             if (user != null) {
-                ((TextView) view.findViewById(R.id.user_list_username)).setText(user.getUsername());
-                ((TextView) view.findViewById(R.id.user_list_first_name)).setText(user.getFirstName());
-                ((TextView) view.findViewById(R.id.user_list_second_name)).setText(user.getSecondName());
-                ((TextView) view.findViewById(R.id.user_list_email)).setText(user.getEmail());
+
+                ImageView icon = (ImageView) view.findViewById(R.id.user_list_icon);
+                TextView fullName = (TextView) view.findViewById(R.id.user_list_full_name);
+                TextView username = (TextView) view.findViewById(R.id.user_list_username);
+                TextView email = (TextView) view.findViewById(R.id.user_list_email);
+
+                if (user.getUserType().equals(UserInfo.TYPE_TEEN)) {
+                    icon.setImageResource(R.drawable.ic_teen);
+                }
+                else {
+                    icon.setImageResource(R.drawable.ic_follower);
+                }
+
+                fullName.setText(user.getFirstName() + " " + user.getSecondName());
+                username.setText(user.getUsername());
+                email.setText(user.getEmail());
+
             }
 
             return view;

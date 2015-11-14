@@ -4,33 +4,49 @@
     android:layout_height="match_parent"
     android:baselineAligned="true"
     android:orientation="horizontal">
-
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_list_id"
+        android:layout_marginStart="10dp"
+        android:textColor="#000000"
+        android:visibility="gone">
+    </TextView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="48sp"
+        android:id="@+id/user_list_icon"
+        android:layout_marginStart="20dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_list_full_name"
+        android:layout_marginStart="20dp"
+        android:textColor="#000000"
+        android:textSize="32sp">
+    </TextView>
+    <View
+        android:layout_width="1dp"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"/>
+    <TextView
+        android:width="100sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/user_list_username"
         android:layout_marginStart="10dp"
-        android:textColor="#000000">
-    </TextView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_list_first_name"
-        android:layout_marginStart="10dp"
-        android:textColor="#000000">
-    </TextView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_list_second_name"
-        android:layout_marginStart="10dp"
-        android:textColor="#000000">
+        android:textColor="#000000"
+        android:textSize="32sp"
+        android:visibility="gone">
     </TextView>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/user_list_email"
         android:layout_marginStart="10dp"
-        android:textColor="#000000">
+        android:textColor="#000000"
+        android:textSize="32sp"
+        android:visibility="gone">
     </TextView>
 </LinearLayout>
