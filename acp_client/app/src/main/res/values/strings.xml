@@ -81,6 +81,8 @@
     <string name="check_in_button">Check-In</string>
     <string name="follow">Follow</string>
     <string name="add_reminder">Add a reminder</string>
+    <string name="reminder_edit">Edit reminder</string>
+    <string name="reminder_delete">Delete reminder</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>
