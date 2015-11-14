@@ -83,6 +83,7 @@
     <string name="add_reminder">Add a reminder</string>
     <string name="reminder_edit">Edit reminder</string>
     <string name="reminder_delete">Delete reminder</string>
+    <string name="reminder_limit">At least 3 reminders should be active</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

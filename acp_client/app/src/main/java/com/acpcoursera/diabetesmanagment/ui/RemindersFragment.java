@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
@@ -37,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
+
 /*
 debugging in ADB:
 >adb shell dumpsys alarm > dump.txt
@@ -51,6 +52,8 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
     private CursorAdapter mAdapter;
     private AlarmManager mAlarmManager;
     private ListView mReminders;
+
+    private int mEnabledRemindersNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +70,8 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
 
         mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         initObligatoryReminders();
+
+        mEnabledRemindersNumber = getEnabledRemindersNumber();
 
         return rootView;
     }
@@ -171,6 +176,7 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
                         .getBroadcast(getActivity(), reminderId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         AlarmManager.INTERVAL_DAY, alarmIntent);
+                mEnabledRemindersNumber++;
                 cursor.close();
             }
         }
@@ -209,6 +215,7 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
             PendingIntent alarmIntent = PendingIntent
                     .getBroadcast(getActivity(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             mAlarmManager.cancel(alarmIntent);
+            mEnabledRemindersNumber--;
         }
     }
 
@@ -242,9 +249,11 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
 
                     mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                             AlarmManager.INTERVAL_DAY, alarmIntent);
+                    mEnabledRemindersNumber++;
                 }
                 else {
                     mAlarmManager.cancel(alarmIntent);
+                    mEnabledRemindersNumber--;
                 }
 
             }
@@ -315,28 +324,49 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
             reminderDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteReminder(id);
+                    if (mEnabledRemindersNumber > 3) {
+                        deleteReminder(id);
+                    }
+                    else {
+                        showToast(getActivity(), getActivity().getString(R.string.reminder_limit));
+                    }
                 }
             });
 
             reminderEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    enableReminder(id, isChecked);
+                    if (mEnabledRemindersNumber <= 3 && !isChecked) {
+                        showToast(getActivity(), getActivity().getString(R.string.reminder_limit));
+                        buttonView.setChecked(true);
+                    }
+                    else {
+                        enableReminder(id, isChecked);
+                    }
                 }
             });
 
         }
     };
 
-    private class ReminderOnClickListener implements ListView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-
+    private int getRemindersNumber() {
+        ContentResolver cr = getActivity().getContentResolver();
+        Cursor cursor = cr.query(DmContract.Reminders.CONTENT_URI, null, null, null, null);
+        if (cursor != null) {
+            return cursor.getCount();
         }
-    };
+        return 0;
+    }
+
+    private int getEnabledRemindersNumber() {
+        ContentResolver cr = getActivity().getContentResolver();
+        Cursor cursor = cr.query(DmContract.Reminders.CONTENT_URI, null,
+                DmContract.Reminders.IS_ENABLED + " != 0", null, null);
+        if (cursor != null) {
+            return cursor.getCount();
+        }
+        return 0;
+    }
+
 
 }
