@@ -35,7 +35,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="48sp"
-        android:id="@+id/reminder_remove"
+        android:id="@+id/reminder_delete"
         android:layout_marginStart="20dp"
         android:contentDescription="@string/reminder_delete"
         android:src="@drawable/ic_delete" />
