@@ -84,11 +84,19 @@
     <string name="reminder_edit">Edit reminder</string>
     <string name="reminder_delete">Delete reminder</string>
     <string name="reminder_limit">At least 3 reminders should be active</string>
+    <string name="user_settings_label">User Settings</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_ok">Ok</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>
         <item>Normal</item>
         <item>Bad</item>
+    </string-array>
+
+    <string-array name="data_to_share_items">
+        <item>@string/major_data_label</item>
+        <item>@string/minor_data_label</item>
     </string-array>
 
 </resources>

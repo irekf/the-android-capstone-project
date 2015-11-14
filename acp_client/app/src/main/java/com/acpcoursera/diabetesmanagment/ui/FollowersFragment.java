@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserSettings;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
 
 public class FollowersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -128,7 +130,9 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == Activity.RESULT_OK) {
-
+                String username = data.getStringExtra(UserListActivity.EXTRA_USERNAME);
+                UserSettings setting = data.getParcelableExtra(UserListActivity.EXTRA_USER_SETTINGS);
+                Log.d(TAG, "username = " + username + ", " + setting.toString());
             }
         }
     }

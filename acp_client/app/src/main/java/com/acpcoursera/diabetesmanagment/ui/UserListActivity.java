@@ -20,22 +20,28 @@ import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+import com.acpcoursera.diabetesmanagment.model.UserSettings;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
-public class UserListActivity extends AppCompatActivity {
+public class UserListActivity extends AppCompatActivity implements
+        UserSettingsDialogFragment.UserSettingsDialogListener {
 
     private static String TAG = UserListActivity.class.getSimpleName();
 
     public  static final String EXTRA_USERNAME = "extra_username";
-    private static String USER_LIST_KEY = "user_list_key";
+    public  static final String EXTRA_USER_SETTINGS = "extra_user_settings";
+
+    private static final String USER_LIST_KEY = "user_list_key";
+    private static final String SELECTED_USER_KEY = "selected_user_key";
 
     private NetOpsReceiver mReceiver;
 
     ListView mUserListView;
     private UserInfo[] mUserList;
+    private UserInfo mSelectedUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,7 @@ public class UserListActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mUserList = MiscUtils.convertParcelableArray(
                     savedInstanceState.getParcelableArray(USER_LIST_KEY), UserInfo.class);
+            mSelectedUser = savedInstanceState.getParcelable(SELECTED_USER_KEY);
         }
         else {
             requestUserList();
@@ -54,8 +61,10 @@ public class UserListActivity extends AppCompatActivity {
         mUserListView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                UserInfo selectedUser = mUserList[position];
-                returnUsername(selectedUser.getUsername());
+                mSelectedUser = mUserList[position];
+                // pick settings for the selected user
+                UserSettingsDialogFragment dialogFragment = new UserSettingsDialogFragment();
+                dialogFragment.show(getSupportFragmentManager(), UserSettingsDialogFragment.TAG);
             }
         });
 
@@ -65,9 +74,10 @@ public class UserListActivity extends AppCompatActivity {
 
     }
 
-    private void returnUsername(String username) {
+    private void returnResults(String username, UserSettings settings) {
         Intent data = new Intent();
         data.putExtra(EXTRA_USERNAME, username);
+        data.putExtra(EXTRA_USER_SETTINGS, settings);
         if (getParent() == null) {
             setResult(Activity.RESULT_OK, data);
         } else {
@@ -96,6 +106,12 @@ public class UserListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArray(USER_LIST_KEY, mUserList);
+        outState.putParcelable(SELECTED_USER_KEY, mSelectedUser);
+    }
+
+    @Override
+    public void onFinishUserSettingsDialog(UserSettings settings) {
+        returnResults(mSelectedUser.getUsername(), settings);
     }
 
     private class NetOpsReceiver extends BroadcastReceiver {
