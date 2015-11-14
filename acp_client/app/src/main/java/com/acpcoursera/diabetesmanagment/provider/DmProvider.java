@@ -76,33 +76,34 @@ public class DmProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
             case FOLLOWER_VALUES_ITEMS:
-                db.delete(DmDatabaseHelper.Tables.FOLLOWERS, selection, selectionArgs);
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.FOLLOWERS, selection, selectionArgs);
                 break;
             case FOLLOWER_VALUES_ITEM:
-                db.delete(DmDatabaseHelper.Tables.FOLLOWERS,
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.FOLLOWERS,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
                 break;
             case FOLLOWING_VALUES_ITEMS:
-                db.delete(DmDatabaseHelper.Tables.FOLLOWING, selection, selectionArgs);
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.FOLLOWING, selection, selectionArgs);
                 break;
             case FOLLOWING_VALUES_ITEM:
-                db.delete(DmDatabaseHelper.Tables.FOLLOWING,
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.FOLLOWING,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
                 break;
             case CHECK_IN_DATA_VALUES_ITEMS:
-                db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA, selection, selectionArgs);
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA, selection, selectionArgs);
                 break;
             case CHECK_IN_DATA_VALUES_ITEM:
-                db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA,
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.CHECK_IN_DATA,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+                break;
             case REMINDER_VALUES_ITEMS:
-                db.delete(DmDatabaseHelper.Tables.REMINDERS, selection, selectionArgs);
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.REMINDERS, selection, selectionArgs);
                 break;
             case REMINDER_VALUES_ITEM:
-                db.delete(DmDatabaseHelper.Tables.REMINDERS,
+                rowsDeleted = db.delete(DmDatabaseHelper.Tables.REMINDERS,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
                 break;
@@ -320,6 +321,7 @@ public class DmProvider extends ContentProvider {
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.CHECK_IN_DATA, values,
                         addKeyIdCheckToSelection(selection, ContentUris.parseId(uri)),
                         selectionArgs);
+                break;
             case REMINDER_VALUES_ITEMS:
                 rowsUpdated = db.update(DmDatabaseHelper.Tables.REMINDERS, values,
                         selection, selectionArgs);
