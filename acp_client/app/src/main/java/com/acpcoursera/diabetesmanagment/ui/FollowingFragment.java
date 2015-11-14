@@ -1,6 +1,7 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
@@ -28,7 +31,7 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
 
     public static final int REQUEST_FOLLOW = 2;
 
-    private SimpleCursorAdapter mAdapter;
+    private CursorAdapter mAdapter;
     private ListView mFollowing;
 
     @Override
@@ -38,29 +41,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
 
         getLoaderManager().initLoader(TEST_LOADER, null, this);
 
+        mAdapter = new FollowingListAdapter(getActivity(), null, 0);
         mFollowing = (ListView) rootView.findViewById(R.id.following_list_view);
-
-        mAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.following_item,
-                null,
-                new String[]
-                        {
-                                DmContract.Following._ID,
-                                DmContract.Following.FOLLOWING_NAME,
-                                DmContract.Following.PENDING,
-                                DmContract.Following.IS_INVITE
-                        },
-                new int[]
-                        {
-                                R.id.following_id,
-                                R.id.following_name,
-                                R.id.following_pending,
-                                R.id.following_is_invite
-                        },
-                0
-        );
-
         mFollowing.setAdapter(mAdapter);
 
         setHasOptionsMenu(true);
@@ -85,6 +67,7 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
                                 {
                                         DmContract.Following._ID,
                                         DmContract.Following.FOLLOWING_NAME,
+                                        DmContract.Following.FOLLOWING_FULL_NAME,
                                         DmContract.Following.PENDING,
                                         DmContract.Following.IS_INVITE
                                 },
@@ -134,6 +117,48 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
 
             }
         }
+    }
+
+    private class FollowingListAdapter extends CursorAdapter {
+
+        public FollowingListAdapter(Context context, Cursor c, int flags) {
+            super(context, c, flags);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.following_item, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+
+            TextView idView = (TextView) view.findViewById(R.id.following_id);
+            ImageView iconView = (ImageView) view.findViewById(R.id.following_icon);
+            ImageView statusView = (ImageView) view.findViewById(R.id.following_status);
+            TextView fullNameView = (TextView) view.findViewById(R.id.following_full_name);
+            TextView usernameView = (TextView) view.findViewById(R.id.following_username);
+
+            final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following._ID));
+            String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_FULL_NAME));
+            int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.PENDING));
+            int isInvite = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.IS_INVITE));
+            String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_NAME));
+
+            idView.setText(id);
+            fullNameView.setText(fullName);
+            usernameView.setText(username);
+
+            iconView.setImageResource(R.drawable.ic_teen);
+            if (isInvite != 0) {
+                statusView.setImageResource(R.drawable.ic_new_request);
+            }
+            else if (pending != 0) {
+                statusView.setImageResource(R.drawable.ic_request_sent);
+            }
+
+        }
+
     }
 
 }

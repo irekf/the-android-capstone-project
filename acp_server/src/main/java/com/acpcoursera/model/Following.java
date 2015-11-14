@@ -13,6 +13,7 @@ public class Following {
 
     private String username;
     private String followingName;
+    private String followingFullName;
     private boolean pending;
     private boolean isInvite;
     private boolean majorData;
@@ -36,6 +37,14 @@ public class Following {
 
     public void setFollowingName(String followingName) {
         this.followingName = followingName;
+    }
+
+    public String getFollowingFullName() {
+        return followingFullName;
+    }
+
+    public void setFollowingFullName(String followingFullName) {
+        this.followingFullName = followingFullName;
     }
 
     public boolean isPending() {
@@ -75,6 +84,7 @@ public class Following {
         return "Following{" +
                 "username='" + username + '\'' +
                 ", followingName='" + followingName + '\'' +
+                ", followingFullName='" + followingFullName + '\'' +
                 ", pending=" + pending +
                 ", isInvite=" + isInvite +
                 ", majorData=" + majorData +

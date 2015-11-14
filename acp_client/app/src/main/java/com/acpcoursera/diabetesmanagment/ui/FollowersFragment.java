@@ -1,6 +1,7 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserSettings;
@@ -30,7 +33,7 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
     public static final int REQUEST_INVITE = 1;
 
-    private SimpleCursorAdapter mAdapter;
+    private CursorAdapter mAdapter;
     private ListView mFollowers;
 
     @Override
@@ -40,27 +43,8 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
         getLoaderManager().initLoader(TEST_LOADER, null, this);
 
+        mAdapter = new FollowersListAdapter(getActivity(), null, 0);
         mFollowers = (ListView) rootView.findViewById(R.id.followers_list_view);
-
-        mAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.follower_item,
-                null,
-                new String[]
-                        {
-                                DmContract.Followers._ID,
-                                DmContract.Followers.FOLLOWER_NAME,
-                                DmContract.Followers.ACCEPTED
-                        },
-                new int[]
-                        {
-                                R.id.follower_id,
-                                R.id.follower_name,
-                                R.id.follower_accepted
-                        },
-                0
-        );
-
         mFollowers.setAdapter(mAdapter);
 
         setHasOptionsMenu(true);
@@ -85,7 +69,9 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                                 {
                                         DmContract.Followers._ID,
                                         DmContract.Followers.FOLLOWER_NAME,
-                                        DmContract.Followers.ACCEPTED
+                                        DmContract.Followers.FOLLOWER_FULL_NAME,
+                                        DmContract.Followers.ACCEPTED,
+                                        DmContract.Followers.PENDING
                                 },
                         null,
                         null,
@@ -135,6 +121,55 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                 Log.d(TAG, "username = " + username + ", " + setting.toString());
             }
         }
+    }
+
+    private class FollowersListAdapter extends CursorAdapter {
+
+        public FollowersListAdapter(Context context, Cursor c, int flags) {
+            super(context, c, flags);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.follower_item, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+
+            TextView idView = (TextView) view.findViewById(R.id.follower_id);
+            ImageView iconView = (ImageView) view.findViewById(R.id.follower_icon);
+            ImageView statusView = (ImageView) view.findViewById(R.id.follower_status);
+            TextView fullNameView = (TextView) view.findViewById(R.id.follower_full_name);
+            TextView usernameView = (TextView) view.findViewById(R.id.follower_username);
+
+            final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers._ID));
+            String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_FULL_NAME));
+            int isTeen = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.IS_TEEN));
+            int accepted = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.ACCEPTED));
+            int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.PENDING));
+            String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_NAME));
+
+            idView.setText(id);
+            fullNameView.setText(fullName);
+            usernameView.setText(username);
+
+            if (isTeen != 0) {
+                iconView.setImageResource(R.drawable.ic_teen);
+            }
+            else {
+                iconView.setImageResource(R.drawable.ic_follower);
+            }
+
+            if (accepted == 0) {
+                statusView.setImageResource(R.drawable.ic_new_request);
+            }
+            else if (pending != 0) {
+                statusView.setImageResource(R.drawable.ic_request_sent);
+            }
+
+        }
+
     }
 
 }

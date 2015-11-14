@@ -10,6 +10,8 @@ public class Follower {
 
     private String username;
     private String followerName;
+    private String followerFullName;
+    private boolean isTeen;
     private boolean accepted;
     private boolean pending;
     private boolean majorData;
@@ -33,6 +35,22 @@ public class Follower {
 
     public void setFollowerName(String followerName) {
         this.followerName = followerName;
+    }
+
+    public String getFollowerFullName() {
+        return followerFullName;
+    }
+
+    public void setFollowerFullName(String followerFullName) {
+        this.followerFullName = followerFullName;
+    }
+
+    public boolean isTeen() {
+        return isTeen;
+    }
+
+    public void setIsTeen(boolean isTeen) {
+        this.isTeen = isTeen;
     }
 
     public boolean isAccepted() {
@@ -72,6 +90,8 @@ public class Follower {
         return "Follower{" +
                 "username='" + username + '\'' +
                 ", followerName='" + followerName + '\'' +
+                ", followerFullName='" + followerFullName + '\'' +
+                ", isTeen=" + isTeen +
                 ", accepted=" + accepted +
                 ", pending=" + pending +
                 ", majorData=" + majorData +
@@ -83,6 +103,8 @@ public class Follower {
         ContentValues values = new ContentValues();
         values.put(DmContract.Followers.USERNAME, username);
         values.put(DmContract.Followers.FOLLOWER_NAME, followerName);
+        values.put(DmContract.Followers.FOLLOWER_FULL_NAME, followerFullName);
+        values.put(DmContract.Followers.IS_TEEN, isTeen ? 1 : 0);
         values.put(DmContract.Followers.ACCEPTED, accepted ? 1 : 0);
         values.put(DmContract.Followers.PENDING, accepted ? 1 : 0);
         values.put(DmContract.Followers.MAJOR_DATA, majorData ? 1 : 0);

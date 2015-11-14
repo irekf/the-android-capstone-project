@@ -10,6 +10,7 @@ public class Following {
 
     private String username;
     private String followingName;
+    private String followingFullName;
     private boolean pending;
     private boolean isInvite;
     private boolean majorData;
@@ -33,6 +34,14 @@ public class Following {
 
     public void setFollowingName(String followingName) {
         this.followingName = followingName;
+    }
+
+    public String getFollowingFullName() {
+        return followingFullName;
+    }
+
+    public void setFollowingFullName(String followingFullName) {
+        this.followingFullName = followingFullName;
     }
 
     public boolean isPending() {
@@ -72,6 +81,7 @@ public class Following {
         return "Following{" +
                 "username='" + username + '\'' +
                 ", followingName='" + followingName + '\'' +
+                ", followingFullName='" + followingFullName + '\'' +
                 ", pending=" + pending +
                 ", isInvite=" + isInvite +
                 ", majorData=" + majorData +
@@ -83,6 +93,7 @@ public class Following {
         ContentValues values = new ContentValues();
         values.put(DmContract.Following.USERNAME, username);
         values.put(DmContract.Following.FOLLOWING_NAME, followingName);
+        values.put(DmContract.Following.FOLLOWING_FULL_NAME, followingFullName);
         values.put(DmContract.Following.PENDING, pending ? 1 : 0);
         values.put(DmContract.Following.IS_INVITE, isInvite ? 1 : 0);
         values.put(DmContract.Following.MAJOR_DATA, majorData ? 1 : 0);
