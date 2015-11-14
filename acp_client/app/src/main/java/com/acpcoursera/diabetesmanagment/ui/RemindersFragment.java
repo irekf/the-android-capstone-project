@@ -151,6 +151,21 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
         }
     }
 
+    private long getIntervalMillis(int hourOfDay, int minute) {
+        long currentTimeMillis = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTimeMillis);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        // this prevents triggering past alarms
+        long intervalMillis = calendar.getTimeInMillis();
+        if(intervalMillis < currentTimeMillis){
+            intervalMillis += 24*60*60*1000;
+        }
+        return intervalMillis;
+    }
+
     private void addNewReminder(int hourOfDay, int minute) {
 
         ContentResolver cr = getActivity().getContentResolver();
@@ -166,15 +181,12 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
             if (cursor != null && cursor.moveToFirst()) {
                 int reminderId = cursor.getInt(0);
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
+                long intervalMillis = getIntervalMillis(hourOfDay, minute);
 
                 Intent intent = new Intent(getActivity(), CheckInPublisher.class);
                 PendingIntent alarmIntent = PendingIntent
                         .getBroadcast(getActivity(), reminderId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, intervalMillis,
                         AlarmManager.INTERVAL_DAY, alarmIntent);
                 mEnabledRemindersNumber++;
                 cursor.close();
@@ -192,16 +204,13 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
                 cvs, null, null);
         if (rowsUpdated != 0) {
 
-            Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
+            long intervalMillis = getIntervalMillis(hourOfDay, minute);
 
-                Intent intent = new Intent(getActivity(), CheckInPublisher.class);
-                PendingIntent alarmIntent = PendingIntent
-                        .getBroadcast(getActivity(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                        AlarmManager.INTERVAL_DAY, alarmIntent);
+            Intent intent = new Intent(getActivity(), CheckInPublisher.class);
+            PendingIntent alarmIntent = PendingIntent
+                    .getBroadcast(getActivity(), id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, intervalMillis,
+                    AlarmManager.INTERVAL_DAY, alarmIntent);
         }
     }
 
@@ -242,12 +251,10 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
                             .getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.HOUR_OF_DAY));
                     int minute = cursor
                             .getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.MINUTE));
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    calendar.set(Calendar.MINUTE, minute);
 
-                    mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    long intervalMillis = getIntervalMillis(hourOfDay, minute);
+
+                    mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, intervalMillis,
                             AlarmManager.INTERVAL_DAY, alarmIntent);
                     mEnabledRemindersNumber++;
                 }
