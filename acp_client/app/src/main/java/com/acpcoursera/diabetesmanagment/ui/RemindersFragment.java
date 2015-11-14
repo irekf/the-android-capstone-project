@@ -20,15 +20,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
 import com.acpcoursera.diabetesmanagment.receiver.CheckInPublisher;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class RemindersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -36,7 +41,7 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
 
     private static final int TEST_LOADER = 0;
 
-    private SimpleCursorAdapter mAdapter;
+    private CursorAdapter mAdapter;
     private AlarmManager mAlarmManager;
     private ListView mReminders;
 
@@ -49,26 +54,7 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
 
         mReminders = (ListView) rootView.findViewById(R.id.reminders_list_view);
 
-        mAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.reminder_item,
-                null,
-                new String[]
-                        {
-                                DmContract.Reminders._ID,
-                                DmContract.Reminders.HOUR_OF_DAY,
-                                DmContract.Reminders.MINUTE,
-                                DmContract.Reminders.IS_ENABLED
-                        },
-                new int[]
-                        {
-                                R.id.reminder_id,
-                                R.id.reminder_hour_of_day,
-                                R.id.reminder_minute,
-                                R.id.reminder_is_enabled
-                        },
-                0
-        );
+        mAdapter = new ReminderAdapter(getActivity(), null, 0);
 
         mReminders.setAdapter(mAdapter);
 
@@ -184,5 +170,44 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
             }
         }
     }
+
+    private class ReminderAdapter extends CursorAdapter {
+
+        private final Calendar mCalendar;
+
+        public ReminderAdapter(Context context, Cursor c, int flags) {
+            super(context, c, flags);
+            mCalendar = Calendar.getInstance();
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.reminder_item, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            TextView reminderId = (TextView) view.findViewById(R.id.reminder_id);
+            ImageView reminderIcon = (ImageView) view.findViewById(R.id.reminder_icon);
+            TextView reminderTime = (TextView) view.findViewById(R.id.reminder_time);
+            Switch reminderEnabled = (Switch) view.findViewById(R.id.reminder_switch);
+
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders._ID));
+            int hourOfDay = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.HOUR_OF_DAY));
+            int minute = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.MINUTE));
+            int isEnabled = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders.IS_ENABLED));
+
+            reminderId.setText(reminderId.getText());
+
+            mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            mCalendar.set(Calendar.MINUTE, minute);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
+            reminderTime.setText(dateFormat.format(mCalendar.getTime()));
+
+            reminderEnabled.setChecked(isEnabled != 0);
+            reminderIcon.setImageResource(isEnabled != 0 ?
+                    R.drawable.ic_alarm_on : R.drawable.ic_alarm_off);
+        }
+    };
 
 }
