@@ -62,5 +62,19 @@ public interface DmServiceProxy {
             @Query("minor_data") boolean minorData
     );
 
+    @POST("/accept")
+    public Call<Void> accept(@Query("username_to_accept") String usernameToAccept,
+                             @Query("is_invite") boolean isInvite,
+                             @Query("major_data") boolean majorData,
+                             @Query("minor_data") boolean minorData);
+
+    @POST("/delete")
+    public Call<Void> delete(@Query("username_to_delete") String usernameToDelete,
+                             @Query("is_follower") boolean isFollower);
+
+    @POST("/settings")
+    public Call<Void> changeSettings(@Query("settings_username") String settingsUsername,
+                                     @Query("major_data") boolean majorData,
+                                     @Query("minor_data") boolean minorData);
 
 }

@@ -331,22 +331,155 @@ public class DmController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/accept", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<Void> accept(OAuth2Authentication auth,
     		@RequestParam("username_to_accept") String usernameToAccept,
-    		@RequestParam("is_invite") boolean isInvite) {
+    		@RequestParam("is_invite") boolean isInvite,
+    		@RequestParam("major_data") boolean majorData,
+    		@RequestParam("minor_data") boolean minorData) {
 
     	String username = auth.getName();
+
+    	String followerName;
+    	String followingName;
+
+    	if (isInvite) {
+    		followerName = username;
+    		followingName = usernameToAccept;
+    	}
+    	else {
+    		followerName = usernameToAccept;
+    		followingName = username;
+    	}
+
+    	Following following = followings
+    			.findByUsernameAndFollowingName(followerName, followingName);
+    	Follower follower = followers
+    			.findByUsernameAndFollowerName(followingName, followerName);
+
+    	if (following == null || follower == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	if (isInvite) {
+    		following.setInvite(false);
+
+    		follower.setPending(false);
+    	}
+    	else {
+    		following.setPending(false);
+    		following.setMajorData(majorData);
+    		following.setMinorData(minorData);
+
+    		follower.setAccepted(true);
+    		follower.setMajorData(majorData);
+    		follower.setMinorData(minorData);
+    	}
+
+    	followings.save(following);
+    	followers.save(follower);
+
+    	UserGcm followingGcmInfo = usersGcm.findByUsername(followerName);
+    	UserGcm followerGcmInfo = usersGcm.findByUsername(followingName);
+
+    	GcmMessage followingMessage = new GcmMessage();
+    	followingMessage.addRecipient(followingGcmInfo.getToken());
+    	followingMessage.addDataField("table", "following");
+
+    	GcmMessage followerMessage = new GcmMessage();
+    	followerMessage.addRecipient(followerGcmInfo.getToken());
+    	followerMessage.addDataField("table", "follower");
+
+    	GcmResponse followingResponse = sendGcmMessage(followingMessage);
+    	GcmResponse followerResponse = sendGcmMessage(followerMessage);
+
+    	System.out.println(followingResponse);
+    	System.out.println(followerResponse);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/decline", method = RequestMethod.POST)
-    public ResponseEntity<Void> decline(OAuth2Authentication auth,
-    		@RequestParam("username_to_decline") String usernameToDecline,
-    		@RequestParam("is_invite") boolean isInvite) {
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResponseEntity<Void> delete(OAuth2Authentication auth,
+    		@RequestParam("username_to_delete") String usernameToDelete,
+    		@RequestParam("is_invite") boolean isFollower) {
 
     	String username = auth.getName();
+
+    	String followerName;
+    	String followingName;
+
+    	if (!isFollower) {
+    		followerName = username;
+    		followingName = usernameToDelete;
+    	}
+    	else {
+    		followerName = usernameToDelete;
+    		followingName = username;
+    	}
+
+    	followings.deleteByUsernameAndFollowingName(followerName, followingName);
+    	followers.deleteByUsernameAndFollowerName(followingName, followerName);
+
+    	UserGcm followingGcmInfo = usersGcm.findByUsername(followerName);
+    	UserGcm followerGcmInfo = usersGcm.findByUsername(followingName);
+
+    	GcmMessage followingMessage = new GcmMessage();
+    	followingMessage.addRecipient(followingGcmInfo.getToken());
+    	followingMessage.addDataField("table", "following");
+
+    	GcmMessage followerMessage = new GcmMessage();
+    	followerMessage.addRecipient(followerGcmInfo.getToken());
+    	followerMessage.addDataField("table", "follower");
+
+    	GcmResponse followingResponse = sendGcmMessage(followingMessage);
+    	GcmResponse followerResponse = sendGcmMessage(followerMessage);
+
+    	System.out.println(followingResponse);
+    	System.out.println(followerResponse);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/settings", method = RequestMethod.POST)
+    public ResponseEntity<Void> changeSettings(OAuth2Authentication auth,
+    		@RequestParam("settings_username") String settingsUsername,
+    		@RequestParam("major_data") boolean majorData,
+    		@RequestParam("minor_data") boolean minorData) {
+
+    	String username = auth.getName();
+
+    	Follower follower = followers.findByUsernameAndFollowerName(username, settingsUsername);
+    	Following following = followings.findByUsernameAndFollowingName(settingsUsername, username);
+
+    	if (following == null || follower == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	follower.setMajorData(majorData);
+    	following.setMajorData(majorData);
+    	follower.setMinorData(minorData);
+    	following.setMinorData(minorData);
+
+    	followers.save(follower);
+    	followings.save(following);
+
+    	UserGcm followingGcmInfo = usersGcm.findByUsername(settingsUsername);
+    	UserGcm followerGcmInfo = usersGcm.findByUsername(username);
+
+    	GcmMessage followingMessage = new GcmMessage();
+    	followingMessage.addRecipient(followingGcmInfo.getToken());
+    	followingMessage.addDataField("table", "following");
+
+    	GcmMessage followerMessage = new GcmMessage();
+    	followerMessage.addRecipient(followerGcmInfo.getToken());
+    	followerMessage.addDataField("table", "follower");
+
+    	GcmResponse followingResponse = sendGcmMessage(followingMessage);
+    	GcmResponse followerResponse = sendGcmMessage(followerMessage);
+
+    	System.out.println(followingResponse);
+    	System.out.println(followerResponse);
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

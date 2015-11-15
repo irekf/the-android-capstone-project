@@ -40,11 +40,16 @@ public class NetOpsService extends IntentService {
     public static String ACTION_GET_USER_LIST = "action_get_user_list";
     public static String ACTION_FOLLOW = "action_follow";
     public static String ACTION_INVITE = "action_invite";
+    public static String ACTION_ACCEPT = "action_accept";
+    public static String ACTION_DELETE = "action_delete";
+    public static String ACTION_CHANGE_SETTINGS = "action_change_setting";
 
     public static String ARG_USER_NAME = "user_name";
     public static String ARG_PASSWORD = "password";
     public static String ARG_TEEN_ONLY = "teen_only";
     public static String ARG_USER_SETTINGS = "user_settings";
+    public static String ARG_IS_INVITE = "is_invite";
+    public static String ARG_IS_FOLLOWER = "is_follower";
 
     public static String EXTRA_USER_INFO = "user_info";
     public static String EXTRA_CHECK_IN_DATA = "check_in_data";
@@ -125,6 +130,15 @@ public class NetOpsService extends IntentService {
             }
             else if (action.equals(ACTION_INVITE)) {
                 handleInviteRequest(intent);
+            }
+            else if (action.equals(ACTION_ACCEPT)) {
+                handleAcceptRequest(intent);
+            }
+            else if (action.equals(ACTION_DELETE)) {
+                handleDeleteRequest(intent);
+            }
+            else if (action.equals(ACTION_CHANGE_SETTINGS)) {
+                handleChangeSettingsRequest(intent);
             }
             else {
 
@@ -336,6 +350,93 @@ public class NetOpsService extends IntentService {
 
         Call<Void> call = sDmService.invite(usernameToInvite,
                 settings.isMajorData(), settings.isMinorData());
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleAcceptRequest(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_ACCEPT);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String usernameToAccept = callerIntent.getStringExtra(ARG_USER_NAME);
+        boolean isInvite = callerIntent.getBooleanExtra(ARG_IS_INVITE, false);
+        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+
+        Call<Void> call = sDmService.accept(usernameToAccept, isInvite,
+                settings.isMajorData(), settings.isMinorData());
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleDeleteRequest(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_ACCEPT);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String username = callerIntent.getStringExtra(ARG_USER_NAME);
+        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+
+        Call<Void> call = sDmService.changeSettings(username,
+                settings.isMajorData(), settings.isMinorData());
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleChangeSettingsRequest(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_ACCEPT);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String usernameToDelete = callerIntent.getStringExtra(ARG_USER_NAME);
+        boolean isFollower = callerIntent.getBooleanExtra(ARG_IS_FOLLOWER, false);
+
+        Call<Void> call = sDmService.delete(usernameToDelete, isFollower);
 
         try {
             Response<Void> response = call.execute();
