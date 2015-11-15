@@ -375,5 +375,28 @@ public class RemindersFragment extends Fragment implements LoaderManager.LoaderC
         return 0;
     }
 
+    public static void removeAlarmsFromSystem(Context context) {
+
+        ContentResolver cr = context.getContentResolver();
+        Cursor cursor = cr.query(DmContract.Reminders.CONTENT_URI,
+                new String[] { DmContract.Reminders._ID },
+                DmContract.Reminders.IS_ENABLED + " != 0", null, null);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        while (cursor != null && cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Reminders._ID));
+
+            Intent intent = new Intent(context, CheckInPublisher.class);
+            PendingIntent alarmIntent = PendingIntent
+                    .getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.cancel(alarmIntent);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+    }
 
 }

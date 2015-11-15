@@ -229,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
     private void logOut() {
         // log out and go back to the login screen
         MiscUtils.setLoggedIn(getApplicationContext(), false);
+        RemindersFragment.removeAlarmsFromSystem(getApplicationContext());
         new DmDatabaseHelper(this).clearDatabase();
         Intent authActivityIntent = new Intent(getApplicationContext(), AuthActivity.class);
         startActivity(authActivityIntent);
