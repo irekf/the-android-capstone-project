@@ -91,6 +91,7 @@
     <string name="success_follow">Follow request sent</string>
     <string name="success_invite">Invite sent</string>
     <string name="error_invite">"Error sending invite: "</string>
+    <string name="delete">Delete</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

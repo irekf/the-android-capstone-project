@@ -149,6 +149,8 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
             ImageView statusView = (ImageView) view.findViewById(R.id.follower_status);
             TextView fullNameView = (TextView) view.findViewById(R.id.follower_full_name);
             TextView usernameView = (TextView) view.findViewById(R.id.follower_username);
+            ImageView actionView = (ImageView) view.findViewById(R.id.follower_action);
+            ImageView deleteView = (ImageView) view.findViewById(R.id.follower_delete);
 
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_FULL_NAME));
@@ -172,12 +174,15 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
             if (accepted == 0) {
                 statusView.setImageResource(R.drawable.ic_new_request);
+                actionView.setImageResource(R.drawable.ic_accept);
             }
             else if (pending != 0) {
                 statusView.setImageResource(R.drawable.ic_request_sent);
+                actionView.setImageResource(0);
             }
             else {
                 statusView.setImageResource(0);
+                actionView.setImageResource(R.drawable.ic_edit);
             }
 
         }

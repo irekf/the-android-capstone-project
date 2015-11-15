@@ -149,6 +149,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
             ImageView statusView = (ImageView) view.findViewById(R.id.following_status);
             TextView fullNameView = (TextView) view.findViewById(R.id.following_full_name);
             TextView usernameView = (TextView) view.findViewById(R.id.following_username);
+            ImageView actionView = (ImageView) view.findViewById(R.id.following_action);
+            ImageView deleteView = (ImageView) view.findViewById(R.id.following_delete);
 
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_FULL_NAME));
@@ -165,12 +167,15 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
             iconView.setImageResource(R.drawable.ic_teen);
             if (isInvite != 0) {
                 statusView.setImageResource(R.drawable.ic_new_request);
+                actionView.setImageResource(R.drawable.ic_accept);
             }
             else if (pending != 0) {
                 statusView.setImageResource(R.drawable.ic_request_sent);
+                actionView.setImageResource(0);
             }
             else {
                 statusView.setImageResource(0);
+                actionView.setImageResource(R.drawable.ic_edit);
             }
 
         }
