@@ -40,15 +40,14 @@ public class NetOpsService extends IntentService {
     public static String ACTION_GET_USER_LIST = "action_get_user_list";
     public static String ACTION_FOLLOW = "action_follow";
 
-    public static String EXTRA_USER_NAME = "user_name";
-    public static String EXTRA_PASSWORD = "password";
-    public static String EXTRA_TEEN_ONLY = "teen_only";
+    public static String ARG_USER_NAME = "user_name";
+    public static String ARG_PASSWORD = "password";
+    public static String ARG_TEEN_ONLY = "teen_only";
+    public static String ARG_USER_SETTINGS = "user_settings";
 
     public static String EXTRA_USER_INFO = "user_info";
     public static String EXTRA_CHECK_IN_DATA = "check_in_data";
     public static String EXTRA_USER_LIST = "user_list";
-    public static String EXTRA_USER_SETTINGS = "user_settings";
-
     public static String EXTRA_ERROR_MESSAGE = "error_message";
 
     public static String RESULT_CODE = "result_code";
@@ -141,8 +140,8 @@ public class NetOpsService extends IntentService {
         Intent reply = new Intent(ACTION_LOG_IN);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
-        String userName = callerIntent.getStringExtra(EXTRA_USER_NAME);
-        String password = callerIntent.getStringExtra(EXTRA_PASSWORD);
+        String userName = callerIntent.getStringExtra(ARG_USER_NAME);
+        String password = callerIntent.getStringExtra(ARG_PASSWORD);
 
         Call<AccessToken> loginCall =
                 sDmServiceUnsecured.login(
@@ -270,7 +269,7 @@ public class NetOpsService extends IntentService {
         Intent reply = new Intent(ACTION_GET_USER_LIST);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
-        boolean teenOnly = callerIntent.getBooleanExtra(EXTRA_TEEN_ONLY, false);
+        boolean teenOnly = callerIntent.getBooleanExtra(ARG_TEEN_ONLY, false);
 
         Call<List<UserInfo>> call = sDmService.getUserList(teenOnly);
 
@@ -299,10 +298,10 @@ public class NetOpsService extends IntentService {
         Intent reply = new Intent(ACTION_FOLLOW);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
-        String usernameTOFollow = callerIntent.getStringExtra(EXTRA_USER_NAME);
-        UserSettings settings = callerIntent.getParcelableExtra(EXTRA_USER_SETTINGS);
+        String usernameToFollow = callerIntent.getStringExtra(ARG_USER_NAME);
+        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
 
-        Call<Void> call = sDmService.follow(usernameTOFollow,
+        Call<Void> call = sDmService.follow(usernameToFollow,
                 settings.isMajorData(), settings.isMinorData());
 
         try {

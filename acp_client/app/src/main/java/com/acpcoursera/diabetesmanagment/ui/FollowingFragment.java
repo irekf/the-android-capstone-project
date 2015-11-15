@@ -218,8 +218,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
         ProgressDialogFragment.show(getActivity());
         Intent intent = new Intent(getActivity(), NetOpsService.class);
         intent.setAction(NetOpsService.ACTION_FOLLOW);
-        intent.putExtra(NetOpsService.EXTRA_USER_NAME, usernameToFollow);
-        intent.putExtra(NetOpsService.EXTRA_USER_SETTINGS, settings);
+        intent.putExtra(NetOpsService.ARG_USER_NAME, usernameToFollow);
+        intent.putExtra(NetOpsService.ARG_USER_SETTINGS, settings);
         getActivity().startService(intent);
     }
 

@@ -73,8 +73,8 @@ public class LogInFragment extends Fragment {
                 // let's try to log in, i.e. get an access token
                 Intent intent = new Intent(getActivity(), NetOpsService.class);
                 intent.setAction(NetOpsService.ACTION_LOG_IN);
-                intent.putExtra(NetOpsService.EXTRA_USER_NAME, mUserName.getText().toString());
-                intent.putExtra(NetOpsService.EXTRA_PASSWORD, mPassword.getText().toString());
+                intent.putExtra(NetOpsService.ARG_USER_NAME, mUserName.getText().toString());
+                intent.putExtra(NetOpsService.ARG_PASSWORD, mPassword.getText().toString());
                 getActivity().startService(intent);
             }
         });

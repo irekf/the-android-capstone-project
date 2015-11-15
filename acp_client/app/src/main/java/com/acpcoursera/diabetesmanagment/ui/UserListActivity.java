@@ -195,7 +195,7 @@ public class UserListActivity extends AppCompatActivity implements
         ProgressDialogFragment.show(this);
         Intent intent = new Intent(this, NetOpsService.class);
         intent.setAction(NetOpsService.ACTION_GET_USER_LIST);
-        intent.putExtra(NetOpsService.EXTRA_TEEN_ONLY, mTeenOnly);
+        intent.putExtra(NetOpsService.ARG_TEEN_ONLY, mTeenOnly);
         startService(intent);
     }
 
