@@ -95,6 +95,7 @@
     <string name="request_accepted">Request accepted</string>
     <string name="follower_deleted">Follower deleted</string>
     <string name="settings_changed">Settings changed</string>
+    <string name="following_deleted">Following deleted</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

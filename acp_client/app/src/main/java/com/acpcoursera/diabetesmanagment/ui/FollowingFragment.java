@@ -155,8 +155,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_FULL_NAME));
             int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.PENDING));
-            int isInvite = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.INVITE));
-            String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_NAME));
+            final int isInvite = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.INVITE));
+            final String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_NAME));
 
 //            Log.d(TAG, dumpCursorToString(cursor));
 
@@ -178,6 +178,23 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
                 actionView.setImageResource(0);
             }
 
+            // listeners
+            actionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isInvite != 0) {
+                        acceptInvite(username);
+                    }
+                }
+            });
+
+            deleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteUser(username);
+                }
+            });
+
         }
 
     }
@@ -189,16 +206,21 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
 
             String action = intent.getAction();
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
-            if (action.equals(NetOpsService.ACTION_FOLLOW)) {
-                if (resultCode == NetOpsService.RC_OK) {
+            if (resultCode == NetOpsService.RC_OK) {
+                if (action.equals(NetOpsService.ACTION_FOLLOW)) {
                     showToast(context, context.getString(R.string.success_follow));
+                } else if (action.equals(NetOpsService.ACTION_ACCEPT)) {
+                    showToast(context, context.getString(R.string.request_accepted));
+                } else if (action.equals(NetOpsService.ACTION_DELETE)) {
+                    showToast(context, context.getString(R.string.following_deleted));
                 }
-                else {
-                    showToast(context, context.getString(R.string.error_follow) +
-                            intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
-                }
-                ProgressDialogFragment.dismiss(getActivity());
             }
+            else {
+                showToast(context, context.getString(R.string.error_follower_request) +
+                        intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
+            }
+
+            ProgressDialogFragment.dismiss(getActivity());
 
         }
     }
@@ -209,6 +231,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
         mReceiver = new NetOpsReceiver();
         IntentFilter filter = new IntentFilter(TAG);
         filter.addAction(NetOpsService.ACTION_FOLLOW);
+        filter.addAction(NetOpsService.ACTION_ACCEPT);
+        filter.addAction(NetOpsService.ACTION_DELETE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
@@ -225,6 +249,24 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
         intent.setAction(NetOpsService.ACTION_FOLLOW);
         intent.putExtra(NetOpsService.ARG_USER_NAME, usernameToFollow);
         intent.putExtra(NetOpsService.ARG_USER_SETTINGS, settings);
+        getActivity().startService(intent);
+    }
+
+    private void acceptInvite(String username) {
+        ProgressDialogFragment.show(getActivity());
+        Intent intent = new Intent(getActivity(), NetOpsService.class);
+        intent.setAction(NetOpsService.ACTION_ACCEPT);
+        intent.putExtra(NetOpsService.ARG_USER_NAME, username);
+        intent.putExtra(NetOpsService.ARG_IS_INVITE, true);
+        getActivity().startService(intent);
+    }
+
+    private void deleteUser(String username) {
+        ProgressDialogFragment.show(getActivity());
+        Intent intent = new Intent(getActivity(), NetOpsService.class);
+        intent.setAction(NetOpsService.ACTION_DELETE);
+        intent.putExtra(NetOpsService.ARG_USER_NAME, username);
+        intent.putExtra(NetOpsService.ARG_IS_FOLLOWER, false);
         getActivity().startService(intent);
     }
 

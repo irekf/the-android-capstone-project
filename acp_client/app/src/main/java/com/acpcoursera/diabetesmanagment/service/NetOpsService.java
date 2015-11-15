@@ -376,7 +376,13 @@ public class NetOpsService extends IntentService {
 
         String usernameToAccept = callerIntent.getStringExtra(ARG_USER_NAME);
         boolean isInvite = callerIntent.getBooleanExtra(ARG_IS_INVITE, false);
-        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+        UserSettings settings;
+        if (!isInvite) {
+            settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+        }
+        else {
+            settings = new UserSettings(false, false);
+        }
 
         Call<Void> call = sDmService.accept(usernameToAccept, isInvite,
                 settings.isMajorData(), settings.isMinorData());
@@ -401,7 +407,7 @@ public class NetOpsService extends IntentService {
 
     private void handleDeleteRequest(Intent callerIntent) {
 
-        Intent reply = new Intent(ACTION_ACCEPT);
+        Intent reply = new Intent(ACTION_DELETE);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         String username = callerIntent.getStringExtra(ARG_USER_NAME);
@@ -429,7 +435,7 @@ public class NetOpsService extends IntentService {
 
     private void handleChangeSettingsRequest(Intent callerIntent) {
 
-        Intent reply = new Intent(ACTION_ACCEPT);
+        Intent reply = new Intent(ACTION_CHANGE_SETTINGS);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         String usernameToDelete = callerIntent.getStringExtra(ARG_USER_NAME);

@@ -303,7 +303,7 @@ public class DmController {
     	following.setUsername(usernameToInvite);
     	following.setFollowingName(username);
     	following.setFollowingFullName(followingFullName);
-    	following.setPending(true);
+    	following.setPending(false);
     	following.setInvite(true);
     	following.setMajorData(majorData);
     	following.setMinorData(minorData);
