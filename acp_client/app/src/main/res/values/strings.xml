@@ -51,7 +51,7 @@
         <item>@string/title_feedback</item>
         <item>@string/title_followers</item>
         <item>@string/title_following</item>
-        <item>@string/title_messages</item>
+        <!--<item>@string/title_messages</item>--> <!--No time to implement this-->
         <item>@string/title_reminders</item>
     </string-array>
 
