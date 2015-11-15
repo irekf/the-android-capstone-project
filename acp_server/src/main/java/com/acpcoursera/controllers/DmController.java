@@ -271,6 +271,63 @@ public class DmController {
 
     	String username = auth.getName();
 
+    	UserInfo followerUserInfo = usersInfo.findByUsername(usernameToInvite);
+    	if (followerUserInfo == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	String followerFullName = followerUserInfo.getFirstName()
+    			+ " " + followerUserInfo.getSecondName();
+    	boolean isTeen = followerUserInfo.getUserType().equals(UserInfo.TYPE_TEEN);
+
+    	Follower follower = new Follower();
+    	follower.setUsername(username);
+    	follower.setFollowerName(usernameToInvite);
+    	follower.setFollowerFullName(followerFullName);
+    	follower.setTeen(isTeen);
+    	follower.setAccepted(true);
+    	follower.setPending(true);
+    	follower.setMajorData(majorData);
+    	follower.setMinorData(minorData);
+
+
+    	UserInfo followingUserInfo = usersInfo.findByUsername(username);
+    	if (followingUserInfo == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	String followingFullName = followingUserInfo.getFirstName()
+    			+ " " + followingUserInfo.getSecondName();
+
+    	Following following = new Following();
+    	following.setUsername(usernameToInvite);
+    	following.setFollowingName(username);
+    	following.setFollowingFullName(followingFullName);
+    	following.setPending(true);
+    	following.setInvite(true);
+    	following.setMajorData(majorData);
+    	following.setMinorData(minorData);
+
+    	followers.save(follower);
+    	followings.save(following);
+
+    	UserGcm followingGcmInfo = usersGcm.findByUsername(usernameToInvite);
+    	UserGcm followerGcmInfo = usersGcm.findByUsername(username);
+
+    	GcmMessage followingMessage = new GcmMessage();
+    	followingMessage.addRecipient(followingGcmInfo.getToken());
+    	followingMessage.addDataField("table", "following");
+
+    	GcmMessage followerMessage = new GcmMessage();
+    	followerMessage.addRecipient(followerGcmInfo.getToken());
+    	followerMessage.addDataField("table", "follower");
+
+    	GcmResponse followingResponse = sendGcmMessage(followingMessage);
+    	GcmResponse followerResponse = sendGcmMessage(followerMessage);
+
+    	System.out.println(followingResponse);
+    	System.out.println(followerResponse);
+
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

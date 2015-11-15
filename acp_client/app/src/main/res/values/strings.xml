@@ -89,6 +89,8 @@
     <string name="label_ok">Ok</string>
     <string name="error_follow">"Follow request error: "</string>
     <string name="success_follow">Follow request sent</string>
+    <string name="success_invite">Invite sent</string>
+    <string name="error_invite">"Error sending invite: "</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

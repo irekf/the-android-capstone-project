@@ -39,6 +39,7 @@ public class NetOpsService extends IntentService {
     public static String ACTION_CHECK_IN = "action_check_in";
     public static String ACTION_GET_USER_LIST = "action_get_user_list";
     public static String ACTION_FOLLOW = "action_follow";
+    public static String ACTION_INVITE = "action_invite";
 
     public static String ARG_USER_NAME = "user_name";
     public static String ARG_PASSWORD = "password";
@@ -121,6 +122,9 @@ public class NetOpsService extends IntentService {
             }
             else if (action.equals(ACTION_FOLLOW)) {
                 handleFollowRequest(intent);
+            }
+            else if (action.equals(ACTION_INVITE)) {
+                handleInviteRequest(intent);
             }
             else {
 
@@ -302,6 +306,35 @@ public class NetOpsService extends IntentService {
         UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
 
         Call<Void> call = sDmService.follow(usernameToFollow,
+                settings.isMajorData(), settings.isMinorData());
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleInviteRequest(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_INVITE);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String usernameToInvite = callerIntent.getStringExtra(ARG_USER_NAME);
+        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+
+        Call<Void> call = sDmService.invite(usernameToInvite,
                 settings.isMajorData(), settings.isMinorData());
 
         try {

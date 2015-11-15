@@ -55,5 +55,12 @@ public interface DmServiceProxy {
             @Query("minor_data") boolean minorData
     );
 
+    @POST("/invite")
+    public Call<Void> invite(
+            @Query("username_to_invite") String usernameToInvite,
+            @Query("major_data") boolean majorData,
+            @Query("minor_data") boolean minorData
+    );
+
 
 }
