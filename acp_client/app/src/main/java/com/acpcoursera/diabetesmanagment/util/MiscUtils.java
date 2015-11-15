@@ -19,26 +19,30 @@ public class MiscUtils {
     private static String TAG = MiscUtils.class.getSimpleName();
 
     public static void setLoggedIn(Context context, boolean isLoggedIn) {
-        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(IS_LOGGED_IN_PREF, isLoggedIn);
         editor.commit();
     }
 
     public static boolean isLoggedIn(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         return sharedPref.getBoolean(IS_LOGGED_IN_PREF, false);
     }
 
     public static void saveAccessToken(Context context, String token) {
-        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(ACCESS_TOKEN_PREF, token);
         editor.commit();
     }
 
     public static String readAccessToken(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         return sharedPref.getString(ACCESS_TOKEN_PREF, "");
     }
 
