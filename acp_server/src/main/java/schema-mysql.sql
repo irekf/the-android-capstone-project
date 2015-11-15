@@ -52,3 +52,30 @@ CREATE TABLE IF NOT EXISTS `check_in_data` (
     PRIMARY KEY (id),
     KEY fk_username_idx(username),
     CONSTRAINT fk_check_in_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
+    
+CREATE TABLE IF NOT EXISTS `follower` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    follower_name varchar(64) NOT NULL,
+    follower_full_name varchar(64) NOT NULL,
+    teen tinyint(1) NOT NULL,
+    accepted tinyint(1) NOT NULL,
+    pending tinyint(1) NOT NULL,
+    major_data tinyint(1) NOT NULL,
+    minor_data tinyint(1) NOT NULL,
+    PRIMARY KEY (id),
+    KEY fk_username_idx(username),
+    CONSTRAINT fk_flwrs_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);
+    
+CREATE TABLE IF NOT EXISTS `following` (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    username varchar(64) NOT NULL,
+    following_name varchar(64) NOT NULL,
+    following_full_name varchar(64) NOT NULL,
+    pending tinyint(1) NOT NULL,
+    invite tinyint(1) NOT NULL,
+    major_data tinyint(1) NOT NULL,
+    minor_data tinyint(1) NOT NULL,
+    PRIMARY KEY (id),
+    KEY fk_username_idx(username),
+    CONSTRAINT fk_flwng_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE);

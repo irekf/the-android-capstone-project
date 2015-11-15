@@ -1,8 +1,6 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
-import android.accounts.Account;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -56,12 +54,6 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // TODO do a smarter sync
-        Bundle data = new Bundle();
-        data.putString("table", DmContract.Followers.CONTENT_TYPE_ID);
-        data.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(new Account(AuthActivity.ACCOUNT, AuthActivity.ACCOUNT_TYPE),
-                AuthActivity.AUTHORITY, data);
     }
 
     @Override

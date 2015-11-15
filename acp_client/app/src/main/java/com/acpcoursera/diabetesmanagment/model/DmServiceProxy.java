@@ -48,4 +48,12 @@ public interface DmServiceProxy {
     @GET("/following")
     public Call<List<Following>> getFollowing();
 
+    @POST("/follow")
+    public Call<Void> follow(
+            @Query("username_to_follow") String usernameToFollow,
+            @Query("major_data") boolean majorData,
+            @Query("minor_data") boolean minorData
+    );
+
+
 }

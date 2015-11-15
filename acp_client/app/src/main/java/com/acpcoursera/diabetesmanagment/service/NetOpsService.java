@@ -11,6 +11,7 @@ import com.acpcoursera.diabetesmanagment.model.CheckInData;
 import com.acpcoursera.diabetesmanagment.model.DmService;
 import com.acpcoursera.diabetesmanagment.model.DmServiceProxy;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+import com.acpcoursera.diabetesmanagment.model.UserSettings;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 import com.acpcoursera.diabetesmanagment.util.NetUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -37,6 +38,7 @@ public class NetOpsService extends IntentService {
 
     public static String ACTION_CHECK_IN = "action_check_in";
     public static String ACTION_GET_USER_LIST = "action_get_user_list";
+    public static String ACTION_FOLLOW = "action_follow";
 
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
@@ -44,6 +46,7 @@ public class NetOpsService extends IntentService {
     public static String EXTRA_USER_INFO = "user_info";
     public static String EXTRA_CHECK_IN_DATA = "check_in_data";
     public static String EXTRA_USER_LIST = "user_list";
+    public static String EXTRA_USER_SETTINGS = "user_settings";
 
     public static String EXTRA_ERROR_MESSAGE = "error_message";
 
@@ -115,6 +118,9 @@ public class NetOpsService extends IntentService {
             }
             else if (action.equals(ACTION_GET_USER_LIST)) {
                 handleGetUserList(intent);
+            }
+            else if (action.equals(ACTION_FOLLOW)) {
+                handleFollowRequest(intent);
             }
             else {
 
@@ -274,6 +280,35 @@ public class NetOpsService extends IntentService {
             else {
                 List<UserInfo> users = response.body();
                 reply.putExtra(EXTRA_USER_LIST, users.toArray(new UserInfo[users.size()]));
+                reply.putExtra(RESULT_CODE, RC_OK);
+            }
+        } catch (IOException e) {
+            reply.putExtra(RESULT_CODE, RC_ERROR);
+            reply.putExtra(EXTRA_ERROR_MESSAGE, e.getMessage());
+            e.printStackTrace();
+        }
+
+        mBroadcastManager.sendBroadcast(reply);
+    }
+
+    private void handleFollowRequest(Intent callerIntent) {
+
+        Intent reply = new Intent(ACTION_FOLLOW);
+        reply.addCategory(Intent.CATEGORY_DEFAULT);
+
+        String usernameTOFollow = callerIntent.getStringExtra(EXTRA_USER_NAME);
+        UserSettings settings = callerIntent.getParcelableExtra(EXTRA_USER_SETTINGS);
+
+        Call<Void> call = sDmService.follow(usernameTOFollow,
+                settings.isMajorData(), settings.isMinorData());
+
+        try {
+            Response<Void> response = call.execute();
+            if (!response.isSuccess()) {
+                reply.putExtra(RESULT_CODE, RC_ERROR);
+                reply.putExtra(EXTRA_ERROR_MESSAGE, response.message());
+            }
+            else {
                 reply.putExtra(RESULT_CODE, RC_OK);
             }
         } catch (IOException e) {

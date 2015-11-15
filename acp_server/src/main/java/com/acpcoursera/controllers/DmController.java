@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ import com.acpcoursera.model.UserAccount;
 import com.acpcoursera.model.UserGcm;
 import com.acpcoursera.model.UserInfo;
 import com.acpcoursera.repository.CheckInDataRepository;
+import com.acpcoursera.repository.FollowerRepository;
+import com.acpcoursera.repository.FollowingRepository;
 import com.acpcoursera.repository.UserGcmRepository;
 import com.acpcoursera.repository.UserInfoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +54,12 @@ public class DmController {
 
     @Autowired
     private CheckInDataRepository usersCheckIn;
+
+    @Autowired
+    private FollowerRepository followers;
+
+    @Autowired
+    private FollowingRepository followings;
 
     @RequestMapping(value = "/print/{text}", method = RequestMethod.GET)
     public @ResponseBody String returnUserText(@PathVariable String text) {
@@ -141,7 +148,16 @@ public class DmController {
     	UserInfo currentUser = new UserInfo();
     	currentUser.setUsername(username);
 
+    	List<Follower> allFollowers = followers.findAllByUsername(username);
+    	List<Following> allFollowing = followings.findAllByUsername(username);
     	List<UserInfo> allUsersInfo = usersInfo.findAll();
+
+    	for (Follower f : allFollowers) {
+    		allUsersInfo.remove(new UserInfo(f.getFollowerName()));
+    	}
+    	for (Following f : allFollowing) {
+    		allUsersInfo.remove(new UserInfo(f.getFollowingName()));
+    	}
     	allUsersInfo.remove(currentUser);
 
     	return new ResponseEntity<List<UserInfo>>(allUsersInfo, HttpStatus.OK);
@@ -154,41 +170,9 @@ public class DmController {
     	UserInfo currentUser = new UserInfo();
     	currentUser.setUsername(username);
 
-    	List<Follower> followers = new ArrayList<>();
+    	List<Follower> allFollowers = followers.findAllByUsername(username);
 
-    	Follower f1 = new Follower();
-    	f1.setUsername("irekf");
-    	f1.setFollowerName("patrick22");
-    	f1.setTeen(true);
-    	f1.setMajorData(true);
-    	f1.setMinorData(true);
-    	f1.setFollowerFullName("Patrick Star");
-    	f1.setAccepted(true);
-
-    	Follower f2 = new Follower();
-    	f2.setUsername("irekf");
-    	f2.setFollowerName("will89");
-    	f2.setTeen(false);
-    	f2.setMajorData(true);
-    	f2.setMinorData(false);
-    	f2.setFollowerFullName("Will Bill");
-    	f2.setAccepted(false);
-
-    	Follower f3 = new Follower();
-    	f3.setUsername("irekf");
-    	f3.setFollowerName("scooby_2");
-    	f3.setTeen(false);
-    	f3.setMajorData(true);
-    	f3.setMinorData(false);
-    	f3.setFollowerFullName("Helen Green");
-    	f3.setAccepted(true);
-    	f3.setPending(true);
-
-    	followers.add(f1);
-    	followers.add(f2);
-    	followers.add(f3);
-
-    	return new ResponseEntity<List<Follower>>(followers, HttpStatus.OK);
+    	return new ResponseEntity<List<Follower>>(allFollowers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/following", method = RequestMethod.GET)
@@ -198,38 +182,109 @@ public class DmController {
     	UserInfo currentUser = new UserInfo();
     	currentUser.setUsername(username);
 
-    	List<Following> following = new ArrayList<>();
+    	List<Following> allFollowing = followings.findAllByUsername(username);
 
-    	Following f1 = new Following();
-    	f1.setUsername("irekf");
-    	f1.setFollowingName("abcde");
-    	f1.setMajorData(true);
-    	f1.setMinorData(true);
-    	f1.setFollowingFullName("Ann Smith");
-    	f1.setPending(true);
-
-    	Following f2 = new Following();
-    	f2.setUsername("irekf");
-    	f2.setFollowingName("driver");
-    	f2.setMajorData(true);
-    	f2.setMinorData(false);
-    	f2.setFollowingFullName("Jane Lee");
-    	f2.setInvite(true);
-
-    	Following f3 = new Following();
-    	f3.setUsername("irekf");
-    	f3.setFollowingName("bee09");
-    	f3.setMajorData(true);
-    	f3.setMinorData(false);
-    	f3.setFollowingFullName("George C.");
-
-    	following.add(f1);
-    	following.add(f2);
-    	following.add(f3);
-
-    	return new ResponseEntity<List<Following>>(following, HttpStatus.OK);
+    	return new ResponseEntity<List<Following>>(allFollowing, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/follow", method = RequestMethod.POST)
+    public ResponseEntity<Void> follow(OAuth2Authentication auth,
+    		@RequestParam("username_to_follow") String usernameToFollow,
+    		@RequestParam("major_data") boolean majorData,
+    		@RequestParam("minor_data") boolean minorData) {
+
+    	String username = auth.getName();
+
+    	UserInfo followerUserInfo = usersInfo.findByUsername(username);
+    	if (followerUserInfo == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	String followerFullName = followerUserInfo.getFirstName()
+    			+ " " + followerUserInfo.getSecondName();
+    	boolean isTeen = followerUserInfo.getUserType().equals(UserInfo.TYPE_TEEN);
+
+    	Follower follower = new Follower();
+    	follower.setUsername(usernameToFollow);
+    	follower.setFollowerName(username);
+    	follower.setFollowerFullName(followerFullName);
+    	follower.setTeen(isTeen);
+    	follower.setAccepted(false);
+    	follower.setPending(false);
+    	follower.setMajorData(majorData);
+    	follower.setMinorData(minorData);
+
+
+    	UserInfo followingUserInfo = usersInfo.findByUsername(usernameToFollow);
+    	if (followingUserInfo == null) {
+    		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+    	}
+
+    	String followingFullName = followingUserInfo.getFirstName()
+    			+ " " + followingUserInfo.getSecondName();
+
+    	Following following = new Following();
+    	following.setUsername(username);
+    	following.setFollowingName(usernameToFollow);
+    	following.setFollowingFullName(followingFullName);
+    	following.setPending(true);
+    	following.setInvite(false);
+    	following.setMajorData(majorData);
+    	following.setMinorData(minorData);
+
+    	followers.save(follower);
+    	followings.save(following);
+
+    	UserGcm followingGcmInfo = usersGcm.findByUsername(username);
+    	UserGcm followerGcmInfo = usersGcm.findByUsername(usernameToFollow);
+
+    	GcmMessage followingMessage = new GcmMessage();
+    	followingMessage.addRecipient(followingGcmInfo.getToken());
+    	followingMessage.addDataField("table", "following");
+
+    	GcmMessage followerMessage = new GcmMessage();
+    	followerMessage.addRecipient(followerGcmInfo.getToken());
+    	followerMessage.addDataField("table", "follower");
+
+    	GcmResponse followingResponse = sendGcmMessage(followingMessage);
+    	GcmResponse followerResponse = sendGcmMessage(followerMessage);
+
+    	System.out.println(followingResponse);
+    	System.out.println(followerResponse);
+
+    	return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/invite", method = RequestMethod.POST)
+    public ResponseEntity<Void> invite(OAuth2Authentication auth,
+    		@RequestParam("username_to_invite") String usernameToInvite,
+    		@RequestParam("major_data") boolean majorData,
+    		@RequestParam("minor_data") boolean minorData) {
+
+    	String username = auth.getName();
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/accept", method = RequestMethod.POST)
+    public ResponseEntity<Void> accept(OAuth2Authentication auth,
+    		@RequestParam("username_to_accept") String usernameToAccept,
+    		@RequestParam("is_invite") boolean isInvite) {
+
+    	String username = auth.getName();
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/decline", method = RequestMethod.POST)
+    public ResponseEntity<Void> decline(OAuth2Authentication auth,
+    		@RequestParam("username_to_decline") String usernameToDecline,
+    		@RequestParam("is_invite") boolean isInvite) {
+
+    	String username = auth.getName();
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 
     private GcmResponse sendGcmMessage(GcmMessage message) {
 

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class UserInfo {
 
+    public static String TYPE_TEEN  = "teen";
+    public static String TYPE_FOLLOWER  = "follower";
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -85,6 +88,10 @@ public class UserInfo {
     }
 
     public UserInfo() {
+    }
+
+    public UserInfo(String username) {
+    	this.username = username;
     }
 
     public String getPassword() {

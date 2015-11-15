@@ -25,6 +25,10 @@ public class UserInfo implements Parcelable {
 
     }
 
+    public UserInfo(String username) {
+        this.username = username;
+    }
+
     protected UserInfo(Parcel in) {
         userType = in.readString();
         firstName = in.readString();

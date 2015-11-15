@@ -87,6 +87,8 @@
     <string name="user_settings_label">User Settings</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_ok">Ok</string>
+    <string name="error_follow">"Follow request error: "</string>
+    <string name="success_follow">Follow request sent</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

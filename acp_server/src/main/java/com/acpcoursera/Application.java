@@ -19,14 +19,18 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.acpcoursera.config.OAuth2ServerConfig;
 import com.acpcoursera.config.SecurityConfiguration;
-import com.acpcoursera.model.UserGcm;
+import com.acpcoursera.repository.CheckInDataRepository;
+import com.acpcoursera.repository.FollowerRepository;
+import com.acpcoursera.repository.FollowingRepository;
+import com.acpcoursera.repository.UserGcmRepository;
 import com.acpcoursera.repository.UserInfoRepository;
 
 /* Automatically inject any dependencies marked with @Autowired */
 @EnableAutoConfiguration
 
 /* Automatically create a JPA implementation of UserInfo repository */
-@EnableJpaRepositories(basePackageClasses = { UserInfoRepository.class, UserGcm.class })
+@EnableJpaRepositories(basePackageClasses = { UserInfoRepository.class, UserGcmRepository.class,
+		CheckInDataRepository.class, FollowerRepository.class, FollowingRepository.class })
 
 /*
  * Enable the DispatcherServlet so that requests can be routed to our
