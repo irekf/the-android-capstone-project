@@ -142,7 +142,8 @@ public class DmController {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public ResponseEntity<List<UserInfo>> getUserList(OAuth2Authentication auth) {
+    public ResponseEntity<List<UserInfo>> getUserList(OAuth2Authentication auth,
+    		@RequestParam("teen_only") boolean teenOnly) {
 
     	String username = auth.getName();
     	UserInfo currentUser = new UserInfo();
@@ -150,7 +151,14 @@ public class DmController {
 
     	List<Follower> allFollowers = followers.findAllByUsername(username);
     	List<Following> allFollowing = followings.findAllByUsername(username);
-    	List<UserInfo> allUsersInfo = usersInfo.findAll();
+
+    	List<UserInfo> allUsersInfo = null;
+    	if (teenOnly) {
+    		allUsersInfo = usersInfo.findAllByUserType(UserInfo.TYPE_TEEN);
+    	}
+    	else {
+    		allUsersInfo = usersInfo.findAll();
+    	}
 
     	for (Follower f : allFollowers) {
     		allUsersInfo.remove(new UserInfo(f.getFollowerName()));

@@ -40,7 +40,7 @@ public interface DmServiceProxy {
     public Call<List<CheckInData>> getCheckInData();
 
     @GET("/users")
-    public Call<List<UserInfo>> getUserList();
+    public Call<List<UserInfo>> getUserList(@Query("teen_only") boolean teenOnly);
 
     @GET("/followers")
     public Call<List<Follower>> getFollowers();

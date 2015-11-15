@@ -42,6 +42,7 @@ public class NetOpsService extends IntentService {
 
     public static String EXTRA_USER_NAME = "user_name";
     public static String EXTRA_PASSWORD = "password";
+    public static String EXTRA_TEEN_ONLY = "teen_only";
 
     public static String EXTRA_USER_INFO = "user_info";
     public static String EXTRA_CHECK_IN_DATA = "check_in_data";
@@ -269,7 +270,9 @@ public class NetOpsService extends IntentService {
         Intent reply = new Intent(ACTION_GET_USER_LIST);
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
-        Call<List<UserInfo>> call = sDmService.getUserList();
+        boolean teenOnly = callerIntent.getBooleanExtra(EXTRA_TEEN_ONLY, false);
+
+        Call<List<UserInfo>> call = sDmService.getUserList(teenOnly);
 
         try {
             Response<List<UserInfo>> response = call.execute();

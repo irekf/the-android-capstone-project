@@ -34,6 +34,8 @@ public class UserListActivity extends AppCompatActivity implements
     public  static final String EXTRA_USERNAME = "extra_username";
     public  static final String EXTRA_USER_SETTINGS = "extra_user_settings";
 
+    public static final String ARG_TEEN_ONLY = "arg_teen_only";
+
     private static final String USER_LIST_KEY = "user_list_key";
     private static final String SELECTED_USER_KEY = "selected_user_key";
 
@@ -42,11 +44,15 @@ public class UserListActivity extends AppCompatActivity implements
     ListView mUserListView;
     private UserInfo[] mUserList;
     private UserInfo mSelectedUser;
+    private boolean mTeenOnly;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
+
+        Intent args = getIntent();
+        mTeenOnly = args.getBooleanExtra(ARG_TEEN_ONLY, false);
 
         if (savedInstanceState != null) {
             mUserList = MiscUtils.convertParcelableArray(
@@ -189,6 +195,7 @@ public class UserListActivity extends AppCompatActivity implements
         ProgressDialogFragment.show(this);
         Intent intent = new Intent(this, NetOpsService.class);
         intent.setAction(NetOpsService.ACTION_GET_USER_LIST);
+        intent.putExtra(NetOpsService.EXTRA_TEEN_ONLY, mTeenOnly);
         startService(intent);
     }
 

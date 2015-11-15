@@ -110,6 +110,7 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
         switch (item.getItemId()) {
             case R.id.menu_follow:
                 Intent intent = new Intent(getActivity(), UserListActivity.class);
+                intent.putExtra(UserListActivity.ARG_TEEN_ONLY, true);
                 startActivityForResult(intent, REQUEST_FOLLOW);
                 break;
             default:
