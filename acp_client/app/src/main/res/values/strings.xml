@@ -90,8 +90,11 @@
     <string name="error_follow">"Follow request error: "</string>
     <string name="success_follow">Follow request sent</string>
     <string name="success_invite">Invite sent</string>
-    <string name="error_invite">"Error sending invite: "</string>
+    <string name="error_follower_request">"Error sending follower request: "</string>
     <string name="delete">Delete</string>
+    <string name="request_accepted">Request accepted</string>
+    <string name="follower_deleted">Follower deleted</string>
+    <string name="settings_changed">Settings changed</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>

@@ -175,7 +175,7 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
             }
             else {
                 statusView.setImageResource(0);
-                actionView.setImageResource(R.drawable.ic_edit);
+                actionView.setImageResource(0);
             }
 
         }

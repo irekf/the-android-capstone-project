@@ -331,7 +331,7 @@ public class DmController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/accept", method = RequestMethod.POST)
     public ResponseEntity<Void> accept(OAuth2Authentication auth,
     		@RequestParam("username_to_accept") String usernameToAccept,
     		@RequestParam("is_invite") boolean isInvite,
@@ -402,7 +402,7 @@ public class DmController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResponseEntity<Void> delete(OAuth2Authentication auth,
     		@RequestParam("username_to_delete") String usernameToDelete,
-    		@RequestParam("is_invite") boolean isFollower) {
+    		@RequestParam("is_follower") boolean isFollower) {
 
     	String username = auth.getName();
 
@@ -418,8 +418,19 @@ public class DmController {
     		followingName = username;
     	}
 
-    	followings.deleteByUsernameAndFollowingName(followerName, followingName);
-    	followers.deleteByUsernameAndFollowerName(followingName, followerName);
+
+    	Following following = followings
+    			.findByUsernameAndFollowingName(followerName, followingName);
+    	Follower follower = followers
+    			.findByUsernameAndFollowerName(followingName, followerName);
+
+    	followings.delete(following);
+    	followers.delete(follower);
+
+    	/* TODO figure out why this won't work. It says that it deletes 1/1 rows but they are still in the DB! */
+//    	long followingDeleted = followings.deleteByUsernameAndFollowingName(followerName, followingName);
+//    	long followersDeleted = followers.deleteByUsernameAndFollowerName(followingName, followerName);
+//    	System.out.println("following deleted = " + followingDeleted + ", followers deleted = " + followersDeleted);
 
     	UserGcm followingGcmInfo = usersGcm.findByUsername(followerName);
     	UserGcm followerGcmInfo = usersGcm.findByUsername(followingName);

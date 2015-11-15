@@ -405,10 +405,9 @@ public class NetOpsService extends IntentService {
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         String username = callerIntent.getStringExtra(ARG_USER_NAME);
-        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
+        boolean isFollower = callerIntent.getBooleanExtra(ARG_IS_FOLLOWER, false);
 
-        Call<Void> call = sDmService.changeSettings(username,
-                settings.isMajorData(), settings.isMinorData());
+        Call<Void> call = sDmService.delete(username, isFollower);
 
         try {
             Response<Void> response = call.execute();
@@ -434,9 +433,10 @@ public class NetOpsService extends IntentService {
         reply.addCategory(Intent.CATEGORY_DEFAULT);
 
         String usernameToDelete = callerIntent.getStringExtra(ARG_USER_NAME);
-        boolean isFollower = callerIntent.getBooleanExtra(ARG_IS_FOLLOWER, false);
+        UserSettings settings = callerIntent.getParcelableExtra(ARG_USER_SETTINGS);
 
-        Call<Void> call = sDmService.delete(usernameToDelete, isFollower);
+        Call<Void> call = sDmService.changeSettings(usernameToDelete,
+                settings.isMajorData(), settings.isMinorData());
 
         try {
             Response<Void> response = call.execute();

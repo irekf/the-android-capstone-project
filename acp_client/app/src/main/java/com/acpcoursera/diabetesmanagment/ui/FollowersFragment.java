@@ -30,7 +30,8 @@ import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
-public class FollowersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FollowersFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        UserSettingsDialogFragment.UserSettingsDialogListener {
 
     private static String TAG = FollowersFragment.class.getSimpleName();
 
@@ -38,6 +39,10 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     public static final int REQUEST_INVITE = 1;
 
     private NetOpsReceiver mReceiver;
+    private String mPendingUsername;
+    private String mPendingNetOpsAction;
+    private static final String PENDING_USERNAME_KEY = "pending_username";
+    private static final String PENDING_ACTION_KEY = "pending_action_key";
 
     private CursorAdapter mAdapter;
     private ListView mFollowers;
@@ -61,6 +66,17 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPendingUsername = savedInstanceState.getString(PENDING_USERNAME_KEY);
+            mPendingNetOpsAction = savedInstanceState.getString(PENDING_ACTION_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(PENDING_USERNAME_KEY, mPendingUsername);
+        outState.putString(PENDING_ACTION_KEY, mPendingNetOpsAction);
     }
 
     @Override
@@ -78,7 +94,9 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                                         DmContract.Followers.FOLLOWER_FULL_NAME,
                                         DmContract.Followers.TEEN,
                                         DmContract.Followers.ACCEPTED,
-                                        DmContract.Followers.PENDING
+                                        DmContract.Followers.PENDING,
+                                        DmContract.Followers.MAJOR_DATA,
+                                        DmContract.Followers.MINOR_DATE
                                 },
                         null,
                         null,
@@ -130,6 +148,11 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
         }
     }
 
+    @Override
+    public void onFinishUserSettingsDialog(UserSettings setting) {
+        runNetOpsActionWithSettings(mPendingNetOpsAction, mPendingUsername, setting);
+    }
+
     private class FollowersListAdapter extends CursorAdapter {
 
         public FollowersListAdapter(Context context, Cursor c, int flags) {
@@ -155,9 +178,11 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_FULL_NAME));
             int isTeen = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.TEEN));
-            int accepted = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.ACCEPTED));
-            int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.PENDING));
-            String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_NAME));
+            final int accepted = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.ACCEPTED));
+            final int pending = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.PENDING));
+            final String username = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Followers.FOLLOWER_NAME));
+            final int majorData = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.MAJOR_DATA));
+            final int minorData = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Followers.MINOR_DATE));
 
 //            Log.d(TAG, dumpCursorToString(cursor));
 
@@ -185,6 +210,33 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
                 actionView.setImageResource(R.drawable.ic_edit);
             }
 
+            //listeners
+            actionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserSettingsDialogFragment dialogFragment = new UserSettingsDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(UserSettingsDialogFragment.USER_SETTINGS_ARGS_KEY,
+                            new UserSettings(majorData != 0, minorData != 0));
+                    dialogFragment.setArguments(args);
+                    dialogFragment.show(getChildFragmentManager(), UserSettingsDialogFragment.TAG);
+                    mPendingUsername = username;
+                    if (accepted == 0) {
+                        mPendingNetOpsAction = NetOpsService.ACTION_ACCEPT;
+                    }
+                    else if (pending == 0) {
+                        mPendingNetOpsAction = NetOpsService.ACTION_CHANGE_SETTINGS;
+                    }
+                }
+            });
+
+            deleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteUser(username);
+                }
+            });
+
         }
 
     }
@@ -196,16 +248,23 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
 
             String action = intent.getAction();
             int resultCode = intent.getIntExtra(NetOpsService.RESULT_CODE, NetOpsService.RC_MISSING);
-            if (action.equals(NetOpsService.ACTION_INVITE)) {
-                if (resultCode == NetOpsService.RC_OK) {
+            if (resultCode == NetOpsService.RC_OK) {
+                if (action.equals(NetOpsService.ACTION_INVITE)) {
                     showToast(context, context.getString(R.string.success_invite));
+                } else if (action.equals(NetOpsService.ACTION_ACCEPT)) {
+                    showToast(context, context.getString(R.string.request_accepted));
+                } else if (action.equals(NetOpsService.ACTION_DELETE)) {
+                    showToast(context, context.getString(R.string.follower_deleted));
+                } else if (action.equals(NetOpsService.ACTION_CHANGE_SETTINGS)) {
+                    showToast(context, context.getString(R.string.settings_changed));
                 }
-                else {
-                    showToast(context, context.getString(R.string.error_invite) +
-                            intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
-                }
-                ProgressDialogFragment.dismiss(getActivity());
             }
+            else {
+                showToast(context, context.getString(R.string.error_follower_request) +
+                        intent.getStringExtra(NetOpsService.EXTRA_ERROR_MESSAGE));
+            }
+
+            ProgressDialogFragment.dismiss(getActivity());
 
         }
     }
@@ -216,6 +275,9 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
         mReceiver = new NetOpsReceiver();
         IntentFilter filter = new IntentFilter(TAG);
         filter.addAction(NetOpsService.ACTION_INVITE);
+        filter.addAction(NetOpsService.ACTION_ACCEPT);
+        filter.addAction(NetOpsService.ACTION_DELETE);
+        filter.addAction(NetOpsService.ACTION_CHANGE_SETTINGS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
@@ -234,5 +296,24 @@ public class FollowersFragment extends Fragment implements LoaderManager.LoaderC
         intent.putExtra(NetOpsService.ARG_USER_SETTINGS, settings);
         getActivity().startService(intent);
     }
+
+    private void runNetOpsActionWithSettings(String action, String username, UserSettings settings) {
+        ProgressDialogFragment.show(getActivity());
+        Intent intent = new Intent(getActivity(), NetOpsService.class);
+        intent.setAction(action);
+        intent.putExtra(NetOpsService.ARG_USER_NAME, username);
+        intent.putExtra(NetOpsService.ARG_USER_SETTINGS, settings);
+        getActivity().startService(intent);
+    }
+
+    private void deleteUser(String username) {
+        ProgressDialogFragment.show(getActivity());
+        Intent intent = new Intent(getActivity(), NetOpsService.class);
+        intent.setAction(NetOpsService.ACTION_DELETE);
+        intent.putExtra(NetOpsService.ARG_USER_NAME, username);
+        intent.putExtra(NetOpsService.ARG_IS_FOLLOWER, true);
+        getActivity().startService(intent);
+    }
+
 
 }

@@ -14,6 +14,6 @@ public interface FollowingRepository extends JpaRepository<Following, Integer> {
 
     public List<Following> findAllByUsername(String username);
 
-    public Integer deleteByUsernameAndFollowingName(String username, String followingName);
+    public Long deleteByUsernameAndFollowingName(String username, String followingName);
 
 }

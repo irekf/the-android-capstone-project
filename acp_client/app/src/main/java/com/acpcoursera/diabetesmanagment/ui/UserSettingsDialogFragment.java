@@ -22,7 +22,7 @@ public class UserSettingsDialogFragment extends DialogFragment {
         void onFinishUserSettingsDialog(UserSettings setting);
     }
 
-    private static final String USER_SETTINGS_ARGS_KEY = "user_settings_args_key";
+    public static final String USER_SETTINGS_ARGS_KEY = "user_settings_args_key";
     private static final String USER_SETTINGS_KEY = "user_settings_key";
 
     private UserSettings mUserSettings;
@@ -85,7 +85,16 @@ public class UserSettingsDialogFragment extends DialogFragment {
             }
         });
 
-        final UserSettingsDialogListener activity = (UserSettingsDialogListener) getActivity();
+        // TODO: it suspect this workaround is awful,
+        // but I don't have time to make something better right now
+        UserSettingsDialogListener candidate;
+        try {
+            candidate = (UserSettingsDialogListener) getActivity();
+        }
+        catch (ClassCastException e) {
+            candidate = (UserSettingsDialogListener) getParentFragment();
+        }
+        final UserSettingsDialogListener activity = candidate;
 
         builder.setMessage(getString(R.string.user_settings_label))
                 .setView(rootView)
