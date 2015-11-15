@@ -12,6 +12,7 @@ import java.lang.reflect.Array;
 
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.ACCESS_TOKEN_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_LOGGED_IN_PREF;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_TEEN_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SHARED_PREF_FILE;
 
 public class MiscUtils {
@@ -30,6 +31,20 @@ public class MiscUtils {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
                 Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         return sharedPref.getBoolean(IS_LOGGED_IN_PREF, false);
+    }
+
+    public static void setIsTeen(Context context, boolean isTeen) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(IS_TEEN_PREF, isTeen);
+        editor.commit();
+    }
+
+    public static boolean isTeen(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        return sharedPref.getBoolean(IS_TEEN_PREF, false);
     }
 
     public static void saveAccessToken(Context context, String token) {

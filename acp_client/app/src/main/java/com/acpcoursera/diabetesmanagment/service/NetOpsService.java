@@ -178,8 +178,8 @@ public class NetOpsService extends IntentService {
                 String accessToken = logInResponse.body().getAccessToken();
                 sDmService = DmService.createService(mHttpClient.clone(), accessToken);
 
-                Call<Void> gcmTokenCall = sDmService.sendGcmToken(getGcmToken());
-                Response<Void> gcmTokenResponse = gcmTokenCall.execute();
+                Call<UserInfo> gcmTokenCall = sDmService.establishConnection(getGcmToken());
+                Response<UserInfo> gcmTokenResponse = gcmTokenCall.execute();
 
                 if (!gcmTokenResponse.isSuccess()) {
                     reply.putExtra(RESULT_CODE, RC_ERROR);
@@ -187,6 +187,7 @@ public class NetOpsService extends IntentService {
                 }
                 else {
                     MiscUtils.saveAccessToken(getApplicationContext(), accessToken);
+                    reply.putExtra(EXTRA_USER_INFO, gcmTokenResponse.body());
                     reply.putExtra(RESULT_CODE, RC_OK);
                 }
 

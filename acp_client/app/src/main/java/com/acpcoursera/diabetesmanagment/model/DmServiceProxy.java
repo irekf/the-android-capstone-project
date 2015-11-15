@@ -30,8 +30,8 @@ public interface DmServiceProxy {
     @POST("/logout")
     public Call<Void> logout();
 
-    @POST("/gcmtoken")
-    public Call<Void> sendGcmToken(@Query("token") String token);
+    @POST("/connect")
+    public Call<UserInfo> establishConnection(@Query("token") String token);
 
     @POST("/checkin")
     public Call<Void> checkIn(@Body CheckInData data);

@@ -20,6 +20,7 @@ public class AcpPreferences {
     public static final String ACCESS_TOKEN_PREF = "access_token_pref";
 
     public static final String IS_LOGGED_IN_PREF = "is_logged_in_pref";
+    public static final String IS_TEEN_PREF = "is_teen_pref";
 
     public static final int NET_DELAY_SEC = 1;
 

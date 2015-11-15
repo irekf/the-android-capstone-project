@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserInfo;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
@@ -108,6 +109,11 @@ public class LogInFragment extends Fragment {
                 if (resultCode == NetOpsService.RC_OK) {
                     // log in and go to the main screen
                     MiscUtils.setLoggedIn(getActivity(), true);
+
+                    // we will need to know if we are a Teen
+                    UserInfo me = intent.getParcelableExtra(NetOpsService.EXTRA_USER_INFO);
+                    MiscUtils.setIsTeen(getActivity(), me.getUserType().equals(UserInfo.TYPE_TEEN));
+
                     Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
                     startActivity(mainActivityIntent);
                 }

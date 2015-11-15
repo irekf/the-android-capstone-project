@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -53,7 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
         mActionBar = getSupportActionBar();
 
-        mOptionTitles = getResources().getStringArray(R.array.option_titles);
+        // use a different set of titles if we're a Follower
+        boolean isTeen = MiscUtils.isTeen(this);
+        int titlesResId;
+        if (isTeen) {
+            titlesResId = R.array.option_titles_teen;
+        }
+        else {
+            titlesResId = R.array.option_titles_follower;
+        }
+
+        mOptionTitles = getResources().getStringArray(titlesResId);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer_items);
 
@@ -122,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), CheckInActivity.class));
             }
         });
+
+        // disable the check-in button if we aren't a Teen
+        if (!isTeen) {
+            ((ViewManager) mCheckInButton.getParent()).removeView(mCheckInButton);
+        }
 
         // logout button (not really a button for now)
         mLogOutButton = (TextView) findViewById(R.id.log_out_button);

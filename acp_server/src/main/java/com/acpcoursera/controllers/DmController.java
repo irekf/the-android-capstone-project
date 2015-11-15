@@ -86,8 +86,8 @@ public class DmController {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/gcmtoken", method = RequestMethod.POST)
-    public ResponseEntity<Void> sendGcmToken(OAuth2Authentication auth,
+    @RequestMapping(value = "/connect", method = RequestMethod.POST)
+    public ResponseEntity<UserInfo> establishConnection(OAuth2Authentication auth,
             @RequestParam("token") String token) {
 
     	String username = auth.getName();
@@ -95,7 +95,12 @@ public class DmController {
     	gcmInfo.setToken(token);
     	usersGcm.save(gcmInfo);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    	UserInfo info = usersInfo.findByUsername(username);
+    	if (info == null) {
+    		return new ResponseEntity<UserInfo>(HttpStatus.NOT_FOUND);
+    	}
+
+        return new ResponseEntity<UserInfo>(info, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
