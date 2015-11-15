@@ -152,9 +152,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState == null) {
-            loadFollowersFragment();
-            mDrawerList.setItemChecked(1, true);
-            mActionBarTitle = getString(R.string.title_followers);
+            loadFeedbackFragment();
+            mDrawerList.setItemChecked(0, true);
+            mActionBarTitle = getString(R.string.title_feedback);
         }
         else {
             mActionBarTitle = savedInstanceState.getCharSequence(ACTION_BAR_TITLE_KEY);
