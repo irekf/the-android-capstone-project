@@ -83,15 +83,17 @@ public class DmController {
         usersInfo.save(info);
         usersGcm.save(new UserGcm(info.getUsername(), null));
 
-        Following selfFollowing = new Following();
-        selfFollowing.setUsername(info.getUsername());
-        selfFollowing.setFollowingName(info.getUsername());
-        selfFollowing.setFollowingFullName(info.getFirstName()
-    			+ " " + info.getSecondName());
-        selfFollowing.setMajorData(true);
-        selfFollowing.setMinorData(true);
+        if (info.getUserType().equals(UserInfo.TYPE_TEEN)) {
+        	Following selfFollowing = new Following();
+        	selfFollowing.setUsername(info.getUsername());
+        	selfFollowing.setFollowingName(info.getUsername());
+        	selfFollowing.setFollowingFullName(info.getFirstName()
+        			+ " " + info.getSecondName());
+        	selfFollowing.setMajorData(true);
+        	selfFollowing.setMinorData(true);
 
-        followings.save(selfFollowing);
+        	followings.save(selfFollowing);
+        }
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -134,7 +136,21 @@ public class DmController {
     	data.setCheckInTimestamp(new Timestamp(System.currentTimeMillis()));
     	usersCheckIn.save(data);
 
-    	/* send GCM */
+    	List<Follower> myFollowers = followers.findAllByUsername(username);
+    	for (Follower f : myFollowers) {
+    		String userToUpdate = f.getFollowerName();
+
+        	/* send GCM to the followers */
+        	UserGcm gcmInfo = usersGcm.findByUsername(userToUpdate);
+        	GcmMessage message = new GcmMessage();
+        	message.addRecipient(gcmInfo.getToken());
+        	message.addDataField("table", "check_in_data");
+
+        	GcmResponse response = sendGcmMessage(message);
+        	System.out.println(response);
+    	}
+
+    	/* send GCM to myself */
     	UserGcm gcmInfo = usersGcm.findByUsername(username);
     	GcmMessage message = new GcmMessage();
     	message.addRecipient(gcmInfo.getToken());
@@ -151,7 +167,7 @@ public class DmController {
 
     	String username = auth.getName();
 
-    	List<CheckInData> checkInData = usersCheckIn.findAllByUsername(username);
+    	List<CheckInData> checkInData = usersCheckIn.findAll();
 
     	return new ResponseEntity<List<CheckInData>>(checkInData, HttpStatus.OK);
     }
