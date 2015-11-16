@@ -1,6 +1,8 @@
 package com.acpcoursera.diabetesmanagment.ui;
 
+import android.accounts.Account;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserInfo;
+import com.acpcoursera.diabetesmanagment.provider.DmContract;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
 import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
@@ -113,6 +116,10 @@ public class LogInFragment extends Fragment {
                     // we will need to know if we are a Teen
                     UserInfo me = intent.getParcelableExtra(NetOpsService.EXTRA_USER_INFO);
                     MiscUtils.setIsTeen(getActivity(), me.getUserType().equals(UserInfo.TYPE_TEEN));
+                    MiscUtils.saveUsername(getActivity(), me.getUsername());
+
+                    // sync all data
+                    syncAllData();
 
                     Intent mainActivityIntent = new Intent(getActivity(), MainActivity.class);
                     startActivity(mainActivityIntent);
@@ -125,6 +132,25 @@ public class LogInFragment extends Fragment {
             }
 
         }
+    }
+
+    private void syncAllData() {
+        Account account = new Account(AuthActivity.ACCOUNT, AuthActivity.ACCOUNT_TYPE);
+
+        Bundle dataFollowing = new Bundle();
+        dataFollowing.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        dataFollowing.putString("table", DmContract.Following.CONTENT_TYPE_ID);
+        ContentResolver.requestSync(account, AuthActivity.AUTHORITY, dataFollowing);
+
+        Bundle dataFollowers = new Bundle();
+        dataFollowers.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        dataFollowers.putString("table", DmContract.Followers.CONTENT_TYPE_ID);
+        ContentResolver.requestSync(account, AuthActivity.AUTHORITY, dataFollowers);
+
+        Bundle dataCheckIn = new Bundle();
+        dataCheckIn.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        dataCheckIn.putString("table", DmContract.CheckInData.CONTENT_TYPE_ID);
+        ContentResolver.requestSync(account, AuthActivity.AUTHORITY, dataCheckIn);
     }
 
     private boolean areCredentialsValid() {

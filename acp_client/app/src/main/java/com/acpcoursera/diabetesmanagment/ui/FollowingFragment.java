@@ -27,6 +27,7 @@ import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.model.UserSettings;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
 import com.acpcoursera.diabetesmanagment.service.NetOpsService;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 
 import static com.acpcoursera.diabetesmanagment.util.MiscUtils.showToast;
 
@@ -42,11 +43,14 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
     private CursorAdapter mAdapter;
     private ListView mFollowing;
 
+    private String mUsername;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_following, container, false);
 
+        mUsername = MiscUtils.readUsername(getActivity());
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
         mAdapter = new FollowingListAdapter(getActivity(), null, 0);
@@ -79,8 +83,8 @@ public class FollowingFragment extends Fragment implements LoaderManager.LoaderC
                                         DmContract.Following.PENDING,
                                         DmContract.Following.INVITE
                                 },
-                        null,
-                        null,
+                        DmContract.Following.FOLLOWING_NAME + " != ?",
+                        new String[] { mUsername },
                         null
                 );
             default:

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.lang.reflect.Array;
 
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.ACCESS_TOKEN_PREF;
+import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.USERNAME_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_LOGGED_IN_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.IS_TEEN_PREF;
 import static com.acpcoursera.diabetesmanagment.config.AcpPreferences.SHARED_PREF_FILE;
@@ -59,6 +60,20 @@ public class MiscUtils {
         SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
                 Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         return sharedPref.getString(ACCESS_TOKEN_PREF, "");
+    }
+
+    public static void saveUsername(Context context, String username) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(USERNAME_PREF, username);
+        editor.commit();
+    }
+
+    public static String readUsername(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(SHARED_PREF_FILE,
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        return sharedPref.getString(USERNAME_PREF, "");
     }
 
     public static void hideKeyboard(Activity activity, View view) {

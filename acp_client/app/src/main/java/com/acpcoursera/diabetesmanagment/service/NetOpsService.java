@@ -226,6 +226,7 @@ public class NetOpsService extends IntentService {
 
         // clear the access token and null the DM service
         MiscUtils.saveAccessToken(getApplicationContext(), "");
+        MiscUtils.saveUsername(getApplicationContext(), "");
         sDmService = null;
 
         mBroadcastManager.sendBroadcast(reply);

@@ -83,6 +83,16 @@ public class DmController {
         usersInfo.save(info);
         usersGcm.save(new UserGcm(info.getUsername(), null));
 
+        Following selfFollowing = new Following();
+        selfFollowing.setUsername(info.getUsername());
+        selfFollowing.setFollowingName(info.getUsername());
+        selfFollowing.setFollowingFullName(info.getFirstName()
+    			+ " " + info.getSecondName());
+        selfFollowing.setMajorData(true);
+        selfFollowing.setMinorData(true);
+
+        followings.save(selfFollowing);
+
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,13 +67,11 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "On load finished");
         mAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "On load reset");
         mAdapter.changeCursor(null);
     }
 
@@ -92,8 +89,6 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
             final int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following._ID));
             String fullName = cursor.getString(cursor.getColumnIndexOrThrow(DmContract.Following.FOLLOWING_FULL_NAME));
-
-            Log.d(TAG, "we got a full name: " + fullName);
 
             idView.setText(Integer.toString(id));
             fullNameView.setText(fullName);
