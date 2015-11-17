@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/feedback_fragment">
 
     <Spinner
         android:layout_width="match_parent"
@@ -16,11 +17,147 @@
         android:layout_below="@+id/following_spinner"
         android:layout_height="300sp"/>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/check_in_data_list_view"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/feedback_chart" />
+    <ScrollView android:id="@+id/check_in_details_frame" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/feedback_chart"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Check-In time:"
+                    android:padding="3dip"
+                    android:textColor="@color/colorAccent"/>
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_check_in_date"
+                    android:padding="3dip"
+                    android:textColor="@color/colorAccent" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="@string/major_data_label"
+                    android:padding="3dip"
+                    android:textColor="@color/colorPrimaryDark" />
+                <TextView
+                    android:width="100sp"
+                    android:text="Value"
+                    android:padding="3dip"
+                    android:textColor="@color/colorPrimaryDark" />
+                <TextView
+                    android:width="100sp"
+                    android:text="Time"
+                    android:padding="3dip"
+                    android:textColor="@color/colorPrimaryDark" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Sugar level:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_sugar"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_sugar_time"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Insulin dosage:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_insulin"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_insulin_time"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Meal:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_meal"
+                    android:scrollbars = "vertical"
+                    android:padding="3dip"
+                    android:maxLines="4" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_meal_time"
+                    android:padding="3dip" />
+            </TableRow>
+
+
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="@string/minor_data_label"
+                    android:padding="3dip"
+                    android:textColor="@color/colorPrimaryDark" />
+                <TextView
+                    android:width="100sp"
+                    android:text="Value"
+                    android:padding="3dip"
+                    android:textColor="@color/colorPrimaryDark" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Mood level:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_mood"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Stress level:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_stress"
+                    android:padding="3dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Energy level:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_energy"
+                    android:padding="3dip" />
+            </TableRow>
+
+        </TableLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

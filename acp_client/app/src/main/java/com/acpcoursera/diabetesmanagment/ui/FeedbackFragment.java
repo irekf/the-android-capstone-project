@@ -8,21 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
+import com.acpcoursera.diabetesmanagment.model.UserSettings;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
-import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -44,14 +42,21 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final int FOLLOWINGS_LOADER_ID = 0;
     private static final int CHECK_IN_DATA_LOADER_ID = 1;
-    private static final String CHECK_IN_DATA_LOADER_USERNAME = "loader_username";
+    private static final int CHECK_IN_DETAILS_LOADER_ID = 2;
 
-    FollowingsAdapter mFollowingsAdapter;
-    Spinner mFollowings;
-    CheckInDataAdapter mCheckInDataAdapter;
-    ListView mCheckInDataList;
+    private static final String CHECK_IN_DATA_LOADER_USERNAME = "loader_username";
+    private static final String CHECK_IN_DETAILS_LOADER_ROW_ID = "details_loader_row_id";
+
+    private FollowingsAdapter mFollowingsAdapter;
+    private Spinner mFollowings;
 
     private LineChart mChart;
+    private View mDetailsView;
+
+    private UserSettings mPickedFollowingSettings;
+    private static final String USER_SETTINGS_KEY = "user_settings_key";
+    private int mPickedCheckInRowId;
+    private static final String PICKED_CHECK_IN_ROW_KEY = "picked_check_in_row_key";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,14 +65,23 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(FOLLOWINGS_LOADER_ID, null, this);
 
+        mDetailsView = rootView.findViewById(R.id.check_in_details_frame);
+        if (savedInstanceState != null) {
+            mPickedCheckInRowId = savedInstanceState.getInt(PICKED_CHECK_IN_ROW_KEY);
+            mPickedFollowingSettings = savedInstanceState.getParcelable(USER_SETTINGS_KEY);
+        }
+        else {
+            mPickedCheckInRowId = -1;
+            mPickedFollowingSettings = new UserSettings(false, false);
+        }
+
         mFollowingsAdapter = new FollowingsAdapter(getActivity(), R.layout.following_drop_down_item, null, 0);
         mFollowings = (Spinner) rootView.findViewById(R.id.following_spinner);
         mFollowings.setAdapter(mFollowingsAdapter);
-        mFollowings.setSelection(0);
 
-        mCheckInDataAdapter = new CheckInDataAdapter(getActivity(), null, 0);
-        mCheckInDataList = (ListView) rootView.findViewById(R.id.check_in_data_list_view);
-        mCheckInDataList.setAdapter(mCheckInDataAdapter);
+        if (savedInstanceState == null) {
+            mFollowings.setSelection(0);
+        }
 
         mFollowings.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -88,6 +102,7 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                             .restartLoader(CHECK_IN_DATA_LOADER_ID, loaderArgs, FeedbackFragment.this);
                 }
 
+                resetCheckInDetails();
             }
 
             @Override
@@ -97,8 +112,18 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         initChart(rootView);
+//        if (mPickedCheckInRowId != -1) {
+//            onValueSelected(new Entry(0, 0, mPickedCheckInRowId), 0, null);
+//        }
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(USER_SETTINGS_KEY, mPickedFollowingSettings);
+        outState.putInt(PICKED_CHECK_IN_ROW_KEY, mPickedCheckInRowId);
     }
 
     @Override
@@ -114,6 +139,8 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                                         DmContract.Following._ID,
                                         DmContract.Following.FOLLOWING_NAME,
                                         DmContract.Following.FOLLOWING_FULL_NAME,
+                                        DmContract.Followers.MAJOR_DATA,
+                                        DmContract.Following.MINOR_DATE
                                 },
                         DmContract.Following.PENDING + " = 0 AND "
                                 + DmContract.Following.INVITE + " = 0",
@@ -138,6 +165,29 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                         new String[] { username },
                         null
                 );
+            case CHECK_IN_DETAILS_LOADER_ID:
+                int rowId = args.getInt(CHECK_IN_DETAILS_LOADER_ROW_ID);
+                String rowIdString = Integer.toString(rowId);
+                return new CursorLoader(
+                        getActivity(),
+                        DmContract.CheckInData.buildCheckInDataUri(),
+                        new String[]
+                                {
+                                        DmContract.CheckInData.SUGAR_LEVEL,
+                                        DmContract.CheckInData.SUGAR_LEVEL_TIME,
+                                        DmContract.CheckInData.INSULIN_DOSAGE,
+                                        DmContract.CheckInData.INSULIN_TIME,
+                                        DmContract.CheckInData.MEAL,
+                                        DmContract.CheckInData.MEAL_TIME,
+                                        DmContract.CheckInData.MOOD_LEVEL,
+                                        DmContract.CheckInData.STRESS_LEVEL,
+                                        DmContract.CheckInData.ENERGY_LEVEL,
+                                        DmContract.CheckInData.CHECK_IN_TIME
+                                },
+                        DmContract.CheckInData._ID + " = ? ",
+                        new String[] { rowIdString },
+                        null
+                );
             default:
                 break;
         }
@@ -152,8 +202,10 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                 mFollowingsAdapter.changeCursor(data);
                 break;
             case CHECK_IN_DATA_LOADER_ID:
-//                mCheckInDataAdapter.changeCursor(data);
                 loadDataToChart(data);
+                break;
+            case CHECK_IN_DETAILS_LOADER_ID:
+                loadCheckInDetails(data);
                 break;
         }
     }
@@ -165,8 +217,10 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                 mFollowingsAdapter.changeCursor(null);
                 break;
             case CHECK_IN_DATA_LOADER_ID:
-//                mCheckInDataAdapter.changeCursor(null);
                 loadDataToChart(null);
+                break;
+            case CHECK_IN_DETAILS_LOADER_ID:
+                resetCheckInDetails();
                 break;
         }
     }
@@ -215,7 +269,20 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         if (e.getData() != null) {
             Integer checkInRowId = (Integer) e.getData();
-            MiscUtils.showToast(getActivity(), "ID selected: " + checkInRowId.toString());
+            mPickedCheckInRowId = checkInRowId;
+
+            Bundle loaderArgs = new Bundle();
+            loaderArgs.putInt(CHECK_IN_DETAILS_LOADER_ROW_ID, checkInRowId);
+
+            LoaderManager loaderManager = getLoaderManager();
+            if (loaderManager.getLoader(CHECK_IN_DETAILS_LOADER_ID) == null) {
+                loaderManager
+                        .initLoader(CHECK_IN_DETAILS_LOADER_ID, loaderArgs, FeedbackFragment.this);
+            } else {
+                loaderManager
+                        .restartLoader(CHECK_IN_DETAILS_LOADER_ID, loaderArgs, FeedbackFragment.this);
+            }
+
         }
     }
 
@@ -245,37 +312,13 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
             usernameView.setText(username);
             fullNameView.setText(fullName);
 
-        }
-    };
+            int majorData = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.MAJOR_DATA));
+            int minorData = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.Following.MINOR_DATE));
 
-    private class CheckInDataAdapter extends CursorAdapter {
-
-        public CheckInDataAdapter(Context context, Cursor c, int flags) {
-            super(context, c, flags);
-        }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return LayoutInflater.from(context).inflate(R.layout.check_in_data_item, parent, false);
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-
-            TextView idView = (TextView) view.findViewById(R.id.check_in_data_id);
-            TextView bloodSugarLevelView = (TextView) view.findViewById(R.id.check_in_blood_sugar);
-            TextView insulinDosageView = (TextView) view.findViewById(R.id.check_in_insulin);
-
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.CheckInData._ID));
-            int bloodSugarLevel = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
-            int insulinDosage = cursor.getInt(cursor.getColumnIndexOrThrow(DmContract.CheckInData.INSULIN_DOSAGE));
-
-            idView.setText(Integer.toString(id));
-            bloodSugarLevelView.setText(Integer.toString(bloodSugarLevel));
-            insulinDosageView.setText(Integer.toString(insulinDosage));
+            mPickedFollowingSettings.setMajorData(majorData != 0);
+            mPickedFollowingSettings.setMinorData(minorData != 0);
 
         }
-
     };
 
     private void initChart(View view) {
@@ -390,6 +433,98 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         mChart.setData(lineData);
         mChart.getXAxis().setDrawLabels(false);
         mChart.invalidate();
+    }
+
+    private void loadCheckInDetails(Cursor data) {
+
+        if (!data.moveToNext()) {
+            resetCheckInDetails();
+            return;
+        }
+
+        // major data
+        TextView checkInTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_check_in_date);
+        TextView sugarView = (TextView) mDetailsView.findViewById(R.id.feedback_sugar);
+        TextView sugarTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_sugar_time);
+        TextView insulinView = (TextView) mDetailsView.findViewById(R.id.feedback_insulin);
+        TextView insulinTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_insulin_time);
+        TextView mealView = (TextView) mDetailsView.findViewById(R.id.feedback_meal);
+        TextView mealTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_meal_time);
+
+        // minor data
+        TextView moodView = (TextView) mDetailsView.findViewById(R.id.feedback_mood);
+        TextView stressView = (TextView) mDetailsView.findViewById(R.id.feedback_stress);
+        TextView energyView = (TextView) mDetailsView.findViewById(R.id.feedback_energy);
+
+        String checkInTime = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.CHECK_IN_TIME));
+        int sugar = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
+        String sugarTime = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL_TIME));
+        int insulin = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.INSULIN_DOSAGE));
+        String insulinTime = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.INSULIN_TIME));
+        String meal = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.MEAL));
+        String mealTime = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.MEAL_TIME));
+
+        int mood = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.MOOD_LEVEL));
+        int stress = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
+        int energy = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.ENERGY_LEVEL));
+
+        if (mPickedFollowingSettings.isMajorData()) {
+            checkInTimeView.setText(checkInTime);
+            sugarView.setText(Integer.toString(sugar));
+            sugarTimeView.setText(sugarTime);
+            insulinView.setText(Integer.toString(insulin));
+            insulinTimeView.setText(insulinTime);
+            mealView.setText(meal);
+            mealTimeView.setText(mealTime);
+        }
+        else {
+            checkInTimeView.setText(checkInTime);
+            sugarView.setText("n/a");
+            sugarTimeView.setText("n/a");
+            insulinView.setText("n/a");
+            insulinTimeView.setText("n/a");
+            mealView.setText("n/a");
+            mealTimeView.setText("n/a");
+        }
+
+        if (mPickedFollowingSettings.isMinorData()) {
+            moodView.setText(Integer.toString(mood));
+            stressView.setText(Integer.toString(stress));
+            energyView.setText(Integer.toString(energy));
+        }
+        else {
+            moodView.setText("n/a");
+            stressView.setText("n/a");
+            energyView.setText("n/a");
+        }
+    }
+
+    private void resetCheckInDetails() {
+        // major data
+        TextView checkInTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_check_in_date);
+        TextView sugarView = (TextView) mDetailsView.findViewById(R.id.feedback_sugar);
+        TextView sugarTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_sugar_time);
+        TextView insulinView = (TextView) mDetailsView.findViewById(R.id.feedback_insulin);
+        TextView insulinTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_insulin_time);
+        TextView mealView = (TextView) mDetailsView.findViewById(R.id.feedback_meal);
+        TextView mealTimeView = (TextView) mDetailsView.findViewById(R.id.feedback_meal_time);
+
+        // minor data
+        TextView moodView = (TextView) mDetailsView.findViewById(R.id.feedback_mood);
+        TextView stressView = (TextView) mDetailsView.findViewById(R.id.feedback_stress);
+        TextView energyView = (TextView) mDetailsView.findViewById(R.id.feedback_energy);
+
+        checkInTimeView.setText("–");
+        sugarView.setText("–");
+        sugarTimeView.setText("–");
+        insulinView.setText("–");
+        insulinTimeView.setText("–");
+        mealView.setText("–");
+        mealTimeView.setText("–");
+
+        moodView.setText("–");
+        stressView.setText("–");
+        energyView.setText("–");
     }
 
 }
