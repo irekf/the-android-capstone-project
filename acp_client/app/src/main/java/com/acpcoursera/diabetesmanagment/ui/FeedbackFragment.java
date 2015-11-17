@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
+import com.acpcoursera.diabetesmanagment.util.MiscUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -31,7 +32,10 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         OnChartGestureListener, OnChartValueSelectedListener {
@@ -93,7 +97,6 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         initChart(rootView);
-        setDummyData(50, 100);
 
         return rootView;
     }
@@ -126,7 +129,10 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                                 {
                                         DmContract.CheckInData._ID,
                                         DmContract.CheckInData.SUGAR_LEVEL,
+                                        DmContract.CheckInData.SUGAR_LEVEL_TIME,
                                         DmContract.CheckInData.INSULIN_DOSAGE,
+                                        DmContract.CheckInData.INSULIN_TIME,
+                                        DmContract.CheckInData.CHECK_IN_TIME
                                 },
                         DmContract.CheckInData.USERNAME + " = ? ",
                         new String[] { username },
@@ -146,7 +152,8 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                 mFollowingsAdapter.changeCursor(data);
                 break;
             case CHECK_IN_DATA_LOADER_ID:
-                mCheckInDataAdapter.changeCursor(data);
+//                mCheckInDataAdapter.changeCursor(data);
+                loadDataToChart(data);
                 break;
         }
     }
@@ -158,7 +165,8 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                 mFollowingsAdapter.changeCursor(null);
                 break;
             case CHECK_IN_DATA_LOADER_ID:
-                mCheckInDataAdapter.changeCursor(null);
+//                mCheckInDataAdapter.changeCursor(null);
+                loadDataToChart(null);
                 break;
         }
     }
@@ -205,7 +213,10 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
+        if (e.getData() != null) {
+            Integer checkInRowId = (Integer) e.getData();
+            MiscUtils.showToast(getActivity(), "ID selected: " + checkInRowId.toString());
+        }
     }
 
     @Override
@@ -282,33 +293,63 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         mChart.setPinchZoom(true);
     }
 
-    // thanks MPAndroidChart for this example
-    private void setDummyData(int count, float range) {
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add((i) + "");
+    private void loadDataToChart(Cursor data) {
+
+        if (data == null || data.getCount() == 0) {
+            mChart.clear();
+            return;
         }
 
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 
-        for (int i = 0; i < count; i++) {
+        ArrayList<Long> timeValues = new ArrayList<>();
 
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 3;// + (float)
-            // ((mult *
-            // 0.1) / 10);
-            yVals.add(new Entry(val, i));
+        ArrayList<Entry> sugarLevelSet = new ArrayList<>();
+        ArrayList<Entry> insulinDosageSet = new ArrayList<>();
+        ArrayList<Entry> checkInId = new ArrayList<>();
+
+        for (int i = 0; data.moveToNext(); i += 3) {
+            Integer id = data.getInt(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData._ID));
+            String checkInTime = data.getString(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData.CHECK_IN_TIME));
+            String sugarTime = data.getString(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL_TIME));
+            String insulinTime = data.getString(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData.INSULIN_TIME));
+            int sugarLevel = data.getInt(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
+            int insulinDosage = data.getInt(
+                    data.getColumnIndexOrThrow(DmContract.CheckInData.INSULIN_DOSAGE));
+
+            try {
+                timeValues.add(timeFormat.parse(checkInTime).getTime());
+                timeValues.add(timeFormat.parse(sugarTime).getTime());
+                timeValues.add(timeFormat.parse(insulinTime).getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            sugarLevelSet.add(new Entry(sugarLevel, i));
+            insulinDosageSet.add(new Entry(insulinDosage, i + 1));
+            checkInId.add(new Entry(0, i + 2, id));
         }
 
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        // set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
+        Long minTimeValue = Collections.min(timeValues);
 
-        // set the line to be drawn like this "- - - - - -"
+        ArrayList<String> timeValuesString = new ArrayList<>();
+        for (int i = 0; i < timeValues.size(); i++) {
+            timeValues.set(i, timeValues.get(i) % minTimeValue);
+            timeValuesString.add(Long.toString(timeValues.get(i) % minTimeValue));
+        }
+
+        LineDataSet set1 = new LineDataSet(sugarLevelSet, "Sugar Level");
+        LineDataSet set2 = new LineDataSet(insulinDosageSet, "Insulin Dosage");
+        LineDataSet set3 = new LineDataSet(checkInId, "Check-In Entries");
+
         set1.enableDashedLine(10f, 5f, 0f);
         set1.enableDashedHighlightLine(10f, 5f, 0f);
-        set1.setColor(Color.BLACK);
+        set1.setColor(Color.RED);
         set1.setCircleColor(Color.BLACK);
         set1.setLineWidth(1f);
         set1.setCircleSize(3f);
@@ -316,18 +357,39 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         set1.setValueTextSize(9f);
         set1.setFillAlpha(65);
         set1.setFillColor(Color.BLACK);
-//        set1.setDrawFilled(true);
-        // set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
-        // Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+
+        set2.enableDashedLine(10f, 5f, 0f);
+        set2.enableDashedHighlightLine(10f, 5f, 0f);
+        set2.setColor(Color.BLUE);
+        set2.setCircleColor(Color.BLACK);
+        set2.setLineWidth(1f);
+        set2.setCircleSize(3f);
+        set2.setDrawCircleHole(false);
+        set2.setValueTextSize(9f);
+        set2.setFillAlpha(65);
+        set2.setFillColor(Color.BLACK);
+
+        set3.enableDashedLine(10f, 5f, 0f);
+        set3.enableDashedHighlightLine(10f, 5f, 0f);
+        set3.setColor(Color.YELLOW);
+        set3.setCircleColor(Color.YELLOW);
+        set3.setLineWidth(1f);
+        set3.setCircleSize(10f);
+        set3.setDrawCircleHole(false);
+        set3.setValueTextSize(9f);
+        set3.setFillAlpha(65);
+        set3.setFillColor(Color.BLACK);
+        set3.setDrawValues(false);
 
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(set1); // add the datasets
+        dataSets.add(set1);
+        dataSets.add(set2);
+        dataSets.add(set3);
 
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
-
-        // set data
-        mChart.setData(data);
+        LineData lineData = new LineData(timeValuesString, dataSets);
+        mChart.setData(lineData);
+        mChart.getXAxis().setDrawLabels(false);
+        mChart.invalidate();
     }
 
 }
