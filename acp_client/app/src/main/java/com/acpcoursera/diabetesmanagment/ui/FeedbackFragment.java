@@ -2,6 +2,7 @@ package com.acpcoursera.diabetesmanagment.ui;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -9,6 +10,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,8 +22,19 @@ import android.widget.TextView;
 
 import com.acpcoursera.diabetesmanagment.R;
 import com.acpcoursera.diabetesmanagment.provider.DmContract;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+
+public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        OnChartGestureListener, OnChartValueSelectedListener {
 
     private static String TAG = FeedbackFragment.class.getSimpleName();
 
@@ -33,6 +46,8 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
     Spinner mFollowings;
     CheckInDataAdapter mCheckInDataAdapter;
     ListView mCheckInDataList;
+
+    private LineChart mChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,8 +79,7 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                 if (loaderManager.getLoader(CHECK_IN_DATA_LOADER_ID) == null) {
                     loaderManager
                             .initLoader(CHECK_IN_DATA_LOADER_ID, loaderArgs, FeedbackFragment.this);
-                }
-                else {
+                } else {
                     loaderManager
                             .restartLoader(CHECK_IN_DATA_LOADER_ID, loaderArgs, FeedbackFragment.this);
                 }
@@ -77,6 +91,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
 
             }
         });
+
+        initChart(rootView);
+        setDummyData(50, 100);
 
         return rootView;
     }
@@ -146,6 +163,56 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
+
     private class FollowingsAdapter extends ResourceCursorAdapter {
 
         public FollowingsAdapter(Context context, int layout, Cursor c, int flags) {
@@ -199,5 +266,68 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
     };
+
+    private void initChart(View view) {
+        mChart = (LineChart) view.findViewById(R.id.feedback_chart);
+        mChart.setOnChartGestureListener(FeedbackFragment.this);
+        mChart.setOnChartValueSelectedListener(FeedbackFragment.this);
+
+        mChart.setDescription("");
+        mChart.setNoDataTextDescription(getString(R.string.no_feedback_data));
+
+        mChart.setTouchEnabled(true);
+
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setPinchZoom(true);
+    }
+
+    // thanks MPAndroidChart for this example
+    private void setDummyData(int count, float range) {
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < count; i++) {
+            xVals.add((i) + "");
+        }
+
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+        for (int i = 0; i < count; i++) {
+
+            float mult = (range + 1);
+            float val = (float) (Math.random() * mult) + 3;// + (float)
+            // ((mult *
+            // 0.1) / 10);
+            yVals.add(new Entry(val, i));
+        }
+
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
+        // set1.setFillAlpha(110);
+        // set1.setFillColor(Color.RED);
+
+        // set the line to be drawn like this "- - - - - -"
+        set1.enableDashedLine(10f, 5f, 0f);
+        set1.enableDashedHighlightLine(10f, 5f, 0f);
+        set1.setColor(Color.BLACK);
+        set1.setCircleColor(Color.BLACK);
+        set1.setLineWidth(1f);
+        set1.setCircleSize(3f);
+        set1.setDrawCircleHole(false);
+        set1.setValueTextSize(9f);
+        set1.setFillAlpha(65);
+        set1.setFillColor(Color.BLACK);
+//        set1.setDrawFilled(true);
+        // set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
+        // Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+        dataSets.add(set1); // add the datasets
+
+        // create a data object with the datasets
+        LineData data = new LineData(xVals, dataSets);
+
+        // set data
+        mChart.setData(data);
+    }
 
 }

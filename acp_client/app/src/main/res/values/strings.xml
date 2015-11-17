@@ -101,6 +101,7 @@
     <string name="follower_deleted">Follower deleted</string>
     <string name="settings_changed">Settings changed</string>
     <string name="following_deleted">Following deleted</string>
+    <string name="no_feedback_data">No data available for this teen</string>
 
     <string-array name="mood_spinner_items">
         <item>Good</item>
