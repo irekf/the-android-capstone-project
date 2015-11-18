@@ -54,6 +54,9 @@ public class CheckInActivity extends AppCompatActivity {
     private Calendar mSugarTimeCalendar;
     private Calendar mMealTimeCalendar;
     private Calendar mInsulinTimeCalendar;
+    private EditText mSugarLevelWho;
+    private EditText mSugarLevelWhere;
+    private EditText mFeelings;
 
     private Button mSubmitButton;
 
@@ -118,6 +121,9 @@ public class CheckInActivity extends AppCompatActivity {
         mMealTime.setOnClickListener(new TimeAndDateListener(mMealTimeCalendar));
         mInsulinTime = (EditText) findViewById(R.id.insulin_administered_edit_text);
         mInsulinTime.setOnClickListener(new TimeAndDateListener(mInsulinTimeCalendar));
+        mSugarLevelWho = (EditText) findViewById(R.id.who_edit_text);
+        mSugarLevelWhere = (EditText) findViewById(R.id.where_edit_text);
+        mFeelings = (EditText) findViewById(R.id.feelings_edit_text);
 
         mSubmitButton = (Button) findViewById(R.id.submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +277,9 @@ public class CheckInActivity extends AppCompatActivity {
         data.setMoodLevel(mMoodNumberPicker.getValue());
         data.setStressLevel(mStressNumberPicker.getValue());
         data.setEnergyLevel(mEnergyNumberPicker.getValue());
+        data.setSugarLevelWho(mSugarLevelWho.getText().toString());
+        data.setSugarLevelWhere(mSugarLevelWhere.getText().toString());
+        data.setFeelings(mFeelings.getText().toString());
         return data;
     }
 

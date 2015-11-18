@@ -24,6 +24,9 @@ public class CheckInData implements Parcelable {
     private int moodLevel;
     private int stressLevel;
     private int energyLevel;
+    private String sugarLevelWho;
+    private String sugarLevelWhere;
+    private String feelings;
 
     private Timestamp checkInTimestamp;
 
@@ -41,6 +44,9 @@ public class CheckInData implements Parcelable {
         moodLevel = in.readInt();
         stressLevel = in.readInt();
         energyLevel = in.readInt();
+        sugarLevelWho = in.readString();
+        sugarLevelWhere = in.readString();
+        feelings = in.readString();
         checkInTimestamp = (Timestamp) in.readSerializable();
     }
 
@@ -72,6 +78,9 @@ public class CheckInData implements Parcelable {
         dest.writeInt(moodLevel);
         dest.writeInt(stressLevel);
         dest.writeInt(energyLevel);
+        dest.writeString(sugarLevelWho);
+        dest.writeString(sugarLevelWhere);
+        dest.writeString(feelings);
         dest.writeSerializable(checkInTimestamp);
     }
 
@@ -155,6 +164,30 @@ public class CheckInData implements Parcelable {
         this.energyLevel = energyLevel;
     }
 
+    public String getSugarLevelWho() {
+        return sugarLevelWho;
+    }
+
+    public void setSugarLevelWho(String sugarLevelWho) {
+        this.sugarLevelWho = sugarLevelWho;
+    }
+
+    public String getSugarLevelWhere() {
+        return sugarLevelWhere;
+    }
+
+    public void setSugarLevelWhere(String sugarLevelWhere) {
+        this.sugarLevelWhere = sugarLevelWhere;
+    }
+
+    public String getFeelings() {
+        return feelings;
+    }
+
+    public void setFeelings(String feelings) {
+        this.feelings = feelings;
+    }
+
     public Timestamp getCheckInTimestamp() {
         return checkInTimestamp;
     }
@@ -176,6 +209,9 @@ public class CheckInData implements Parcelable {
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
+                ", sugarLevelWho=" + sugarLevelWho +
+                ", sugarLevelWhere=" + sugarLevelWhere +
+                ", feelings=" + feelings +
                 ", checkInTimestamp='" + checkInTimestamp + '\'' +
                 '}';
     }
@@ -192,6 +228,9 @@ public class CheckInData implements Parcelable {
         values.put(DmContract.CheckInData.MOOD_LEVEL, moodLevel);
         values.put(DmContract.CheckInData.STRESS_LEVEL, stressLevel);
         values.put(DmContract.CheckInData.ENERGY_LEVEL, energyLevel);
+        values.put(DmContract.CheckInData.SUGAR_LEVEL_WHO, sugarLevelWho);
+        values.put(DmContract.CheckInData.SUGAR_LEVEL_WHERE, sugarLevelWhere);
+        values.put(DmContract.CheckInData.FEELINGS, feelings);
         values.put(DmContract.CheckInData.CHECK_IN_TIME, checkInTimestamp.toString());
         return values;
     }

@@ -156,6 +156,45 @@
                     android:padding="3dip" />
             </TableRow>
 
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Person with you when checked sugar:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_who"
+                    android:scrollbars = "vertical"
+                    android:padding="3dip"
+                    android:maxLines="4" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Location when checked sugar:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_where"
+                    android:scrollbars = "vertical"
+                    android:padding="3dip"
+                    android:maxLines="4" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:width="100sp"
+                    android:text="Feelings when checked sugar:"
+                    android:padding="3dip" />
+                <TextView
+                    android:width="100sp"
+                    android:id="@+id/feedback_feelings"
+                    android:scrollbars = "vertical"
+                    android:padding="3dip"
+                    android:maxLines="4" />
+            </TableRow>
+
         </TableLayout>
 
     </ScrollView>

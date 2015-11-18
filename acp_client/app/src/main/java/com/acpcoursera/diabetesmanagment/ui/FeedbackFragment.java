@@ -182,6 +182,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
                                         DmContract.CheckInData.MOOD_LEVEL,
                                         DmContract.CheckInData.STRESS_LEVEL,
                                         DmContract.CheckInData.ENERGY_LEVEL,
+                                        DmContract.CheckInData.SUGAR_LEVEL_WHO,
+                                        DmContract.CheckInData.SUGAR_LEVEL_WHERE,
+                                        DmContract.CheckInData.FEELINGS,
                                         DmContract.CheckInData.CHECK_IN_TIME
                                 },
                         DmContract.CheckInData._ID + " = ? ",
@@ -455,6 +458,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         TextView moodView = (TextView) mDetailsView.findViewById(R.id.feedback_mood);
         TextView stressView = (TextView) mDetailsView.findViewById(R.id.feedback_stress);
         TextView energyView = (TextView) mDetailsView.findViewById(R.id.feedback_energy);
+        TextView whoView = (TextView) mDetailsView.findViewById(R.id.feedback_who);
+        TextView whereView = (TextView) mDetailsView.findViewById(R.id.feedback_where);
+        TextView feelingsView = (TextView) mDetailsView.findViewById(R.id.feedback_feelings);
 
         String checkInTime = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.CHECK_IN_TIME));
         int sugar = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
@@ -467,6 +473,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         int mood = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.MOOD_LEVEL));
         int stress = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL));
         int energy = data.getInt(data.getColumnIndexOrThrow(DmContract.CheckInData.ENERGY_LEVEL));
+        String who = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL_WHO));
+        String where = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.SUGAR_LEVEL_WHERE));
+        String feelings = data.getString(data.getColumnIndexOrThrow(DmContract.CheckInData.FEELINGS));
 
         if (mPickedFollowingSettings.isMajorData()) {
             checkInTimeView.setText(checkInTime);
@@ -491,11 +500,17 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
             moodView.setText(Integer.toString(mood));
             stressView.setText(Integer.toString(stress));
             energyView.setText(Integer.toString(energy));
+            whoView.setText(who);
+            whereView.setText(where);
+            feelingsView.setText(feelings);
         }
         else {
             moodView.setText("n/a");
             stressView.setText("n/a");
             energyView.setText("n/a");
+            whoView.setText("n/a");
+            whereView.setText("n/a");
+            feelingsView.setText("n/a");
         }
     }
 
@@ -513,6 +528,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         TextView moodView = (TextView) mDetailsView.findViewById(R.id.feedback_mood);
         TextView stressView = (TextView) mDetailsView.findViewById(R.id.feedback_stress);
         TextView energyView = (TextView) mDetailsView.findViewById(R.id.feedback_energy);
+        TextView whoView = (TextView) mDetailsView.findViewById(R.id.feedback_who);
+        TextView whereView = (TextView) mDetailsView.findViewById(R.id.feedback_where);
+        TextView feelingsView = (TextView) mDetailsView.findViewById(R.id.feedback_feelings);
 
         checkInTimeView.setText("–");
         sugarView.setText("–");
@@ -525,6 +543,9 @@ public class FeedbackFragment extends Fragment implements LoaderManager.LoaderCa
         moodView.setText("–");
         stressView.setText("–");
         energyView.setText("–");
+        whoView.setText("–");
+        whereView.setText("–");
+        feelingsView.setText("–");
     }
 
 }

@@ -30,6 +30,9 @@ public class CheckInData {
     private int moodLevel;
     private int stressLevel;
     private int energyLevel;
+	private String sugarLevelWho;
+    private String sugarLevelWhere;
+    private String feelings;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.S")
     private Timestamp checkInTimestamp;
@@ -118,6 +121,30 @@ public class CheckInData {
         this.energyLevel = energyLevel;
     }
 
+    public String getSugarLevelWho() {
+		return sugarLevelWho;
+	}
+
+	public void setSugarLevelWho(String sugarLevelWho) {
+		this.sugarLevelWho = sugarLevelWho;
+	}
+
+	public String getSugarLevelWhere() {
+		return sugarLevelWhere;
+	}
+
+	public void setSugarLevelWhere(String sugarLevelWhere) {
+		this.sugarLevelWhere = sugarLevelWhere;
+	}
+
+	public String getFeelings() {
+		return feelings;
+	}
+
+	public void setFeelings(String feelings) {
+		this.feelings = feelings;
+	}
+
     public Timestamp getCheckInTimestamp() {
         return checkInTimestamp;
     }
@@ -139,6 +166,9 @@ public class CheckInData {
                 ", moodLevel=" + moodLevel +
                 ", stressLevel=" + stressLevel +
                 ", energyLevel=" + energyLevel +
+                ", sugarLevelWho=" + sugarLevelWho +
+                ", sugarLevelWhere=" + sugarLevelWhere +
+                ", feelings=" + feelings +
                 ", checkInTimestamp='" + checkInTimestamp + '\'' +
                 '}';
     }

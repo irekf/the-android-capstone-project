@@ -1,55 +1,55 @@
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-20 09:15:00', 4, '2015-10-20 08:00:00', 'chicken and juice', '2015-10-20 08:30:00', 80, '2015-10-20 07:25:00', 6, 3, 4);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-20 09:15:00', 4, '2015-10-20 08:00:00', 'chicken and juice', '2015-10-20 08:30:00', 80, '2015-10-20 07:25:00', 6, 3, 4, "mom", "home", "tired");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-20 13:50:00', 6, '2015-10-20 12:00:00', 'cereals', '2015-10-20 12:48:00', 70, '2015-10-20 11:25:00', 8, 2, 9);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-20 13:50:00', 6, '2015-10-20 12:00:00', 'cereals', '2015-10-20 12:48:00', 70, '2015-10-20 11:25:00', 8, 2, 9, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-20 18:30:00', 8, '2015-10-20 17:00:00', 'milk', '2015-10-20 18:10:00', 30, '2015-10-20 15:15:00', 4, 6, 6);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-20 18:30:00', 8, '2015-10-20 17:00:00', 'milk', '2015-10-20 18:10:00', 30, '2015-10-20 15:15:00', 4, 6, 6, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-21 10:30:00', 5, '2015-10-21 09:00:00', 'beef', '2015-10-21 08:10:00', 80, '2015-10-21 08:15:00', 3, 8, 4);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-21 10:30:00', 5, '2015-10-21 09:00:00', 'beef', '2015-10-21 08:10:00', 80, '2015-10-21 08:15:00', 3, 8, 4, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-21 13:30:00', 11, '2015-10-21 12:00:00', 'soup', '2015-10-21 12:40:00', 40, '2015-10-21 13:00:00', 4, 1, 8);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-21 13:30:00', 11, '2015-10-21 12:00:00', 'soup', '2015-10-21 12:40:00', 40, '2015-10-21 13:00:00', 4, 1, 8, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-21 20:00:00', 8, '2015-10-21 19:00:00', 'soup', '2015-10-21 19:20:00', 90, '2015-10-21 19:45:00', 8, 5, 3);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-21 20:00:00', 8, '2015-10-21 19:00:00', 'soup', '2015-10-21 19:20:00', 90, '2015-10-21 19:45:00', 8, 5, 3, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-22 09:30:00', 5, '2015-10-22 08:00:00', 'beef', '2015-10-22 08:10:00', 50, '2015-10-22 08:15:00', 3, 5, 5);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-22 09:30:00', 5, '2015-10-22 08:00:00', 'beef', '2015-10-22 08:10:00', 50, '2015-10-22 08:15:00', 3, 5, 5, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-22 14:30:00', 11, '2015-10-22 13:00:00', 'soup', '2015-10-22 13:40:00', 40, '2015-10-22 14:00:00', 7, 5, 7);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-22 14:30:00', 11, '2015-10-22 13:00:00', 'soup', '2015-10-22 13:40:00', 40, '2015-10-22 14:00:00', 7, 5, 7, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'bill', '2015-10-22 19:00:00', 12, '2015-10-22 18:50:00', 'soup', '2015-10-22 18:55:00', 30, '2015-10-22 17:45:00', 7, 2, 6);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'bill', '2015-10-22 19:00:00', 12, '2015-10-22 18:50:00', 'soup', '2015-10-22 18:55:00', 30, '2015-10-22 17:45:00', 7, 2, 6, "a friend", "school", "happy");
 
 ***********************
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-05 08:15:00', 8, '2015-11-05 08:10:00', 'chicken and juice', '2015-11-05 08:30:00', 40, '2015-11-05 07:25:00', 5, 3, 4);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-05 08:15:00', 8, '2015-11-05 08:10:00', 'chicken and juice', '2015-11-05 08:30:00', 40, '2015-11-05 07:25:00', 5, 3, 4, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-05 12:50:00', 5, '2015-11-05 12:00:00', 'cereals', '2015-11-05 12:48:00', 20, '2015-11-05 11:25:00', 7, 2, 9);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-05 12:50:00', 5, '2015-11-05 12:00:00', 'cereals', '2015-11-05 12:48:00', 20, '2015-11-05 11:25:00', 7, 2, 9, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-05 17:30:00', 7, '2015-11-05 17:00:00', 'milk', '2015-11-05 18:10:00', 55, '2015-11-05 15:15:00', 6, 6, 6);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-05 17:30:00', 7, '2015-11-05 17:00:00', 'milk', '2015-11-05 18:10:00', 55, '2015-11-05 15:15:00', 6, 6, 6, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-06 09:30:00', 10, '2015-11-06 09:00:00', 'fruits', '2015-11-06 08:10:00', 45, '2015-11-06 08:15:00', 4, 8, 4);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-06 09:30:00', 10, '2015-11-06 09:00:00', 'fruits', '2015-11-06 08:10:00', 45, '2015-11-06 08:15:00', 4, 8, 4, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-06 11:30:00', 15, '2015-11-06 12:00:00', 'fruits', '2015-11-06 12:40:00', 70, '2015-11-06 13:00:00', 2, 1, 8);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-06 11:30:00', 15, '2015-11-06 12:00:00', 'fruits', '2015-11-06 12:40:00', 70, '2015-11-06 13:00:00', 2, 1, 8, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-06 19:00:00', 6, '2015-11-06 19:00:00', 'soup', '2015-11-06 19:20:00', 80, '2015-11-06 19:45:00', 9, 5, 3);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-06 19:00:00', 6, '2015-11-06 19:00:00', 'soup', '2015-11-06 19:20:00', 80, '2015-11-06 19:45:00', 9, 5, 3, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-07 08:30:00', 6, '2015-11-07 08:00:00', 'fruits', '2015-11-07 08:10:00', 30, '2015-11-07 08:15:00', 5, 5, 5);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-07 08:30:00', 6, '2015-11-07 08:00:00', 'fruits', '2015-11-07 08:10:00', 30, '2015-11-07 08:15:00', 5, 5, 5, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-07 13:30:00', 8, '2015-11-07 13:00:00', 'fruits', '2015-11-07 13:40:00', 40, '2015-11-07 14:00:00', 6, 5, 7);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-07 13:30:00', 8, '2015-11-07 13:00:00', 'fruits', '2015-11-07 13:40:00', 40, '2015-11-07 14:00:00', 6, 5, 7, "a friend", "school", "happy");
 
-INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level) 
-VALUES ( 'helen', '2015-11-07 18:00:00', 7, '2015-11-07 18:50:00', 'soup', '2015-11-07 18:55:00', 70, '2015-11-07 17:45:00', 7, 2, 6);
+INSERT INTO check_in_data (username, check_in_timestamp, sugar_level, sugar_level_time, meal, meal_time, insulin_dosage, insulin_time, mood_level, stress_level, energy_level, sugar_level_who, sugar_level_where, feelings) 
+VALUES ( 'helen', '2015-11-07 18:00:00', 7, '2015-11-07 18:50:00', 'soup', '2015-11-07 18:55:00', 70, '2015-11-07 17:45:00', 7, 2, 6, "a friend", "school", "happy");

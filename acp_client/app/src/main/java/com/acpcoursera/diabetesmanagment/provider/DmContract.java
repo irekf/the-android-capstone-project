@@ -48,6 +48,9 @@ public class DmContract {
         String MOOD_LEVEL = "mood_level";
         String STRESS_LEVEL = "stress_level";
         String ENERGY_LEVEL = "energy_level";
+        String SUGAR_LEVEL_WHO = "sugar_level_who";
+        String SUGAR_LEVEL_WHERE = "sugar_level_where";
+        String FEELINGS = "feelings";
         String CHECK_IN_TIME = "check_in_time";
     }
 

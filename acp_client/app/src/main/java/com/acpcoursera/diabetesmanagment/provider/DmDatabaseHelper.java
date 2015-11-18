@@ -13,7 +13,7 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
 
     private static String TAG = DmDatabaseHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private static final String DATABASE_NAME = "acp.db";
 
@@ -62,6 +62,9 @@ public class DmDatabaseHelper extends SQLiteOpenHelper {
             + CheckInDataColumns.MOOD_LEVEL + " INTEGER NOT_NULL, "
             + CheckInDataColumns.STRESS_LEVEL + " INTEGER NOT_NULL, "
             + CheckInDataColumns.ENERGY_LEVEL + " INTEGER NOT_NULL, "
+            + CheckInDataColumns.SUGAR_LEVEL_WHO + " TEXT, "
+            + CheckInDataColumns.SUGAR_LEVEL_WHERE + " TEXT, "
+            + CheckInDataColumns.FEELINGS + " TEXT, "
             + CheckInDataColumns.CHECK_IN_TIME + " TEXT NOT_NULL"
             + " )";
 
